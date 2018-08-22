@@ -1,2 +1,2 @@
 # GraduationProject
-Graduation project to recognize photo
+Graduation project to recognize photo.
