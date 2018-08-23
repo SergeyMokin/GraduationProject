@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GraduationProject.Filters;
 using GraduationProjectModels;
+using GraduationProjectRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace GraduationProject
 {
@@ -89,6 +91,8 @@ namespace GraduationProject
 
         private void RegisterDependencyInjection(IServiceCollection services)
         {
+            services.AddDbContext<GraduationProjectContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }

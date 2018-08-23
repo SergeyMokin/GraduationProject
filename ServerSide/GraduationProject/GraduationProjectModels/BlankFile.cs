@@ -16,21 +16,30 @@ namespace GraduationProjectModels
 
         public string FileType { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public List<BlankFileUser> BlankFileUsers { get; set; }
 
         public BlankFile()
         {
-            Users = new List<User>();
+            BlankFileUsers = new List<BlankFileUser>();
         }
 
         public bool Validate()
         {
-            throw new Exception();
+            return true;
         }
 
         public void Edit(BlankFile blankFile)
         {
 
         }
+    }
+
+    public class BlankFileUser
+    {
+        public long UserId { get; set; }
+        public User User { get; set; }
+
+        public long BlankFileId { get; set; }
+        public BlankFile BlankFile { get; set; }
     }
 }

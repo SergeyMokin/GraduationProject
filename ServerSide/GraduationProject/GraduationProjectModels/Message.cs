@@ -12,7 +12,7 @@ namespace GraduationProjectModels
 
         public bool Validate()
         {
-            throw new Exception();
+            return true;
         }
 
         public void Edit(Message message)

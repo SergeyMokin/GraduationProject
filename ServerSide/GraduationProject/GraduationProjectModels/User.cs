@@ -10,16 +10,16 @@ namespace GraduationProjectModels
 
         public string Email { get; set; }
 
-        public ICollection<BlankFile> BlankFiles { get; set; }
+        public List<BlankFileUser> BlankFileUsers { get; set; }
 
         public User()
         {
-            BlankFiles = new List<BlankFile>();
+            BlankFileUsers = new List<BlankFileUser>();
         }
 
         public bool Validate()
         {
-            throw new Exception();
+            return true;
         }
 
         public void Edit(User user)
@@ -40,7 +40,7 @@ namespace GraduationProjectModels
 
         public bool Validate()
         {
-            throw new Exception();
+            return true;
         }
 
         public void Edit(Password password)

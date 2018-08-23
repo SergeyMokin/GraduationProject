@@ -6,14 +6,16 @@ using GraduationProject.Extensions;
 using GraduationProjectInterfaces.Controllers;
 using GraduationProjectInterfaces.Services;
 using GraduationProjectModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraduationProject.Controllers
 {
-    [Route("api/Account/[action]")]
+    [Route("api/User/[action]")]
     [Produces("application/json")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase, IUserController
     {
         private IUserService _userService;
@@ -23,27 +25,32 @@ namespace GraduationProject.Controllers
             _userService = userService;
         }
 
-        public async Task<FileResult> DownloadFile(long id)
+        [HttpGet]
+        public async Task<FileContentResult> DownloadFile(long id)
         {
             return await _userService.DownloadFile(id, User.GetUserId());
         }
 
-        public async Task<FileResult> GenerateExcel(BlankFile param)
+        [HttpPost]
+        public async Task<FileContentResult> GenerateExcel([FromBody]BlankFile param)
         {
             return await _userService.GenerateExcel(param, User.GetUserId());
         }
 
-        public IQueryable<BlankFile> GetFiles()
+        [HttpGet]
+        public async Task<IEnumerable<BlankFile>> GetFiles()
         {
-            return _userService.GetFiles(User.GetUserId());
+            return await _userService.GetFiles(User.GetUserId());
         }
 
+        [HttpDelete]
         public async Task<long> RemoveFile(long id)
         {
             return await _userService.RemoveFile(id, User.GetUserId());
         }
 
-        public Message SendMessage(Message mes)
+        [HttpPost]
+        public Message SendMessage([FromBody]Message mes)
         {
             return _userService.SendMessage(mes, User.GetUserId());
         }
