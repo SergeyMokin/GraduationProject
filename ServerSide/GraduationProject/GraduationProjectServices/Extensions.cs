@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GraduationProjectServices
 {
@@ -9,12 +10,20 @@ namespace GraduationProjectServices
     {
         public static bool IsEmail(this string email)
         {
-            return true;
+            const string PATTERN = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+
+            return string.IsNullOrWhiteSpace(email)
+                ? false
+                : new Regex(PATTERN).Match(email).Success;
         }
 
         public static bool IsPassword(this string password)
         {
-            return true;
+            const string PATTERN = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
+
+            return string.IsNullOrWhiteSpace(password)
+                ? false
+                : new Regex(PATTERN).Match(password).Success;
         }
     }
 }
