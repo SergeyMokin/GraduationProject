@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GraduationProjectModels
 {
+    // Interface of class what contains in database.
     public interface IEntity<T>
     {
         long Id { get; set; }

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace GraduationProjectModels
 {
+    // Some auth options.
     public class AuthOptions
     {
         //Encryption key.

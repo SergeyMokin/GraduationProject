@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProjectServices
 {
+    // IUserService implementation to work with user documents.
     public class UserService : IUserService
     {
         private readonly IImageHandler _imageHandler;
@@ -56,7 +57,13 @@ namespace GraduationProjectServices
             return (await _userRepository.Get().Include(u => u.BlankFileUsers)
                 .FirstOrDefaultAsync(u => u.Id == userId))
                 .BlankFileUsers
-                .Select(x => x.BlankFile);
+                .Select(x => new BlankFile
+                {
+                    Id = x.BlankFile.Id,
+                    FileType = x.BlankFile.FileType,
+                    Name = x.BlankFile.Name,
+                    Type = x.BlankFile.Type
+                });
         }
 
         public async Task<long> RemoveFile(long fileId, long userId)

@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GraduationProject.Filters;
+﻿using GraduationProject.Filters;
 using GraduationProjectModels;
 using GraduationProjectRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using GraduationProjectInterfaces.Controllers;
+using GraduationProject.Controllers;
+using GraduationProjectInterfaces.Services;
+using GraduationProjectServices;
+using GraduationProjectInterfaces.Repository;
+using GraduationProjectInterfaces.ImageHandler;
+using GraduationProjectImageHandler;
 
 namespace GraduationProject
 {
+    // Configuration of application.
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -32,6 +33,7 @@ namespace GraduationProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Enable cors.
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -40,6 +42,7 @@ namespace GraduationProject
                        .AllowCredentials();
             }));
 
+            // Add auth to app by JWT token.
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -59,14 +62,17 @@ namespace GraduationProject
                     };
                 });
 
+            // Add cors attribute to all controllers.
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory("MyPolicy"));
             });
 
+            // Enable MVC and add exception handling attribute.
             services.AddMvc(options =>
                 options.Filters.Add(new ControllerExceptionFilterAttribute())).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            // Register all dependencies.
             RegisterDependencyInjection(services);
         }
 
@@ -89,8 +95,21 @@ namespace GraduationProject
                 .UseMvc();
         }
 
+        // Register dependencies.
         private void RegisterDependencyInjection(IServiceCollection services)
         {
+            services.AddScoped<IImageHandler, ImageHandler>();
+
+            services.AddScoped<IRepository<User>, Repository<User>>();
+            services.AddScoped<IRepository<BlankFile>, Repository<BlankFile>>();
+            services.AddScoped<IRepository<Password>, Repository<Password>>();
+            
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IAccountController, AccountController>();
+            services.AddScoped<IUserController, UserController>();
+
             services.AddDbContext<GraduationProjectContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }

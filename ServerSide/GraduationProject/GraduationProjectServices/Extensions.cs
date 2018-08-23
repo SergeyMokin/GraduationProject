@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GraduationProjectServices
 {
+    // Validation extensions.
     public static class Extensions
     {
         public static bool IsEmail(this string email)

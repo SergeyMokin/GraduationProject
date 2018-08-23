@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace GraduationProjectInterfaces.Controllers
 {
+    // Controller of user files.
     public interface IUserController
     {
         Task<FileContentResult> GenerateExcel(BlankFile param);

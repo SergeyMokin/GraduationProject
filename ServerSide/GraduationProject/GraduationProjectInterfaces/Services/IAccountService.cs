@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProjectInterfaces.Services
 {
+    // Service what realize logic of work controller of accounts.
     public interface IAccountService
     {
         Task<LoginToken> Register(string email, string password);

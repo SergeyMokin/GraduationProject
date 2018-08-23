@@ -4,12 +4,13 @@ using System.Text;
 
 namespace GraduationProjectModels
 {
+    // User account.
     public class User: IEntity<User>
     {
         public long Id { get; set; }
 
         public string Email { get; set; }
-
+        
         public List<BlankFileUser> BlankFileUsers { get; set; }
 
         public User()
@@ -19,15 +20,17 @@ namespace GraduationProjectModels
 
         public bool Validate()
         {
-            return true;
+            return !string.IsNullOrWhiteSpace(Email);
         }
 
         public void Edit(User user)
         {
-
+            Email = user.Email;
+            BlankFileUsers = user.BlankFileUsers;
         }
     }
 
+    // Model to contain password in database.
     public class Password: IEntity<Password>
     {
         public long Id { get; set; }
@@ -40,12 +43,13 @@ namespace GraduationProjectModels
 
         public bool Validate()
         {
-            return true;
+            return !string.IsNullOrWhiteSpace(Current);
         }
 
         public void Edit(Password password)
-        { 
-            
+        {
+            Current = password.Current;
+            IsActive = password.IsActive;
         }
     }
 }

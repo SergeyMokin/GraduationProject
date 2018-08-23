@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProjectInterfaces.Controllers
 {
+    // Controller of user accounts.
     public interface IAccountController
     {
         Task<LoginToken> Register(string email, string password);

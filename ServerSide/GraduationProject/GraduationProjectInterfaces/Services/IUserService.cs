@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProjectInterfaces.Services
 {
+    // Service what realize logic of work controller of user documents.
     public interface IUserService
     {
         Task<FileContentResult> GenerateExcel(BlankFile param, long userId);

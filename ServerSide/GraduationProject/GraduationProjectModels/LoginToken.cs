@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GraduationProjectModels
 {
+    // Creditionals of user to get access to app.
     public class LoginToken
     {
         public User User { get; set; }

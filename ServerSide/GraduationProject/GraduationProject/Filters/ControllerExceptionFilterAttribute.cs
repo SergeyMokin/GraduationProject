@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GraduationProject.Filters
 {
+    // Filter attribute to handling exceptions.
     public class ControllerExceptionFilterAttribute : ExceptionFilterAttribute
     {
         private readonly Dictionary<Type, IActionResult> _exceptionFilter =

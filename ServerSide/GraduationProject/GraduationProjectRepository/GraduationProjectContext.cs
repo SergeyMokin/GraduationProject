@@ -6,6 +6,7 @@ using System.Text;
 
 namespace GraduationProjectRepository
 {
+    // Realization of DbContext to work with database.
     public class GraduationProjectContext : DbContext
     {
         public DbSet<User> Users { get; set; }
@@ -17,6 +18,7 @@ namespace GraduationProjectRepository
             Database.EnsureCreated();
         }
 
+        // Configure models using Fluent API.
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>(entity => {

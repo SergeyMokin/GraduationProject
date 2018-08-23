@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GraduationProjectModels
 {
+    // Message event.
     public class Message: IEntity<Message>
     {
         public long Id { get; set; }
@@ -12,12 +13,12 @@ namespace GraduationProjectModels
 
         public bool Validate()
         {
-            return true;
+            return FileIds != null;
         }
 
         public void Edit(Message message)
         {
-
+            FileIds = message.FileIds;
         }
     }
 }

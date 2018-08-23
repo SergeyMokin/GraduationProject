@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GraduationProjectServices
 {
+    // IAccountService implementation to work with user account.
     public class AccountService : IAccountService
     {
         private readonly IRepository<User> _userRepository;

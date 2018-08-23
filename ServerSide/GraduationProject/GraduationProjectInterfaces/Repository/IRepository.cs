@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProjectInterfaces.Repository
 {
+    // Universal repository to work with database.
     public interface IRepository<T>
         where T : class, IEntity<T>
     {

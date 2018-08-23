@@ -6,6 +6,7 @@ using System.Text;
 
 namespace GraduationProjectServices
 {
+    // Service to write logs.
     public static class LogService
     {
         private static readonly List<string> _notWrittenExceptions
@@ -27,7 +28,7 @@ namespace GraduationProjectServices
 
             var path = Path.Combine(
                            Directory.GetCurrentDirectory(),
-                          "logs", DateTime.Now.ToString("dd_MM_yy") + "_log.txt");
+                          "wwwroot/logs", DateTime.Now.ToString("dd_MM_yy") + "_log.txt");
             lock (_lock)
             {
                 try

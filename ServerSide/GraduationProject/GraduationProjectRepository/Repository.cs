@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProjectRepository
 {
+    // IRepository implementation to work with database.
     public class Repository<T> : IRepository<T>
         where T: class, IEntity<T>
     {

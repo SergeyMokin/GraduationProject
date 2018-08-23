@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GraduationProjectModels
 {
+    // BlankFile image/document what contain in database.
     public class BlankFile : IEntity<BlankFile>
     {
         public long Id { get; set; }
@@ -25,15 +26,23 @@ namespace GraduationProjectModels
 
         public bool Validate()
         {
-            return true;
+            return !(string.IsNullOrWhiteSpace(Name)
+                && string.IsNullOrWhiteSpace(Data)
+                && string.IsNullOrWhiteSpace(Type)
+                && string.IsNullOrWhiteSpace(FileType));
         }
 
         public void Edit(BlankFile blankFile)
         {
-
+            Name = blankFile.Name;
+            Data = blankFile.Data;
+            Type = blankFile.Type;
+            FileType = blankFile.Type;
+            BlankFileUsers = blankFile.BlankFileUsers;
         }
     }
 
+    // Many-to-many relationship implementation.
     public class BlankFileUser
     {
         public long UserId { get; set; }
