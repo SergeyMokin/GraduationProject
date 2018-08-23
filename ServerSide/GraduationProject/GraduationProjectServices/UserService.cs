@@ -67,7 +67,12 @@ namespace GraduationProjectServices
 
         public async Task<long> RemoveFile(long fileId, long userId)
         {
-            throw new NotImplementedException();
+            var user = (await _userRepository.Get().Include(u => u.BlankFileUsers)
+                .FirstOrDefaultAsync(u => u.Id == userId));
+
+            user.BlankFileUsers.Remove(user.BlankFileUsers.FirstOrDefault(x => x.BlankFileId == fileId));
+
+            return fileId;
         }
 
         public Message SendMessage(Message mes, long userId)
