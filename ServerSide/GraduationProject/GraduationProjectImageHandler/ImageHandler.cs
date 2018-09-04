@@ -12,9 +12,11 @@ namespace GraduationProjectImageHandler
     {
         public Task<BlankFile> GenerateExcel(BlankFile param)
         {
-            param.Type = "example";
-            param.FileType = "file/txt";
+            param.Id = 0;
+            param.Name = "hello_world.txt";
             param.Data = "SGVsbG8gV29ybGQh";
+            param.Type = "test";
+            param.FileType = "file/txt";
             return Task.Run(() => param);
         }
     }
