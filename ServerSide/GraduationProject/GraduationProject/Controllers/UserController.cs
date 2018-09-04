@@ -41,7 +41,7 @@ namespace GraduationProject.Controllers
 
         // GET api/user/getfiles
         [HttpGet]
-        public async Task<IEnumerable<BlankFile>> GetFiles()
+        public async Task<IEnumerable<BlankFileUserReturn>> GetFiles()
         {
             return await _userService.GetFiles(User.GetUserId());
         }

@@ -7,32 +7,118 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.SS.Util;
 
 namespace GraduationProjectImageHandler
 {
     // Process images class.
     public class ImageHandler : IImageHandler
     {
+        private Tuple<string, string> _answerVariants = new Tuple<string, string>("YES", "NO");
+        private Dictionary<int, string> _answers = new Dictionary<int, string>();
+
         private string _savedImageName;
         private string _savedBlackWhiteImageName;
+
+        private string _excelFileName;
+        private string _excelFilePath;
+
         private BlankFile _blankFile;
 
         public Task<BlankFile> GenerateExcel(BlankFile param)
         {
-            var path = Directory.GetCurrentDirectory() + "\\wwwroot\\" + DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds;
-            _savedImageName = path + param.Name;
-            _savedBlackWhiteImageName = path + param.Name + "_bw.jpg";
+            var pathToSave = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString());
+
+            _savedImageName = pathToSave + param.Name;
+            _savedBlackWhiteImageName = pathToSave + param.Name + "_bw";
+
+            _excelFileName = param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
+            _excelFilePath = pathToSave + _excelFileName;
+
             _blankFile = param;
 
             SaveImage();
             SaveGrayScaleImage();
 
-            //todo: create excel.
+            SearchAnswers();
 
             File.Delete(_savedImageName);
             File.Delete(_savedBlackWhiteImageName);
 
-            return Task.Run(() => param);
+            return Task.Run(() => CreateExcel());
+        }
+
+        private BlankFile CreateExcel()
+        {
+            using (var fs = new FileStream(_excelFilePath, FileMode.Create, FileAccess.Write))
+            {
+
+                IWorkbook workbook = new XSSFWorkbook();
+
+                ISheet sheet = workbook.CreateSheet("ImageHandlerResult");
+
+                for (var i = 0; i < 7; i++)
+                {
+                    IRow row = sheet.CreateRow(i);
+                    row.CreateCell(0).SetCellValue(Questions.Values[i + 1]);
+                    row.CreateCell(1).SetCellValue(_answers[i + 1]);
+                }
+
+                sheet.AutoSizeColumn(0);
+                sheet.AutoSizeColumn(1);
+
+                workbook.Write(fs);
+            };
+
+            var data = Convert.ToBase64String(File.ReadAllBytes(_excelFilePath));
+
+            File.Delete(_excelFilePath);
+
+            return new BlankFile
+            {
+                Id = 0,
+                Name = _excelFileName,
+                Data = data,
+                Type = "GraduationBlank",
+                FileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            };
+        }
+
+        private void SearchAnswers()
+        {
+            using (var img = new Bitmap(_savedBlackWhiteImageName))
+            {
+                var i = 1;
+                foreach (var c in AnswerCoordinates.Coordinates)
+                {
+                    var blackPixelLeftCount = SearchCountOfBlackPixelsByCoordinates(img, c.Value[0], c.Value[1], c.Value[2], c.Value[3]);
+                    var blackPixelRightCount = SearchCountOfBlackPixelsByCoordinates(img, c.Value[4], c.Value[5], c.Value[6], c.Value[7]);
+
+                    _answers.Add(i++, blackPixelLeftCount > blackPixelRightCount ? _answerVariants.Item1 : _answerVariants.Item2);
+                }
+            }
+        }
+
+        private int SearchCountOfBlackPixelsByCoordinates(Bitmap img, int startX, int startY, int endX, int endY)
+        {
+            var blackPixelCount = 0;
+            for (var x = startX; x < endX; x++)
+            {
+                for (var y = startY; y < endY; y++)
+                {
+                    var color = img.GetPixel(x, y);
+                    if ((color.R + color.G + color.B) < 5)
+                    {
+                        blackPixelCount++;
+                    }
+                }
+            }
+            return blackPixelCount;
         }
 
         private void SaveImage()

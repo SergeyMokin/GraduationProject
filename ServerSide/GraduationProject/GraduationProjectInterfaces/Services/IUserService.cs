@@ -13,7 +13,7 @@ namespace GraduationProjectInterfaces.Services
     {
         Task<FileContentResult> GenerateExcel(BlankFile param, long userId);
 
-        Task<IEnumerable<BlankFile>> GetFiles(long userId);
+        Task<IEnumerable<BlankFileUserReturn>> GetFiles(long userId);
 
         Task<long> RemoveFile(long fileId, long userId);
 

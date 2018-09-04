@@ -12,7 +12,7 @@ namespace GraduationProjectInterfaces.Controllers
     {
         Task<FileContentResult> GenerateExcel(BlankFile param);
 
-        Task<IEnumerable<BlankFile>> GetFiles();
+        Task<IEnumerable<BlankFileUserReturn>> GetFiles();
 
         Task<long> RemoveFile(long id);
 

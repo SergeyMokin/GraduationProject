@@ -29,12 +29,13 @@ namespace GraduationProjectServices
 
         public async Task<FileContentResult> DownloadFile(long fileId, long userId)
         {
-            var file = (await _userRepository.Get().Include(u => u.BlankFileUsers)
+            var fileUser = (await _userRepository.Get().Include(u => u.BlankFileUsers)
                 .FirstOrDefaultAsync(u => u.Id == userId))
                 .BlankFileUsers
-                .Select(x => x.BlankFile)
-                .FirstOrDefault(f => f.Id == fileId) 
+                .FirstOrDefault(f => f.BlankFileId == fileId) 
                 ?? throw new ArgumentNullException();
+
+            var file = await _blankFileRepository.GetAsync(fileUser.BlankFileId);
 
             return new FileContentResult(Convert.FromBase64String(file.Data), file.FileType)
             {
@@ -47,24 +48,46 @@ namespace GraduationProjectServices
             var file = await _imageHandler.GenerateExcel(param) 
                 ?? throw new InvalidOperationException();
 
+            var user = await _userRepository.GetAsync(userId);
+
+            file = await _blankFileRepository.AddAsync(file);
+
+            user.BlankFileUsers.Add(new BlankFileUser
+            {
+                BlankFile = file,
+                BlankFileId = file.Id,
+                User = user,
+                UserId = user.Id
+            });
+
+            await _userRepository.EditAsync(user);
+
             return new FileContentResult(Convert.FromBase64String(file.Data), file.FileType)
             {
                 FileDownloadName = file.Name
             };
         }
 
-        public async Task<IEnumerable<BlankFile>> GetFiles(long userId)
+        public async Task<IEnumerable<BlankFileUserReturn>> GetFiles(long userId)
         {
-            return (await _userRepository.Get().Include(u => u.BlankFileUsers)
+            var files = (await _userRepository.Get().Include(u => u.BlankFileUsers)
                 .FirstOrDefaultAsync(u => u.Id == userId))
                 .BlankFileUsers
-                .Select(x => new BlankFile
-                {
-                    Id = x.BlankFile.Id,
-                    FileType = x.BlankFile.FileType,
-                    Name = x.BlankFile.Name,
-                    Type = x.BlankFile.Type
-                });
+                .Select(x => new BlankFileUserReturn(x))
+                .ToArray();
+
+            var blankFilesNames = _blankFileRepository
+                .Get()
+                .Where(x => files.Any(f => f.BlankFileId == x.Id))
+                .Select(x => x.Name)
+                .ToArray();
+
+            for (var i = 0; i < blankFilesNames.Length; i++)
+            {
+                files[i].FileName = blankFilesNames[i];
+            }
+
+            return files;
         }
 
         public async Task<long> RemoveFile(long fileId, long userId)
@@ -74,6 +97,8 @@ namespace GraduationProjectServices
                 ?? throw new ArgumentNullException();
 
             user.BlankFileUsers.Remove(user.BlankFileUsers.FirstOrDefault(x => x.BlankFileId == fileId));
+
+            await _userRepository.EditAsync(user);
 
             return fileId;
         }

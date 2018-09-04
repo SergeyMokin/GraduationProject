@@ -51,4 +51,19 @@ namespace GraduationProjectModels
         public long BlankFileId { get; set; }
         public BlankFile BlankFile { get; set; }
     }
+
+    public class BlankFileUserReturn
+    {
+        public BlankFileUserReturn(BlankFileUser fileUser)
+        {
+            UserId = fileUser.UserId;
+            BlankFileId = fileUser.BlankFileId;
+        }
+
+        public long UserId { get; set; }
+
+        public long BlankFileId { get; set; }
+
+        public string FileName { get; set; }
+    }
 }
