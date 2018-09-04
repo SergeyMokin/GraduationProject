@@ -90,7 +90,7 @@ namespace GraduationProjectServices
 
         public async Task<LoginToken> UpdateToken(long userId)
         {
-            return GenerateToken(await _userRepository.GetAsync(userId));
+            return GenerateToken(await _userRepository.GetAsync(userId) ?? throw new ArgumentNullException());
         }
 
         private LoginToken GenerateToken(User user)

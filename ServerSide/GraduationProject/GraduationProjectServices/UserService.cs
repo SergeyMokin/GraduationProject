@@ -33,7 +33,8 @@ namespace GraduationProjectServices
                 .FirstOrDefaultAsync(u => u.Id == userId))
                 .BlankFileUsers
                 .Select(x => x.BlankFile)
-                .FirstOrDefault(f => f.Id == fileId);
+                .FirstOrDefault(f => f.Id == fileId) 
+                ?? throw new ArgumentNullException();
 
             return new FileContentResult(Convert.FromBase64String(file.Data), file.FileType)
             {
@@ -43,7 +44,8 @@ namespace GraduationProjectServices
 
         public async Task<FileContentResult> GenerateExcel(BlankFile param, long userId)
         {
-            var file = await _imageHandler.GenerateExcel(param);
+            var file = await _imageHandler.GenerateExcel(param) 
+                ?? throw new InvalidOperationException();
 
             return new FileContentResult(Convert.FromBase64String(file.Data), file.FileType)
             {
@@ -68,7 +70,8 @@ namespace GraduationProjectServices
         public async Task<long> RemoveFile(long fileId, long userId)
         {
             var user = (await _userRepository.Get().Include(u => u.BlankFileUsers)
-                .FirstOrDefaultAsync(u => u.Id == userId));
+                .FirstOrDefaultAsync(u => u.Id == userId)) 
+                ?? throw new ArgumentNullException();
 
             user.BlankFileUsers.Remove(user.BlankFileUsers.FirstOrDefault(x => x.BlankFileId == fileId));
 
