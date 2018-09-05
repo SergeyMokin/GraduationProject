@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Linq;
 
 namespace GraduationProjectServices
 {
@@ -41,14 +43,36 @@ namespace GraduationProjectServices
         {
             newPassword = newPassword.IsPassword() ? newPassword : throw new ArgumentException();
 
-            var userPassword = await _passwordRepository
+            var userPasswords = _passwordRepository
                 .Get()
-                .FirstOrDefaultAsync(p => p.UserId == userId && p.Current.Equals(oldPassword))
+                .Where(p => p.UserId == userId)
                 ?? throw new InvalidOperationException();
 
-            userPassword.Current = newPassword;
+            var currentUserPassword = userPasswords.FirstOrDefault(p => p.IsActive) ?? throw new ArgumentNullException();
 
-            await _passwordRepository.EditAsync(userPassword);
+            if (!VerifyHashedPassword(currentUserPassword.Current, oldPassword))
+            {
+                throw new InvalidOperationException();
+            }
+
+            foreach (var password in userPasswords)
+            {
+                if (VerifyHashedPassword(password.Current, newPassword))
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            currentUserPassword.IsActive = false;
+
+            await _passwordRepository.EditAsync(currentUserPassword);
+
+            await _passwordRepository.AddAsync(new Password()
+            {
+                UserId = userId,
+                Current = HashPassword(newPassword),
+                IsActive = true
+            });
 
             return await _userRepository.GetAsync(userId);
         }
@@ -81,7 +105,7 @@ namespace GraduationProjectServices
             await _passwordRepository.AddAsync(new Password
             {
                 UserId = user.Id,
-                Current = password,
+                Current = HashPassword(password),
                 IsActive = true
             });
 
@@ -123,5 +147,56 @@ namespace GraduationProjectServices
                 DateExpires = expires
             };
         }
+
+
+        #region Work with passwords.
+        //Create hash of password.
+        private string HashPassword(string password)
+        {
+            byte[] salt;
+            byte[] buffer2;
+
+            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
+            {
+                salt = bytes.Salt;
+                buffer2 = bytes.GetBytes(0x20);
+            }
+
+            byte[] dst = new byte[0x31];
+
+            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
+            Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
+
+            return Convert.ToBase64String(dst);
+        }
+
+        //Verify password.
+        private bool VerifyHashedPassword(string hashedPassword, string password)
+        {
+            byte[] buffer4;
+
+            byte[] src = Convert.FromBase64String(hashedPassword);
+
+            if ((src.Length != 0x31) || (src[0] != 0))
+            {
+                return false;
+            }
+
+            byte[] dst = new byte[0x10];
+
+            Buffer.BlockCopy(src, 1, dst, 0, 0x10);
+
+            byte[] buffer3 = new byte[0x20];
+
+            Buffer.BlockCopy(src, 0x11, buffer3, 0, 0x20);
+
+            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, dst, 0x3e8))
+            {
+                buffer4 = bytes.GetBytes(0x20);
+            }
+
+            return buffer3.SequenceEqual(buffer4);
+        }
+        #endregion
     }
 }

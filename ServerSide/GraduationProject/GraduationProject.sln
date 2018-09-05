@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProject", "GraduationProject\GraduationProject.csproj", "{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectControllers", "GraduationProject\GraduationProjectControllers.csproj", "{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProjectInterfaces", "GraduationProjectInterfaces\GraduationProjectInterfaces.csproj", "{E594E13C-A298-402C-B28A-C8099229E319}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectInterfaces", "GraduationProjectInterfaces\GraduationProjectInterfaces.csproj", "{E594E13C-A298-402C-B28A-C8099229E319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProjectModels", "GraduationProjectModels\GraduationProjectModels.csproj", "{1F176C63-1BF9-4FCD-BCCB-DDF0FD5585AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectModels", "GraduationProjectModels\GraduationProjectModels.csproj", "{1F176C63-1BF9-4FCD-BCCB-DDF0FD5585AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProjectTests", "GraduationProjectTests\GraduationProjectTests.csproj", "{B447C444-4A92-4B0B-8D3D-DEC5A1B7C94C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectTests", "GraduationProjectTests\GraduationProjectTests.csproj", "{B447C444-4A92-4B0B-8D3D-DEC5A1B7C94C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProjectServices", "GraduationProjectServices\GraduationProjectServices.csproj", "{7B5B3AF0-5F65-48C9-BBB6-791DEE38169E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectServices", "GraduationProjectServices\GraduationProjectServices.csproj", "{7B5B3AF0-5F65-48C9-BBB6-791DEE38169E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProjectRepository", "GraduationProjectRepository\GraduationProjectRepository.csproj", "{CB1C51FA-5045-4A3F-97C0-A5D038F8B6E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectRepositories", "GraduationProjectRepository\GraduationProjectRepositories.csproj", "{CB1C51FA-5045-4A3F-97C0-A5D038F8B6E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraduationProjectImageHandler", "GraduationProjectImageHandler\GraduationProjectImageHandler.csproj", "{8ABC8FC4-095E-4211-896B-742BBDB6D5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectImageHandler", "GraduationProjectImageHandler\GraduationProjectImageHandler.csproj", "{8ABC8FC4-095E-4211-896B-742BBDB6D5EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

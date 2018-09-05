@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using GraduationProject.Extensions;
-using GraduationProject.Filters;
+using GraduationProjectControllers.Extensions;
+using GraduationProjectControllers.Filters;
 using GraduationProjectInterfaces.Controllers;
 using GraduationProjectInterfaces.Services;
 using GraduationProjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GraduationProject.Controllers
+namespace GraduationProjectControllers.Controllers
 {
     [DisableFormValueModelBinding]
     [Route("api/[controller]/[action]")]
@@ -56,9 +56,9 @@ namespace GraduationProject.Controllers
         // POST api/user/sendmessage
         // mes from body
         [HttpPost]
-        public Message SendMessage([FromBody]Message mes)
+        public async Task<Message> SendMessage([FromBody]Message mes)
         {
-            return _userService.SendMessage(mes, User.GetUserId());
+            return await _userService.SendMessage(mes, User.GetUserId());
         }
     }
 }

@@ -19,6 +19,6 @@ namespace GraduationProjectInterfaces.Services
 
         Task<FileContentResult> DownloadFile(long fileId, long userId);
 
-        Message SendMessage(Message mes, long userId);
+        Task<Message> SendMessage(Message mes, long userId);
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GraduationProjectRepository
+namespace GraduationProjectRepositories
 {
     // IRepository implementation to work with database.
     public class Repository<T> : IRepository<T>

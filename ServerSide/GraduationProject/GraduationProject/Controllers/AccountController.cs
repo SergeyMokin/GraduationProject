@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
-using GraduationProject.Extensions;
-using GraduationProject.Filters;
+using GraduationProjectControllers.Extensions;
+using GraduationProjectControllers.Filters;
 using GraduationProjectInterfaces.Controllers;
 using GraduationProjectInterfaces.Services;
 using GraduationProjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GraduationProject.Controllers
+namespace GraduationProjectControllers.Controllers
 {
     [DisableFormValueModelBinding]
     [Route("api/[controller]/[action]")]

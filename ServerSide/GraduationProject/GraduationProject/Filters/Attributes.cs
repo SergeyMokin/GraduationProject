@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Linq;
 
-namespace GraduationProject.Filters
+namespace GraduationProjectControllers.Filters
 {
     // Disable form value model binding.
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

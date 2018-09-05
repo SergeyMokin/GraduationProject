@@ -42,13 +42,7 @@ namespace GraduationProjectImageHandler
 
             _blankFile = param;
 
-            SaveImage();
-            SaveGrayScaleImage();
-
             SearchAnswers();
-
-            File.Delete(_savedImageName);
-            File.Delete(_savedBlackWhiteImageName);
 
             return Task.Run(() => CreateExcel());
         }
@@ -91,6 +85,9 @@ namespace GraduationProjectImageHandler
 
         private void SearchAnswers()
         {
+            SaveImage();
+            SaveGrayScaleImage();
+
             using (var img = new Bitmap(_savedBlackWhiteImageName))
             {
                 var i = 1;
@@ -102,6 +99,9 @@ namespace GraduationProjectImageHandler
                     _answers.Add(i++, blackPixelLeftCount > blackPixelRightCount ? _answerVariants.Item1 : _answerVariants.Item2);
                 }
             }
+
+            File.Delete(_savedImageName);
+            File.Delete(_savedBlackWhiteImageName);
         }
 
         private int SearchCountOfBlackPixelsByCoordinates(Bitmap img, int startX, int startY, int endX, int endY)
@@ -135,11 +135,19 @@ namespace GraduationProjectImageHandler
         {
             using (var image = new Bitmap(_savedImageName))
             {
-                using (var bw = image.Clone(new Rectangle(0, 0, image.Width, image.Height), PixelFormat.Format1bppIndexed))
+                using (var resImg = ResizeBitmap(image, new Size { Width = 1080, Height = 1397 }))
                 {
-                    bw.Save(_savedBlackWhiteImageName);
+                    using (var bw = resImg.Clone(new Rectangle(0, 0, resImg.Width, resImg.Height), PixelFormat.Format1bppIndexed))
+                    {
+                        bw.Save(_savedBlackWhiteImageName);
+                    }
                 }
             }
+        }
+
+        private Bitmap ResizeBitmap(Image imgToResize, Size size)
+        {
+            return new Bitmap(imgToResize, size);
         }
     }
 }

@@ -8,7 +8,7 @@
     <ProjectReference Include="..\GraduationProjectImageHandler\GraduationProjectImageHandler.csproj" />
     <ProjectReference Include="..\GraduationProjectInterfaces\GraduationProjectInterfaces.csproj" />
     <ProjectReference Include="..\GraduationProjectModels\GraduationProjectModels.csproj" />
-    <ProjectReference Include="..\GraduationProjectRepository\GraduationProjectRepository.csproj" />
+    <ProjectReference Include="..\GraduationProjectRepository\GraduationProjectRepositories.csproj" />
   </ItemGroup>
 
   <ItemGroup>

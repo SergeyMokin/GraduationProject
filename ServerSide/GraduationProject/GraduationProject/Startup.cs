@@ -1,6 +1,6 @@
-﻿using GraduationProject.Filters;
+﻿using GraduationProjectControllers.Filters;
 using GraduationProjectModels;
-using GraduationProjectRepository;
+using GraduationProjectRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,14 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using GraduationProjectInterfaces.Controllers;
-using GraduationProject.Controllers;
+using GraduationProjectControllers.Controllers;
 using GraduationProjectInterfaces.Services;
 using GraduationProjectServices;
 using GraduationProjectInterfaces.Repository;
 using GraduationProjectInterfaces.ImageHandler;
 using GraduationProjectImageHandler;
 
-namespace GraduationProject
+namespace GraduationProjectControllers
 {
     // Configuration of application.
     public class Startup

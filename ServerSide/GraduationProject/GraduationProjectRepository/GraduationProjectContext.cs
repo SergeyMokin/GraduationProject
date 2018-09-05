@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GraduationProjectRepository
+namespace GraduationProjectRepositories
 {
     // Realization of DbContext to work with database.
     public class GraduationProjectContext : DbContext

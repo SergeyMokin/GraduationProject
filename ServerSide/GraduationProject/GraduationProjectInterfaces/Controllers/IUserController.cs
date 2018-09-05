@@ -18,7 +18,7 @@ namespace GraduationProjectInterfaces.Controllers
 
         Task<FileContentResult> DownloadFile(long id);
 
-        Message SendMessage(Message mes);
+        Task<Message> SendMessage(Message mes);
 
     }
 }

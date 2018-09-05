@@ -50,6 +50,8 @@ namespace GraduationProjectModels
 
         public long BlankFileId { get; set; }
         public BlankFile BlankFile { get; set; }
+
+        public bool IsAccepted { get; set; } = true;
     }
 
     public class BlankFileUserReturn

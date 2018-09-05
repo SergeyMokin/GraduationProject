@@ -7,6 +7,7 @@ namespace GraduationProjectModels
     // Message event.
     public class Message: IEntity<Message>
     {
+        //Id of recipient.
         public long Id { get; set; }
 
         public IEnumerable<long> FileIds { get; set; }

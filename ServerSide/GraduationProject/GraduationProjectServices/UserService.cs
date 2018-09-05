@@ -45,8 +45,18 @@ namespace GraduationProjectServices
 
         public async Task<FileContentResult> GenerateExcel(BlankFile param, long userId)
         {
+            if (!param.Validate())
+            {
+                throw new ArgumentException();
+            }
+
             var file = await _imageHandler.GenerateExcel(param) 
                 ?? throw new InvalidOperationException();
+
+            if ((await _blankFileRepository.Get().FirstOrDefaultAsync(f => f.Name.Equals(file.Name))) != null)
+            {
+                throw new InvalidOperationException();
+            }
 
             var user = await _userRepository.GetAsync(userId);
 
@@ -103,9 +113,30 @@ namespace GraduationProjectServices
             return fileId;
         }
 
-        public Message SendMessage(Message mes, long userId)
+        public async Task<Message> SendMessage(Message mes, long userId)
         {
-            throw new NotImplementedException();
+            if (!mes.Validate())
+            {
+                throw new ArgumentException();
+            }
+
+            var user = (await _userRepository.Get().Include(u => u.BlankFileUsers)
+                .FirstOrDefaultAsync(u => u.Id == mes.Id))
+                ?? throw new ArgumentNullException();
+
+            var fileList = new List<BlankFileUser>();
+
+            foreach (var id in mes.FileIds)
+            {
+                fileList.Add(new BlankFileUser { UserId = user.Id, BlankFileId = id, IsAccepted = false });
+            }
+
+            user.BlankFileUsers.AddRange(fileList);
+
+            await _userRepository.EditAsync(user);
+
+            return mes;
         }
+
     }
 }
