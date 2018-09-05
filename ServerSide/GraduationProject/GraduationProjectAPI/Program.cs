@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace GraduationProjectControllers
+namespace GraduationProjectAPI
 {
     // Start point of application.
     public class Program

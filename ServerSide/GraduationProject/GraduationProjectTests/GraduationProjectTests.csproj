@@ -13,12 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GraduationProjectAPI\GraduationProjectAPI.csproj" />
     <ProjectReference Include="..\GraduationProjectImageHandler\GraduationProjectImageHandler.csproj" />
     <ProjectReference Include="..\GraduationProjectInterfaces\GraduationProjectInterfaces.csproj" />
     <ProjectReference Include="..\GraduationProjectModels\GraduationProjectModels.csproj" />
     <ProjectReference Include="..\GraduationProjectRepository\GraduationProjectRepositories.csproj" />
     <ProjectReference Include="..\GraduationProjectServices\GraduationProjectServices.csproj" />
-    <ProjectReference Include="..\GraduationProject\GraduationProjectControllers.csproj" />
   </ItemGroup>
 
 </Project>

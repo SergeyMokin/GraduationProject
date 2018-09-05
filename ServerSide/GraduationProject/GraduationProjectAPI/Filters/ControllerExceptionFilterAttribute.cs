@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GraduationProjectControllers.Filters
+namespace GraduationProjectAPI.Filters
 {
     // Filter attribute to handling exceptions.
     public class ControllerExceptionFilterAttribute : ExceptionFilterAttribute

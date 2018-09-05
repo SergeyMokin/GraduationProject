@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectControllers", "GraduationProject\GraduationProjectControllers.csproj", "{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectInterfaces", "GraduationProjectInterfaces\GraduationProjectInterfaces.csproj", "{E594E13C-A298-402C-B28A-C8099229E319}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectModels", "GraduationProjectModels\GraduationProjectModels.csproj", "{1F176C63-1BF9-4FCD-BCCB-DDF0FD5585AB}"
@@ -17,16 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectRepositori
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectImageHandler", "GraduationProjectImageHandler\GraduationProjectImageHandler.csproj", "{8ABC8FC4-095E-4211-896B-742BBDB6D5EC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraduationProjectAPI", "GraduationProjectAPI\GraduationProjectAPI.csproj", "{066A6171-EA8B-4C9B-B47C-55998F5E3C85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE9B5C1A-E952-4752-8775-2E2F8F886EB4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E594E13C-A298-402C-B28A-C8099229E319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E594E13C-A298-402C-B28A-C8099229E319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E594E13C-A298-402C-B28A-C8099229E319}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{8ABC8FC4-095E-4211-896B-742BBDB6D5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ABC8FC4-095E-4211-896B-742BBDB6D5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ABC8FC4-095E-4211-896B-742BBDB6D5EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{066A6171-EA8B-4C9B-B47C-55998F5E3C85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{066A6171-EA8B-4C9B-B47C-55998F5E3C85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{066A6171-EA8B-4C9B-B47C-55998F5E3C85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{066A6171-EA8B-4C9B-B47C-55998F5E3C85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 
-namespace GraduationProjectControllers.Extensions
+namespace GraduationProjectAPI.Extensions
 {
     public static class UserExtension
     {
