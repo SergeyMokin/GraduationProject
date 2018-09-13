@@ -53,7 +53,7 @@ namespace GraduationProjectServices
             var file = await _imageHandler.GenerateExcel(param) 
                 ?? throw new InvalidOperationException();
 
-            if ((await _blankFileRepository.Get().FirstOrDefaultAsync(f => f.Name.Equals(file.Name))) != null)
+            if ((_blankFileRepository.Get().FirstOrDefault(f => f.Name.Equals(file.Name))) != null)
             {
                 throw new InvalidOperationException();
             }
