@@ -17,7 +17,7 @@ namespace GraduationProjectAPI.Controllers
     [Authorize]
     public class UserController : ControllerBase, IUserController
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {

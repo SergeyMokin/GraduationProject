@@ -124,12 +124,7 @@ namespace GraduationProjectServices
                 .FirstOrDefaultAsync(u => u.Id == mes.Id))
                 ?? throw new ArgumentNullException();
 
-            var fileList = new List<BlankFileUser>();
-
-            foreach (var id in mes.FileIds)
-            {
-                fileList.Add(new BlankFileUser { UserId = user.Id, BlankFileId = id, IsAccepted = false });
-            }
+            var fileList = mes.FileIds.Select(id => new BlankFileUser { UserId = user.Id, BlankFileId = id, IsAccepted = false }).ToList();
 
             user.BlankFileUsers.AddRange(fileList);
 

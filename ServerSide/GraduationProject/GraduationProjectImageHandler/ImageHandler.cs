@@ -3,13 +3,12 @@ using GraduationProjectModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using NPOI.SS.Util;
 
 namespace GraduationProjectImageHandler
 {
@@ -32,7 +31,7 @@ namespace GraduationProjectImageHandler
             var pathToSave = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot",
-                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString());
+                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
 
             _savedImageName = pathToSave + param.Name;
             _savedBlackWhiteImageName = pathToSave + param.Name + "_bw";
@@ -67,7 +66,7 @@ namespace GraduationProjectImageHandler
                 sheet.AutoSizeColumn(1);
 
                 workbook.Write(fs);
-            };
+            }
 
             var data = Convert.ToBase64String(File.ReadAllBytes(_excelFilePath));
 

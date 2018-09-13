@@ -45,8 +45,7 @@ namespace GraduationProjectServices
 
             var userPasswords = _passwordRepository
                 .Get()
-                .Where(p => p.UserId == userId)
-                ?? throw new InvalidOperationException();
+                .Where(p => p.UserId == userId);
 
             var currentUserPassword = userPasswords.FirstOrDefault(p => p.IsActive) ?? throw new ArgumentNullException();
 
@@ -86,8 +85,13 @@ namespace GraduationProjectServices
 
             var userPassword = await _passwordRepository
                     .Get()
-                    .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Current.Equals(password))
-                    ?? throw new InvalidOperationException();
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id && x.IsActive)
+                    ?? throw new NotSupportedException();
+
+            if (VerifyHashedPassword(userPassword.Current, password))
+            {
+                throw new InvalidOperationException();
+            }
 
             return GenerateToken(user);
         }
@@ -117,7 +121,7 @@ namespace GraduationProjectServices
             return GenerateToken(await _userRepository.GetAsync(userId) ?? throw new ArgumentNullException());
         }
 
-        private LoginToken GenerateToken(User user)
+        private static LoginToken GenerateToken(User user)
         {
             var claims = new List<Claim>
                 {
@@ -129,7 +133,7 @@ namespace GraduationProjectServices
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             var now = DateTime.UtcNow;
-            var expires = now.Add(TimeSpan.FromMinutes(AuthOptions.LIFE_TIME));
+            var expires = now.Add(TimeSpan.FromMinutes(AuthOptions.LifeTime));
 
             var jwt = new JwtSecurityToken(
                     notBefore: now,
@@ -151,18 +155,18 @@ namespace GraduationProjectServices
 
         #region Work with passwords.
         //Create hash of password.
-        private string HashPassword(string password)
+        private static string HashPassword(string password)
         {
             byte[] salt;
             byte[] buffer2;
 
-            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
+            using (var bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
             {
                 salt = bytes.Salt;
                 buffer2 = bytes.GetBytes(0x20);
             }
 
-            byte[] dst = new byte[0x31];
+            var dst = new byte[0x31];
 
             Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
             Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
@@ -171,26 +175,26 @@ namespace GraduationProjectServices
         }
 
         //Verify password.
-        private bool VerifyHashedPassword(string hashedPassword, string password)
+        private static bool VerifyHashedPassword(string hashedPassword, string password)
         {
             byte[] buffer4;
 
-            byte[] src = Convert.FromBase64String(hashedPassword);
+            var src = Convert.FromBase64String(hashedPassword);
 
             if ((src.Length != 0x31) || (src[0] != 0))
             {
                 return false;
             }
 
-            byte[] dst = new byte[0x10];
+            var dst = new byte[0x10];
 
             Buffer.BlockCopy(src, 1, dst, 0, 0x10);
 
-            byte[] buffer3 = new byte[0x20];
+            var buffer3 = new byte[0x20];
 
             Buffer.BlockCopy(src, 0x11, buffer3, 0, 0x20);
 
-            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, dst, 0x3e8))
+            using (var bytes = new Rfc2898DeriveBytes(password, dst, 0x3e8))
             {
                 buffer4 = bytes.GetBytes(0x20);
             }

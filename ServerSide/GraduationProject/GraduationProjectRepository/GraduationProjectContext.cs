@@ -1,19 +1,16 @@
 ﻿using GraduationProjectModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GraduationProjectRepositories
 {
     // Realization of DbContext to work with database.
-    public class GraduationProjectContext : DbContext
+    public sealed class GraduationProjectContext : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Password> Passwords { get; set; }
         public DbSet<BlankFile> BlankFiles { get; set; }
 
-        public GraduationProjectContext(DbContextOptions<GraduationProjectContext> options) : base(options)
+        public GraduationProjectContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
         }

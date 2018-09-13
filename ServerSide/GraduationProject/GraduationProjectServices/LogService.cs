@@ -11,7 +11,7 @@ namespace GraduationProjectServices
         private static readonly List<string> _notWrittenExceptions
             = new List<string>();
 
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
 
         public static void UpdateLogFile(Exception ex)
         {
@@ -32,9 +32,9 @@ namespace GraduationProjectServices
             {
                 try
                 {
-                    if (_notWrittenExceptions.Count > 0)
+                    if (_notWrittenExceptions.Any())
                     {
-                        while (_notWrittenExceptions.Count > 0)
+                        while (_notWrittenExceptions.Any())
                         {
                             File.AppendAllText(path, _notWrittenExceptions.Last() + Environment.NewLine);
                             _notWrittenExceptions.Remove(_notWrittenExceptions.Last());

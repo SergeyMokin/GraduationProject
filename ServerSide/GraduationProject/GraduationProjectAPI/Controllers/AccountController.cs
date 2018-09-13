@@ -15,7 +15,7 @@ namespace GraduationProjectAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase, IAccountController
     {
-        private IAccountService _accountService;
+        private readonly IAccountService _accountService;
 
         public AccountController(IAccountService accountService)
         {
