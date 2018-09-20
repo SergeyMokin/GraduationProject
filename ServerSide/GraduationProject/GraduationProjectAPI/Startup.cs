@@ -71,6 +71,9 @@ namespace GraduationProjectAPI
             // Enable MVC and add exception handling attribute.
             services.AddMvc(options =>
                 options.Filters.Add(new ControllerExceptionFilterAttribute())).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
+            //Get and decode connection string.
+            BuildAppSettingsProvider();
 
             // Register all dependencies.
             RegisterDependencyInjection(services);
@@ -111,7 +114,13 @@ namespace GraduationProjectAPI
             services.AddScoped<IUserController, UserController>();
 
             services.AddDbContext<GraduationProjectContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(AppSettings.DbConnectionString));
+        }
+
+        private void BuildAppSettingsProvider()
+        {
+            AppSettings.DbConnectionString =
+                Defines.GetDecodedString(Configuration["AppSettings:DBConnectionString"]);
         }
     }
 }
