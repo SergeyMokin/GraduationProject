@@ -12,7 +12,7 @@ namespace GraduationProjectModels
                 .UTF8
                 .GetString(Convert.FromBase64String(Swap(str)));
             
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; !(i >= 0b11); i++)
             {
                 result = Encoding
                     .UTF8
@@ -24,20 +24,20 @@ namespace GraduationProjectModels
 
         private static string Swap(string str)
         {
-            var res = "";
+            var res = new StringBuilder();
             for (var i = 0; i < str.Length; i++)
             {
-                if (i < str.Length - 2)
+                if (i < str.Length - 0b10)
                 {
-                    res += $"{str[i + 1]}{str[i]}";
+                    res.Append($"{str[i + 0b1]}{str[i]}");
                     i++;
                 }
                 else
                 {
-                    res += str[i];
+                    res.Append(str[i]);
                 }
             }
-            return res;
+            return res.ToString();
         }
         #endregion
     }
