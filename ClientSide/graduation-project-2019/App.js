@@ -68,30 +68,22 @@ export default class App extends React.Component {
   }
 
   render() {
-    if(this.state.isLoading)
-    {
-      return (
-      <Container>
-        <StatusBar hidden={true} />
-        <Content contentContainerStyle={styles.body}>
-            <Spinner color="blue" />
-        </Content>
-      </Container>
-      );
-    }
-    if(this.state.isLogined)
-    {
-      return (
-      <Container>
-        <StatusBar hidden={true} />
-        <Test userInfo = {this.userInfo}/>
-      </Container>
-      )
-    }
+    const content = this.state.isLoading ?
+      <Content contentContainerStyle={styles.body}>
+        <Spinner color="blue" />
+      </Content>
+
+      : this.state.isLogined ?
+      <Test userInfo = {this.userInfo}/>
+
+      :
+      <LoginPage loginSuccessful={this.loginSuccessful.bind(this)}/>
+    ;
+
     return (
       <Container>
         <StatusBar hidden={true} />
-        <LoginPage loginSuccessful={this.loginSuccessful.bind(this)}/>
+        {content}
       </Container>
     );
   }
