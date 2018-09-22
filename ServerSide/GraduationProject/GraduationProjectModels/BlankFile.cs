@@ -58,6 +58,7 @@ namespace GraduationProjectModels
         {
             UserId = fileUser.UserId;
             BlankFileId = fileUser.BlankFileId;
+            IsAccepted = fileUser.IsAccepted;
         }
 
         public long UserId { get; set; }
@@ -65,5 +66,7 @@ namespace GraduationProjectModels
         public long BlankFileId { get; set; }
 
         public string FileName { get; set; }
+
+        public bool IsAccepted { get; set; }
     }
 }

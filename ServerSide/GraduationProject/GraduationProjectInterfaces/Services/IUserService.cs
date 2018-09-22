@@ -12,6 +12,10 @@ namespace GraduationProjectInterfaces.Services
 
         Task<IEnumerable<BlankFileUserReturn>> GetFiles(long userId);
 
+        IEnumerable<BlankType> GetBlankTypes();
+
+        Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions);
+
         Task<long> RemoveFile(long fileId, long userId);
 
         Task<FileContentResult> DownloadFile(long fileId, long userId);

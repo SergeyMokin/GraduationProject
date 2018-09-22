@@ -9,6 +9,8 @@ namespace GraduationProjectRepositories
         public DbSet<User> Users { get; set; }
         public DbSet<Password> Passwords { get; set; }
         public DbSet<BlankFile> BlankFiles { get; set; }
+        public DbSet<QuestionEntity> Questions { get; set; }
+        public DbSet<BlankType> BlankTypes { get; set; }
 
         public GraduationProjectContext(DbContextOptions options) : base(options)
         {
@@ -18,7 +20,8 @@ namespace GraduationProjectRepositories
         // Configure models using Fluent API.
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>(entity => {
+            builder.Entity<User>(entity => 
+            {
                 entity.HasIndex(x => x.Email).IsUnique();
             });
 

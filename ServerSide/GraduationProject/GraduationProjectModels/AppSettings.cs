@@ -8,5 +8,7 @@
             get => _connectionString?.Replace("Connection Time", "");
             set => _connectionString = value;
         }
+
+        public const int QuestionsCount = 7;
     }
 }

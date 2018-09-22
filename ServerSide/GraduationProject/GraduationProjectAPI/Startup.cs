@@ -106,7 +106,9 @@ namespace GraduationProjectAPI
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<BlankFile>, Repository<BlankFile>>();
             services.AddScoped<IRepository<Password>, Repository<Password>>();
-            
+            services.AddScoped<IRepository<BlankType>, Repository<BlankType>>();
+            services.AddScoped<IRepository<QuestionEntity>, Repository<QuestionEntity>>();
+
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
 

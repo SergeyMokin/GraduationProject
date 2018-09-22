@@ -46,6 +46,18 @@ namespace GraduationProjectAPI.Controllers
             return await _userService.GetFiles(User.GetUserId());
         }
 
+        [HttpGet]
+        public IEnumerable<BlankType> GetBlankTypes()
+        {
+            return _userService.GetBlankTypes();
+        }
+
+        [HttpPost]
+        public async Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions)
+        {
+            return await _userService.AddBlankType(typeName, questions);
+        }
+
         // DELETE api/user/removefile?id=
         [HttpDelete]
         public async Task<long> RemoveFile(long id)
