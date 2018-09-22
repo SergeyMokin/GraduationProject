@@ -35,7 +35,7 @@ namespace GraduationProjectServices
 
         public async Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions)
         {
-            var questionsToAdd = questions?.ToArray();
+            var questionsToAdd = questions?.Select(x => string.IsNullOrWhiteSpace(x) ? throw new ArgumentException() : x).ToArray();
 
             if (questionsToAdd?.Count() != AppSettings.QuestionsCount)
             {
