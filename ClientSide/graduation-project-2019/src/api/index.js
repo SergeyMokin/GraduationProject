@@ -243,6 +243,29 @@ export default class ApiRequests
         }
     }
 
+    async getBlankTypes()
+    {
+        let method = `GET`;
+        let path = API_URL + `user/getblanktypes`;
+
+        let response = await fetch(
+            path, 
+            {
+                method: method,
+                headers: this.headers
+            }
+        );
+
+        if(response.status === 200 || response.status === 201 || response.status === 204)
+        {
+            return response.json();
+        }
+        else
+        {
+            CreateException(response.status);
+        }
+    }
+
     async removeFile(id)
     {
         let method = `DELETE`;
@@ -263,6 +286,31 @@ export default class ApiRequests
         else
         {
             CreateException(response.status);
+        }
+    }
+
+    async addBlankType(param)
+    {
+        let method = `POST`;
+        let path = API_URL + `user/addblanktype`;
+        let body = JSON.stringify(param);
+
+        let response = await fetch(
+            path, 
+            {
+                method: method,
+                headers: this.headers,
+                body: body
+            }
+        );
+
+        if(response.status === 200 || response.status === 201 || response.status === 204)
+        {
+            return response.json();
+        }
+        else
+        {
+            CreateException(response.status, 'This type exists.');
         }
     }
 
