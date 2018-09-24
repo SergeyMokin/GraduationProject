@@ -1,6 +1,505 @@
+﻿﻿<!DOCTYPE HTML "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<header><title>This is title</title></header>
-<body>
-Hello world
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>GraduationProject</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="shortcut icon" href="https://pp.userapi.com/c844417/v844417151/7618e/M2-RlJWBrPY.jpg">
+</head>
+<body style="padding: 0; margin: 0;">
+    <div class="navbar-fixed" style="top: -22px">
+        <nav>
+            <a href="#SUPPORT" class="brand-logo right"><img src="http://images.franklinroad.org/graduation-logo.png" style="width:50px; margin-top:5px" title="SUPPORT" /></a>
+            <a href="#" class="brand-logo center">Documentation</a>
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li><a href="#account">Account</a></li>
+                <li><a href="#user_c">User</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#exceptions">Exceptions</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div style="padding: 25px">
+        <h4>Account controller <img id="account" src="https://cdn.onlinewebfonts.com/svg/img_262535.png" style="width:25px; cursor:pointer;" /></h4>
+        <table style="display:table" id="account_table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Permitions</th>
+                    <th>Request</th>
+                    <th>Path</th>
+                    <th>Parameters</th>
+                    <th>Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Регистрация пользователя</td>
+                    <td>Allow anonymous</td>
+                    <td>POST</td>
+                    <td>api/account/register</td>
+                    <td>
+                        email: <a style="color: blue">string</a><br />
+                        password: <a style="color:blue">string</a><br />
+                    </td>
+                    <td>
+                        <a style="color:green" href="#LoginToken">LoginToken</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Получить токен доступа</td>
+                    <td>Allow anonymous</td>
+                    <td>POST</td>
+                    <td>api/account/login</td>
+                    <td>
+                        email: <a style="color: blue">string</a><br />
+                        password: <a style="color:blue">string</a><br />
+                    </td>
+                    <td>
+                        <a style="color:green" href="#LoginToken">LoginToken</a> <br />
+                        <a style="color:green" href="#400" title="Неверный логин или пароль.">400</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Обновить токен</td>
+                    <td>Authorize</td>
+                    <td>POST</td>
+                    <td>api/account/updatetoken</td>
+                    <td> - </td>
+                    <td>
+                        <a style="color:green" href="#LoginToken">LoginToken</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#404">404</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Изменить пароль</td>
+                    <td>Authorize</td>
+                    <td>PUT</td>
+                    <td>api/account/changepassword</td>
+                    <td>
+                        oldPassword: <a style="color: blue">string</a><br />
+                        newPassword: <a style="color:blue">string</a><br />
+                    </td>
+                    <td>
+                        <a style="color:green" href="#User">User</a> <br />
+                        <a style="color:green" href="#400" title="Неверный старый пароль или новый соответствует предыдущим.">400</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#404">404</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Изменить email</td>
+                    <td>Authorize</td>
+                    <td>PUT</td>
+                    <td>api/account/changeemail</td>
+                    <td>
+                        email: <a style="color: blue">string</a><br />
+                    </td>
+                    <td>
+                        <a style="color:green" href="#User">User</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div style="padding: 25px">
+        <h4>User controller <img id="user_c" src="https://png.icons8.com/ios/1600/expand-filled.png" style="width:25px; cursor:pointer;" /></h4>
+        <table style="display:none" id="user_table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Permitions</th>
+                    <th>Request</th>
+                    <th>Path</th>
+                    <th>Parameters</th>
+                    <th>Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Скачать файл</td>
+                    <td>Authorize</td>
+                    <td>GET</td>
+                    <td>api/user/downloadfile</td>
+                    <td>id : <a style="color: blue">long</a></td>
+                    <td>
+                        <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#404">404</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Сгенерировать эксель по фото</td>
+                    <td>Authorize</td>
+                    <td>POST</td>
+                    <td>api/user/generateexcel</td>
+                    <td>[FromBody]param: <a style="color:green" href="#BlankFile">BlankFile</a></td>
+                    <td>
+                        <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
+                        <a style="color:green" href="#400" title="Невозомжно сгенерировать эксель. Обратитесь в support.">400</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Получить список всех файлов пользователя</td>
+                    <td>Authorize</td>
+                    <td>GET</td>
+                    <td>api/user/getfiles</td>
+                    <td> - </td>
+                    <td>
+                        <a style="color:green" href="#BlankFileUserReturn">BlankFileUserReturn</a>[] <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Получить список всех типов бланков доступных к генерации</td>
+                    <td>Authorize</td>
+                    <td>GET</td>
+                    <td>api/user/getblanktypes</td>
+                    <td> - </td>
+                    <td>
+                        <a style="color:green" href="#BlankType">BlankType</a>[] <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Добавить тип бланка для генерации</td>
+                    <td>Authorize</td>
+                    <td>POST</td>
+                    <td>api/user/addblanktype</td>
+                    <td>
+                        typeName: <a style="color:blue">string</a> <br />
+                        questions: <a style="color:blue">string</a>[] <br />
+                    </td>
+                    <td>
+                        <a style="color:green" href="#BlankType">BlankType</a> <br />
+                        <a style="color:green" href="#400" title="Данный тип уже существует.">400</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Удалить файл пользователя</td>
+                    <td>Authorize</td>
+                    <td>DELETE</td>
+                    <td>api/user/removefile</td>
+                    <td>id : <a style="color:blue">long</a></td>
+                    <td>
+                        <a style="color:blue">long</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#404">404</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Отправить файлы пользователю</td>
+                    <td>Authorize</td>
+                    <td>POST</td>
+                    <td>api/user/sendmessage</td>
+                    <td>
+                        [FromBody]mes : <a style="color:green" href="#Message">Message</a>
+                    </td>
+                    <td>
+                        <a style="color:green" href="#Message">Message</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#404">404</a> <br />
+                        <a style="color:green" href="#422">422</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div style="padding: 25px">
+        <h4>Models <img id="models" src="https://cdn.onlinewebfonts.com/svg/img_262535.png" style="width:25px; cursor:pointer;" /></h4>
+        <table style="display:table" id="models_table">
+            <thead>
+                <tr>
+                    <th>Model name</th>
+                    <th>Parameters</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a style="color:green" href="#LoginToken" id="LoginToken">LoginToken</a></td>
+                    <td>
+                        user : <a style="color: green" href="#User">User</a><br />
+                        bearerToken : <a style="color: blue">string</a><br />
+                        dateExpires : <a style="color:green" href="#DateTime">DateTime</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#User" id="User">User</a></td>
+                    <td>
+                        id : <a style="color: blue">long</a><br />
+                        email : <a style="color: blue">string</a><br />
+                        blankFileUsers : <a style="color: green" href="#BlankFileUser">BlankFileUser</a>[]<br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#BlankFileUser" id="BlankFileUser">BlankFileUser</a></td>
+                    <td>
+                        userId : <a style="color: blue">long</a><br />
+                        user : <a style="color: green" href="#User">User</a><br />
+                        blankFileId : <a style="color: blue">long</a><br />
+                        blankFile : <a style="color: green" href="#BlankFile">BlankFile</a><br />
+                        isAccepted : <a style="color: blue">bool</a><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#BlankFile" id="BlankFile">BlankFile</a></td>
+                    <td>
+                        id : <a style="color: blue">long</a><br />
+                        name : <a style="color: blue">string</a><br />
+                        data : <a style="color: blue">string</a><br />
+                        type : <a style="color: blue">string</a><br />
+                        fileType : <a style="color: blue">string</a><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#BlankFileUserReturn" id="BlankFileUserReturn">BlankFileUserReturn</a></td>
+                    <td>
+                        userId : <a style="color: blue">long</a><br />
+                        blankFileId : <a style="color: blue">long</a><br />
+                        fileName : <a style="color: blue">string</a><br />
+                        isAccepted : <a style="color: blue">bool</a><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#BlankType" id="BlankType">BlankType</a></td>
+                    <td>
+                        id : <a style="color: blue">long</a><br />
+                        type : <a style="color: blue">string</a><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#Message" id="Message">Message</a></td>
+                    <td>
+                        id : <a style="color: blue">long</a>(id of recipient)<br />
+                        fileIds : <a style="color: blue">long</a>[]<br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#DateTime" id="DateTime">DateTime</a></td>
+                    <td>
+                        C# data type.
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#FileContentResult" id="FileContentResult">FileContentResult</a></td>
+                    <td>
+                        Media type to download.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div style="padding: 25px">
+        <h4>Exceptions <img id="exceptions" src="https://cdn.onlinewebfonts.com/svg/img_262535.png" style="width:25px; cursor:pointer;" /></h4>
+        <table style="display:table" id="exceptions_table">
+            <thead>
+                <tr>
+                    <th>Exception</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a style="color:green" href="#400" id="400">400</a></td>
+                    <td>
+                        <b>Bad Request.</b> <br />
+                        Невозможно произвести операцию. <br />
+                        Данные уже существуют на сервере или некорректны. <br />
+                        Для подробности возникновения ошибки наведите на ошибку в RESPONSE метода. <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#401" id="401">401</a></td>
+                    <td>
+                        <b>Unauthorized.</b> <br />
+                        Ошибка авторизации. <br />
+                        Проверьте токен доступа. <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#403" id="403">403</a></td>
+                    <td>
+                        <b>Forbidden.</b> <br />
+                        Ошибка доступа. <br />
+                        Пользователь не имеет прав доступа к этим данным. <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#404" id="404">404</a></td>
+                    <td>
+                        <b>Not Found.</b> <br />
+                        Запрашиваемые данные не найдены. <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#422" id="422">422</a></td>
+                    <td>
+                        <b>Unprocessable Entity.</b> <br />
+                        Переданные параметры не проходят валидацию. <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#500" id="500">500</a></td>
+                    <td>
+                        <b>Internal Server Error.</b> <br />
+                        Ошибка сервера, что-то пошло не так при выполнении операции. <br />
+                        Напишите в USER SUPPORT о своей проблеме. <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="center">
+                    <h6 class="white-text" id="SUPPORT">
+                        User support email: s.a.mokin@list.ru
+                    </h6>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright center">
+            <div class="container" id="footer_copyright">
+            </div>
+        </div>
+    </footer>
+    <div id="scroller" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>var linkExpand = "https://png.icons8.com/ios/1600/expand-filled.png";
+        var linkCurtail = "https://cdn.onlinewebfonts.com/svg/img_262535.png";
+
+        var lastPosition = 0;
+        var accountCounter = 0;
+        var userCounter = 0;
+        var modelsCounter = 0;
+        var exceptionsCounter = 0;
+
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+        }
+
+        $(function () {
+            $('a[href*=#]:not([href=#])').click(function () {
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                    if (target.length) {
+                        $('html,body').animate({
+                            //the 205 is a fixed header offset
+                            scrollTop: target.offset().top - 205
+                        }, 1000);
+                        lastPosition = $(document).scrollTop();
+                        return false;
+                    }
+                }
+            });
+        });
+
+        $("#account").click(() => {
+            accountCounter++;
+            if (accountCounter % 2 != 0) {
+                $("#account").prop("src", linkExpand);
+                $("#account_table").css("display", "none");
+                return;
+            }
+            $("#account").prop("src", linkCurtail);
+            $("#account_table").css("display", "table");
+        });
+
+        $("#user_c").click(() => {
+            userCounter++;
+            if (userCounter % 2 == 0) {
+                $("#user_c").prop("src", linkExpand);
+                $("#user_table").css("display", "none");
+                return;
+            }
+            $("#user_c").prop("src", linkCurtail);
+            $("#user_table").css("display", "table");
+        });
+        
+
+        $("#models").click(() => {
+            modelsCounter++;
+            if (modelsCounter % 2 != 0) {
+                $("#models").prop("src", linkExpand);
+                $("#models_table").css("display", "none");
+                return;
+            }
+            $("#models").prop("src", linkCurtail);
+            $("#models_table").css("display", "table");
+        });
+
+        $("#exceptions").click(() => {
+            exceptionsCounter++;
+            if (exceptionsCounter % 2 != 0) {
+                $("#exceptions").prop("src", linkExpand);
+                $("#exceptions_table").css("display", "none");
+                return;
+            }
+            $("#exceptions").prop("src", linkCurtail);
+            $("#exceptions_table").css("display", "table");
+        });
+
+        $("#footer_copyright").text("©" + (new Date).getFullYear() + " GraduationProject");</script>
+    <style>
+
+        #scroller {
+            position: fixed;
+            /** позиция кнопки scroll to top **/
+            bottom: 30px;
+            right: 30px;
+            /** картинка кнопки наверх**/
+            background: transparent url(http://sitear.ru/uploads/lessons/sozdaem-knopku-naverh-scroll-to-top-na-jquery/demo/arrow.png);
+            filter: grayscale(100%);
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            /** скрываем кнопку в начале **/
+            display: none;
+        }
+    </style>
+    <script>$(document).ready(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 0) {
+                    $('#scroller').fadeIn();
+                } else {
+                    $('#scroller').fadeOut();
+                }
+            });
+            $('#scroller').click(function () {
+                $('body,html').animate({
+                    scrollTop: lastPosition
+                }, 400);
+                lastPosition = 0;
+                return false;
+            });
+        });</script>
 </body>
 </html>

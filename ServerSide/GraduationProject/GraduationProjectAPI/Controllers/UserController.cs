@@ -46,12 +46,14 @@ namespace GraduationProjectAPI.Controllers
             return await _userService.GetFiles(User.GetUserId());
         }
 
+        // GET api/user/getblanktypes
         [HttpGet]
         public IEnumerable<BlankType> GetBlankTypes()
         {
             return _userService.GetBlankTypes();
         }
 
+        // POST api/user/addblanktype
         [HttpPost]
         public async Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions)
         {
