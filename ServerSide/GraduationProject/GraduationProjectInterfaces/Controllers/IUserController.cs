@@ -14,6 +14,8 @@ namespace GraduationProjectInterfaces.Controllers
 
         IEnumerable<BlankType> GetBlankTypes();
 
+        IEnumerable<User> GetUsers();
+
         Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions);
 
         Task<long> RemoveFile(long id);

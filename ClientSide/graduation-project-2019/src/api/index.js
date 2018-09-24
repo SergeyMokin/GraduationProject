@@ -266,6 +266,29 @@ export default class ApiRequests
         }
     }
 
+    async getUsers()
+    {
+        let method = `GET`;
+        let path = API_URL + `user/getusers`;
+
+        let response = await fetch(
+            path, 
+            {
+                method: method,
+                headers: this.headers
+            }
+        );
+
+        if(response.status === 200 || response.status === 201 || response.status === 204)
+        {
+            return response.json();
+        }
+        else
+        {
+            CreateException(response.status);
+        }
+    }
+
     async removeFile(id)
     {
         let method = `DELETE`;

@@ -46,6 +46,13 @@ namespace GraduationProjectAPI.Controllers
             return await _userService.GetFiles(User.GetUserId());
         }
 
+        // GET api/user/getusers
+        [HttpGet]
+        public IEnumerable<User> GetUsers()
+        {
+            return _userService.GetUsers(User.GetUserId());
+        }
+
         // GET api/user/getblanktypes
         [HttpGet]
         public IEnumerable<BlankType> GetBlankTypes()

@@ -119,6 +119,11 @@ namespace GraduationProjectServices
             return _blankTypeRepository.Get();
         }
 
+        public IEnumerable<User> GetUsers(long userId)
+        {
+            return _userRepository.Get().Where(u => u.Id != userId);
+        }
+
         public async Task<IEnumerable<BlankFileUserReturn>> GetFiles(long userId)
         {
             var files = (await _userRepository.Get().Include(u => u.BlankFileUsers)
