@@ -1,7 +1,7 @@
 import React from 'react';
-import { StatusBar, AsyncStorage } from 'react-native';
-import Test from './src/components/test';
-import { Container, Content, Spinner } from 'native-base';
+import { StatusBar, AsyncStorage, Image } from 'react-native';
+import MainPage from './src/components/main-page';
+import { Container, Content, Spinner, Header } from 'native-base';
 import styles from './src/styles/mainstyle.js';
 import { Font } from 'expo';
 import LoginPage from './src/components/login-page';
@@ -15,6 +15,11 @@ export default class App extends React.Component {
     this.userInfo = {};
     this.api = new ApiRequsts();
     this.userInfoContainer = this.api.asyncStorageUser;
+  }
+
+  changeUserInfo(data)
+  {
+    this.userInfo = data;
   }
 
   async componentWillMount() {
@@ -35,7 +40,11 @@ export default class App extends React.Component {
     };
 
     let success = (data) => {
-      if(data === null) return;
+      if(data === null) 
+      {
+        this.setState({isLogined: false, isLoading: false});
+        return;
+      }
 
       this.api.setAuthorizationHeader(JSON.parse(data).bearerToken);
       this.api.updateToken()
@@ -53,18 +62,26 @@ export default class App extends React.Component {
       .catch(error);
   }
 
-  async loginSuccessful()
+  async authCallback()
   {
     let success = (data) => {
-      this.userInfo = JSON.parse(data);
-      this.setState({isLogined: true});
+      if(data !== null)
+      {
+        this.userInfo = JSON.parse(data);
+        this.setState({isLogined: true});
+      }
+      else
+      {
+        this.setState({isLogined: false});
+      }
     };
     let error = (error) => {
       console.log(error);
+      this.setState({isLogined: false});
     }
     await AsyncStorage.getItem(this.userInfoContainer)
       .then(success.bind(this))
-      .catch(error);
+      .catch(error.bind(this));
   }
 
   render() {
@@ -74,15 +91,19 @@ export default class App extends React.Component {
       </Content>
 
       : this.state.isLogined ?
-      <Test userInfo = {this.userInfo}/>
+      <MainPage userInfo = {this.userInfo} logout={this.authCallback.bind(this)} changeUserInfo = {this.changeUserInfo.bind(this)}/>
 
       :
-      <LoginPage loginSuccessful={this.loginSuccessful.bind(this)}/>
+      <LoginPage loginSuccessful={this.authCallback.bind(this)}/>
     ;
 
     return (
       <Container>
         <StatusBar hidden={true} />
+        
+        <Header style={{backgroundColor:'blue'}}>
+          <Image source={require('./src/images/gp-logo-white.png')} style={{width:50, height: 50}}/>
+        </Header>
         {content}
       </Container>
     );

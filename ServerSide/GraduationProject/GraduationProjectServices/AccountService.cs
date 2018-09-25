@@ -88,7 +88,7 @@ namespace GraduationProjectServices
                     .FirstOrDefaultAsync(x => x.UserId == user.Id && x.IsActive)
                     ?? throw new NotSupportedException();
 
-            if (VerifyHashedPassword(userPassword.Current, password))
+            if (!VerifyHashedPassword(userPassword.Current, password))
             {
                 throw new InvalidOperationException();
             }

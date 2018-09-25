@@ -1,5 +1,15 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
-  }
+    "name": "Graduation Project 2019",
+    "icon": "./src/images/gp-logo-white.png",
+    "version": "1.0.0",
+    "slug": "gp-2019",
+    "sdkVersion": "27.0.0",
+    "ios": {
+      "bundleIdentifier": "com.graduationproject2019.graduationproject2019"
+    },
+    "android": {
+      "package": "com.graduationproject2019.graduationproject2019"
+    }
+   }
 }

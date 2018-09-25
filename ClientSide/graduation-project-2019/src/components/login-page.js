@@ -1,6 +1,6 @@
-import { Header, Content, Container, List, ListItem, InputGroup, Input, Icon, Text, Button, Spinner, H1 } from 'native-base';
+import { Content, Container, List, ListItem, InputGroup, Input, Icon, Text, Button, Spinner } from 'native-base';
 import React, {Component} from 'react';
-import { Image, AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import styles from '../styles/mainstyle.js';
 import ApiRequests from '../api';
 
@@ -127,11 +127,7 @@ export default class LoginPage extends Component {
     </Content>;
 
     return (
-            <Container>
-                <Header style={{backgroundColor:'blue'}}>
-                    <Image source={require('../images/gp-logo-white.png')} style={{width:50, height: 50}}/>
-                </Header>
-                
+            <Container>                
                 {content}
             </Container>
     );
