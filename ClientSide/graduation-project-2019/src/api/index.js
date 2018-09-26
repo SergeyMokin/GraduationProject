@@ -58,7 +58,7 @@ export default class ApiRequests
     async register(email, password)
     {
         let method = `POST`;
-        let path = API_URL + `account/register?email=${email}&password=${password}`;
+        let path = API_URL + `account/register?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
         
         let response = await fetch(
             path, 
@@ -83,7 +83,7 @@ export default class ApiRequests
     async login(email, password)
     {
         let method = `POST`;
-        let path = API_URL + `account/login?email=${email}&password=${password}`;
+        let path = API_URL + `account/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
 
         let response = await fetch(
             path, 
@@ -106,7 +106,7 @@ export default class ApiRequests
     async changePassword(oldPassword, newPassword)
     {
         let method = `PUT`;
-        let path = API_URL + `account/changepassword?oldPassword=${oldPassword}&newPassword=${newPassword}`;
+        let path = API_URL + `account/changepassword?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`;
 
         let response = await fetch(
             path, 
@@ -129,7 +129,7 @@ export default class ApiRequests
     async changeEmail(email)
     {
         let method = `PUT`;
-        let path = API_URL + `account/changeemail?email=${email}`;
+        let path = API_URL + `account/changeemail?email=${encodeURIComponent(email)}`;
 
         let response = await fetch(
             path, 
@@ -175,7 +175,7 @@ export default class ApiRequests
     async downloadFile(id)
     {
         let method = `GET`;
-        let path = API_URL + `user/downloadfile?id=${id}`;
+        let path = API_URL + `user/downloadfile?id=${encodeURIComponent(id)}`;
 
         let response = await fetch(
             path, 
@@ -292,7 +292,7 @@ export default class ApiRequests
     async removeFile(id)
     {
         let method = `DELETE`;
-        let path = API_URL + `user/removefile?id=${id}`;
+        let path = API_URL + `user/removefile?id=${encodeURIComponent(id)}`;
 
         let response = await fetch(
             path, 
@@ -315,15 +315,16 @@ export default class ApiRequests
     async addBlankType(param)
     {
         let method = `POST`;
-        let path = API_URL + `user/addblanktype`;
-        let body = JSON.stringify(param);
-
+        let path = API_URL + `user/addblanktype?typeName=${encodeURIComponent(param.typeName)}`;
+        for(let i = 0; i < param.questions.length; i++)
+        {
+            path += `&questions=${encodeURIComponent(param.questions[i])}`
+        }
         let response = await fetch(
             path, 
             {
                 method: method,
-                headers: this.headers,
-                body: body
+                headers: this.headers
             }
         );
 

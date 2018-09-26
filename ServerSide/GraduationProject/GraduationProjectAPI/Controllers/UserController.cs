@@ -62,7 +62,7 @@ namespace GraduationProjectAPI.Controllers
 
         // POST api/user/addblanktype
         [HttpPost]
-        public async Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions)
+        public async Task<BlankType> AddBlankType(string typeName, [FromQuery(Name="questions")]IEnumerable<string> questions)
         {
             return await _userService.AddBlankType(typeName, questions);
         }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
-import { Container, Button, Footer, FooterTab, Icon } from 'native-base';
+import { Container, Button, Footer, FooterTab, Icon, Content } from 'native-base';
 import ApiRequsts from '../api';
 import ProfilePage from './profile-page';
 import BlankCreatorPage from './blank-creator-page';
@@ -52,13 +52,13 @@ export default class MainPage extends React.Component {
 
     render() {
         const content = this.state.currentPage === MainPage.routes.main ?
-            <BlankListPage />
+            <BlankListPage userInfo={this.props.userInfo} />
 
             : this.state.currentPage === MainPage.routes.profile ?
             <ProfilePage userInfo={this.props.userInfo} logoutCallback = {this.logout.bind(this)} changeUserInfo = {this.props.changeUserInfo}/>
 
             :
-            <BlankCreatorPage />
+            <BlankCreatorPage userInfo={this.props.userInfo} />
             ;
 
         const buttonContent = 
@@ -72,6 +72,7 @@ export default class MainPage extends React.Component {
         return (
             <Container>
                 {content}
+                
                 <Footer style={{ backgroundColor: "blue" }}>
                     {buttonContent}
                 </Footer>
