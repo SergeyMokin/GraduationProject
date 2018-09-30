@@ -419,7 +419,7 @@
 
         $(function () {
             $('a[href*=#]:not([href=#])').click(function () {
-                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                if (location.pathname.replace(/^\//, '') === this.pathname.replace(/^\//, '') && location.hostname === this.hostname) {
                     var target = $(this.hash);
                     target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
                     if (target.length) {
@@ -436,7 +436,7 @@
 
         $("#account").click(() => {
             accountCounter++;
-            if (accountCounter % 2 != 0) {
+            if (accountCounter % 2 !== 0) {
                 $("#account").prop("src", linkExpand);
                 $("#account_table").css("display", "none");
                 return;
@@ -447,7 +447,7 @@
 
         $("#user_c").click(() => {
             userCounter++;
-            if (userCounter % 2 == 0) {
+            if (userCounter % 2 === 0) {
                 $("#user_c").prop("src", linkExpand);
                 $("#user_table").css("display", "none");
                 return;
@@ -459,7 +459,7 @@
 
         $("#models").click(() => {
             modelsCounter++;
-            if (modelsCounter % 2 != 0) {
+            if (modelsCounter % 2 !== 0) {
                 $("#models").prop("src", linkExpand);
                 $("#models_table").css("display", "none");
                 return;
@@ -470,7 +470,7 @@
 
         $("#exceptions").click(() => {
             exceptionsCounter++;
-            if (exceptionsCounter % 2 != 0) {
+            if (exceptionsCounter % 2 !== 0) {
                 $("#exceptions").prop("src", linkExpand);
                 $("#exceptions_table").css("display", "none");
                 return;

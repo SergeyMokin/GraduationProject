@@ -1,7 +1,8 @@
-import { Container, Text, List, Button, ListItem, Segment, InputGroup, Icon, Input, Content, Spinner } from 'native-base';
+import { Container, Text, List, Button, ListItem, Segment, InputGroup, Icon, Input, Content, Spinner, Item, Picker } from 'native-base';
 import React, {Component} from 'react';
 import styles from '../styles/mainstyle.js';
 import ApiRequests from '../api/index.js';
+import CameraPage from './camera-page.js';
 
 const buttons = {
   blank: "Blank",
@@ -23,6 +24,8 @@ export default class BlankCreatorPage extends Component {
         q5: "",
         q6: "",
         q7: "",
+        imageData: null,
+        selected2: "Graduation Project",
         inputStyle: {
           color: 'blue'
         },
@@ -47,7 +50,7 @@ export default class BlankCreatorPage extends Component {
 
   async componentWillMount()
   {
-    await this.getTypes.call(this);
+    await this.getTypes();
   }
 
   async getTypes()
@@ -60,6 +63,7 @@ export default class BlankCreatorPage extends Component {
 
     let success = (data) => {
         this.types = data;
+        this.onValueChange2(data[0].type);
         this.setState({isLoading: false});
     };
 
@@ -122,6 +126,61 @@ export default class BlankCreatorPage extends Component {
       .catch(error.bind(this));
   }
 
+  onValueChange2(value)
+  {
+    this.setState({
+        selected2: value
+      });
+  }
+
+  async generateExcel()
+  {
+    if(this.state.imageData === null || this.state.isLoading) return;
+    this.setState({isLoading: true});
+    let error = (error) => {
+      this.successMessage = "";
+        this.errorMessage = error.status + " : " + error.message;
+        this.setState({
+            isLoading: false,
+            messageStyle:{
+              color: 'red',
+              alignSelf: 'center',
+              padding: 20
+            }
+        });
+    };
+
+    let success = async (data) => {
+        this.errorMessage = "";
+        this.successMessage = "Success";
+        
+        this.setState({
+            isLoading: false,
+            typeName: "",
+            imageData: null,
+            messageStyle:{
+              color: 'green',
+              alignSelf: 'center',
+              padding: 20
+            }
+          });
+    };
+
+    let uriParts = this.state.imageData.uri.split('.');
+    let fileType = uriParts[uriParts.length - 1];
+    let fileName = uriParts[uriParts.length - 2].split('/')[uriParts[uriParts.length - 2].split('/').length - 1];
+    let type = `image/${fileType}`;
+    let name = `${fileName}.${fileType}`
+
+    console.log(name)
+    console.log(type)
+    console.log(this.state.imageData.base64 !== undefined)
+
+    await this.api.generateExcel({id: 0, name: name, data: this.state.imageData.base64, type: this.state.selected2, fileType: type, fileTypeUsers: []})
+      .then(success.bind(this))
+      .catch(error.bind(this));
+  }
+
   refresh(){
     this.errorMessage = "";
     this.successMessage = "";
@@ -140,6 +199,7 @@ export default class BlankCreatorPage extends Component {
       q5: "",
       q6: "",
       q7: "",
+      selected2: this.types[0].type,
       inputStyle: {
         color: 'blue'
       },
@@ -157,8 +217,26 @@ export default class BlankCreatorPage extends Component {
         <Spinner color="blue" />
     </Content>
 
-    : this.state.enabledButton === buttons.blank ?
-    <Button><Text>Blank</Text></Button>
+    : this.state.enabledButton === buttons.blank && !this.state.isCamera && !this.state.isCameraRoll ?
+    <Content>
+        <Item picker>
+              <Picker
+                mode="dropdown"
+                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                style={{ width: undefined }}
+                placeholder="Select blank type"
+                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderIconColor="#007aff"
+                selectedValue={this.state.selected2}
+                onValueChange={this.onValueChange2.bind(this)}
+              >
+              {this.types.map(item => <Picker.Item label={item.type} value={item.type} key={item.id} />)}
+              </Picker>
+        </Item>
+        <CameraPage imageCallback = {(imageData) => {this.setState({imageData: imageData})}}/>
+        <Button style={styles.primaryButton} onPress={this.generateExcel.bind(this)}><Text>Generate excel</Text></Button>
+        <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
+    </Content>
 
     :
           <List>

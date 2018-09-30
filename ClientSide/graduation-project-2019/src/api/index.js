@@ -187,7 +187,7 @@ export default class ApiRequests
 
         if(response.status === 200 || response.status === 201 || response.status === 204)
         {
-            return response.json();
+            return response;
         }
         else
         {
@@ -212,7 +212,7 @@ export default class ApiRequests
 
         if(response.status === 200 || response.status === 201 || response.status === 204)
         {
-            return response.json();
+            return response;
         }
         else
         {
