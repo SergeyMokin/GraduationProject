@@ -143,7 +143,7 @@ namespace GraduationProjectServices
                 file.FileName = blankFiles.FirstOrDefault(x => x.Id == file.BlankFileId)?.Name;
             }
 
-            return files;
+            return files.OrderByDescending(x => x.BlankFileId);
         }
 
         public async Task<long> RemoveFile(long fileId, long userId)
@@ -179,5 +179,20 @@ namespace GraduationProjectServices
             return mes;
         }
 
+        public async Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId, long userId)
+        {
+            var user = (await _userRepository.Get().Include(u => u.BlankFileUsers)
+                           .FirstOrDefaultAsync(u => u.Id == userId))
+                       ?? throw new ArgumentNullException();
+
+            user.BlankFileUsers = user.BlankFileUsers.Select(x =>
+                x.BlankFileId == fileId
+                    ? new BlankFileUser {UserId = x.UserId, BlankFileId = x.BlankFileId, IsAccepted = true}
+                    : x).ToList();
+
+            await _userRepository.EditAsync(user);
+
+            return await GetFiles(userId);
+        }
     }
 }

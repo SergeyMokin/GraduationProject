@@ -22,6 +22,8 @@ namespace GraduationProjectInterfaces.Services
 
         Task<FileContentResult> DownloadFile(long fileId, long userId);
 
+        Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId, long userId);
+
         Task<Message> SendMessage(Message mes, long userId);
     }
 }

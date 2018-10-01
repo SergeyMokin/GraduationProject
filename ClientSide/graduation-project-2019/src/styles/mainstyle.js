@@ -19,7 +19,6 @@ module.exports = StyleSheet.create({
     padding: 15,
     backgroundColor:"blue",
     alignSelf: 'auto',
-    alignItems:'center',
     justifyContent:'center'
   }
 });

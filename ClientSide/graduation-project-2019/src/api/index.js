@@ -1,3 +1,5 @@
+import Expo from 'expo';
+
 const API_URL = `https://graduationprojectapi20180920024232.azurewebsites.net/api/`;
 
 class StatusException
@@ -174,16 +176,20 @@ export default class ApiRequests
 
     async downloadFile(id)
     {
-        let method = `GET`;
         let path = API_URL + `user/downloadfile?id=${encodeURIComponent(id)}`;
+        let folder = Expo.FileSystem.documentDirectory + 'downloads/';
+        try
+        {
+            await Expo.FileSystem.makeDirectoryAsync(folder, {intermediates: true});
+        }
+        catch(ex)
+        {
+            console.log(ex);
+        }
+        let pathToSave = folder + new Date().toJSON() + ".xlsx";
 
-        let response = await fetch(
-            path, 
-            {
-                method: method,
-                headers: this.headers
-            }
-        );
+        var downloadResumable = Expo.FileSystem.createDownloadResumable(path, pathToSave, {headers: this.headers});
+        let response = await downloadResumable.downloadAsync();
 
         if(response.status === 200 || response.status === 201 || response.status === 204)
         {
@@ -335,6 +341,29 @@ export default class ApiRequests
         else
         {
             CreateException(response.status, 'This type exists.');
+        }
+    }
+
+    async acceptFile(fileId)
+    {
+        let method = `POST`;
+        let path = API_URL + `user/acceptfile?fileId=${fileId}`;
+
+        let response = await fetch(
+            path, 
+            {
+                method: method,
+                headers: this.headers
+            }
+        );
+
+        if(response.status === 200 || response.status === 201 || response.status === 204)
+        {
+            return response.json();
+        }
+        else
+        {
+            CreateException(response.status);
         }
     }
 

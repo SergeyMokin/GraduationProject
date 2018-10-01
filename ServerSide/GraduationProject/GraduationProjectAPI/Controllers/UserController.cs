@@ -81,5 +81,12 @@ namespace GraduationProjectAPI.Controllers
         {
             return await _userService.SendMessage(mes, User.GetUserId());
         }
+
+        // POST api/user/acceptfile
+        [HttpPost]
+        public async Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId)
+        {
+            return await _userService.AcceptFile(fileId, User.GetUserId());
+        }
     }
 }

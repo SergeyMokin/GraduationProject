@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  Button,
   Image,
   Share,
   StyleSheet,
-  Text,
-  View,
   ImageStore
 } from 'react-native';
+import { Button, Text, Content, Icon, Segment } from 'native-base';
 import { Constants, ImagePicker, Permissions } from 'expo';
 
 
@@ -29,26 +27,36 @@ export default class CameraPage extends Component {
     } = this.state;
 
     return (
-      <View style={styles.container}>
-        <Button
-          onPress={this._pickImage.bind(this)}
-          title="Pick an image from camera roll"
-        />
-        <Button onPress={this._takePhoto.bind(this)} title="Take a photo" />
+      <Content style={styles.container}>
+        <Segment>
+          <Button
+            style = {styles.primaryButton}
+            onPress={this._pickImage.bind(this)}
+          >
+            <Icon name="ios-folder" style={{margin: 5, color: 'white'}}/>
+          </Button>
+          <Button 
+            style = {styles.primaryButton} 
+            onPress={this._takePhoto.bind(this)}>
+            <Icon name="ios-camera" style={{margin: 5, color: 'white'}}/>
+          </Button>
+        </Segment>
 
         {this._maybeRenderImage()}
         {this._maybeRenderUploadingOverlay()}
-      </View>
+      </Content>
     );
   }
 
   _maybeRenderUploadingOverlay = () => {
     if (this.state.uploading) {
       return (
-        <View
-          style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}>
+        <Content
+          style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}
+          justifyContent = 'center'
+          alignItems = 'center'>
           <ActivityIndicator color="#fff" size="large" />
-        </View>
+        </Content>
       );
     }
   };
@@ -63,30 +71,15 @@ export default class CameraPage extends Component {
     }
 
     return (
-      <View
+      <Content
         style={styles.maybeRenderContainer}>
-        <View
+        <Content
           style={styles.maybeRenderImageContainer}>
-          <Image source={{ uri: image }} style={styles.maybeRenderImage} />
-        </View>
-
-        <Text
-          onLongPress={this._share}
-          style={styles.maybeRenderImageText}>
-          Share
-        </Text>
-      </View>
+          <Image source={{ uri: image.uri }} style={styles.maybeRenderImage} />
+        </Content>
+      </Content>
     );
   };
-
-  _share = () => {
-    Share.share({
-      message: this.state.image,
-      title: 'Check out this photo',
-      url: this.state.image,
-    });
-  };
-  
 
   _takePhoto = async () => {
     const {
@@ -151,7 +144,7 @@ export default class CameraPage extends Component {
         
 
         this.setState({
-          image: pickerResult.uri
+          image: pickerResult
         });
       }
     } catch (e) {
@@ -169,9 +162,7 @@ export default class CameraPage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
   },
   exampleText: {
     fontSize: 20,
@@ -180,9 +171,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   maybeRenderUploading: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)'
   },
   maybeRenderContainer: {
     borderRadius: 3,
@@ -209,5 +198,13 @@ const styles = StyleSheet.create({
   maybeRenderImageText: {
     paddingHorizontal: 10,
     paddingVertical: 10,
+  },
+  primaryButton: {
+    margin: 10,
+    padding: 15,
+    backgroundColor:"blue",
+    alignSelf: 'auto',
+    alignItems:'center',
+    justifyContent:'center'
   }
 });

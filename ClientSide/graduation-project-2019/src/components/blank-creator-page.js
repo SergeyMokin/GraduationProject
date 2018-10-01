@@ -33,7 +33,8 @@ export default class BlankCreatorPage extends Component {
           color: 'red',
           alignSelf: 'center',
           padding: 20
-        }
+        },
+        linkDownloadedFile: null
       }
 
       this.api = new ApiRequests();
@@ -172,10 +173,6 @@ export default class BlankCreatorPage extends Component {
     let type = `image/${fileType}`;
     let name = `${fileName}.${fileType}`
 
-    console.log(name)
-    console.log(type)
-    console.log(this.state.imageData.base64 !== undefined)
-
     await this.api.generateExcel({id: 0, name: name, data: this.state.imageData.base64, type: this.state.selected2, fileType: type, fileTypeUsers: []})
       .then(success.bind(this))
       .catch(error.bind(this));
@@ -240,7 +237,7 @@ export default class BlankCreatorPage extends Component {
 
     :
           <List>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-document" style={this.state.inputStyle} />
                     <Input
@@ -249,7 +246,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Name of type"} />
                 </InputGroup>
             </ListItem> 
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
@@ -258,7 +255,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Q1"} />
                 </InputGroup>
             </ListItem>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
@@ -267,7 +264,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Q2"} />
                 </InputGroup>
             </ListItem>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
@@ -276,7 +273,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Q3"} />
                 </InputGroup>
             </ListItem>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
@@ -285,7 +282,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Q4"} />
                 </InputGroup>
             </ListItem>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
@@ -294,7 +291,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Q5"} />
                 </InputGroup>
             </ListItem>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
@@ -303,7 +300,7 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Q6"} />
                 </InputGroup>
             </ListItem>
-            <ListItem>
+            <ListItem style={{height: 20}}>
                 <InputGroup>
                     <Icon name="ios-help" style={this.state.inputStyle} />
                     <Input
