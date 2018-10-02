@@ -37,7 +37,7 @@ function CreateException(status, messageBadRequst = null)
     }
 }
 
-function ResponseHandler(response)
+function ResponseHandler(response, badReqMes = null)
 {
     if(response.status === 200 || response.status === 201 || response.status === 204)
     {
@@ -45,7 +45,7 @@ function ResponseHandler(response)
     }
     else
     {
-        CreateException(response.status, 'User exists');
+        CreateException(response.status, badReqMes);
     }
 }
 
@@ -80,7 +80,7 @@ export default class ApiRequests
             }
         );
 
-        return ResponseHandler(response);
+        return ResponseHandler(response, 'User exists');
     }
 
     async login(email, password)
@@ -96,7 +96,7 @@ export default class ApiRequests
             }
         );
 
-        return ResponseHandler(response);
+        return ResponseHandler(response, 'Invalid login or password');
     }
 
     async changePassword(oldPassword, newPassword)
@@ -112,7 +112,7 @@ export default class ApiRequests
             }
         );
 
-        return ResponseHandler(response);
+        return ResponseHandler(response, 'Can not used password twice or your old password is incorrect');
     }
 
     async changeEmail(email)
@@ -173,7 +173,7 @@ export default class ApiRequests
         }
         else
         {
-            CreateException(response.status, 'User exists');
+            CreateException(response.status, 'Can not generate this file. Your file is wrong or file with this name exists');
         }
     }
 
@@ -257,7 +257,7 @@ export default class ApiRequests
             }
         );
 
-        return ResponseHandler(response);
+        return ResponseHandler(response, 'This type exists.');
     }
 
     async acceptFile(fileId)
