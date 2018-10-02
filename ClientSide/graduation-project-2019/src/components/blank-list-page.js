@@ -190,7 +190,7 @@ export default class BlankListPage extends Component {
                         selectedValue={this.state.selected2}
                         onValueChange={this.onValueChange2.bind(this)}
                       >
-                      {this.users.map(item => <Picker.Item label={item.email} value={item.email} key={item.id} />)}
+                      {this.users.map(item => <Picker.Item label={item.email} value={item} key={item.id} />)}
                       </Picker>
                 </Item>
                 <Button style={styles.primaryButton} onPress={this.sendMessageModalClose.bind(this)}><Text>Back</Text></Button>
