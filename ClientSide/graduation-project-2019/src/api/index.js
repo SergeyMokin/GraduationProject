@@ -37,6 +37,18 @@ function CreateException(status, messageBadRequst = null)
     }
 }
 
+function ResponseHandler(response)
+{
+    if(response.status === 200 || response.status === 201 || response.status === 204)
+    {
+        return response.json();
+    }
+    else
+    {
+        CreateException(response.status, 'User exists');
+    }
+}
+
 export default class ApiRequests
 {
     asyncStorageUser = 'gp-2019-user';
@@ -68,16 +80,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status, 'User exists');
-        }
-
-        return response.json();
+        return ResponseHandler(response);
     }
 
     async login(email, password)
@@ -93,14 +96,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status, 'Invalid login or password');
-        }
+        return ResponseHandler(response);
     }
 
     async changePassword(oldPassword, newPassword)
@@ -116,14 +112,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status, 'Can not used password twice or your old password is incorrect');
-        }
+        return ResponseHandler(response);
     }
 
     async changeEmail(email)
@@ -139,14 +128,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async updateToken()
@@ -162,14 +144,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async downloadFile(id)
@@ -198,7 +173,7 @@ export default class ApiRequests
         }
         else
         {
-            CreateException(response.status, 'Can not generate this file. Your file is wrong or file with this name exists');
+            CreateException(response.status, 'User exists');
         }
     }
 
@@ -215,14 +190,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async getBlankTypes()
@@ -238,14 +206,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async getUsers()
@@ -261,14 +222,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async removeFile(id)
@@ -284,14 +238,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async addBlankType(param)
@@ -310,14 +257,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status, 'This type exists.');
-        }
+        return ResponseHandler(response);
     }
 
     async acceptFile(fileId)
@@ -333,14 +273,7 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 
     async sendMessage(mes)
@@ -358,13 +291,6 @@ export default class ApiRequests
             }
         );
 
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response.json();
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return ResponseHandler(response);
     }
 }

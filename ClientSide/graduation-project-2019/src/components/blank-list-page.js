@@ -72,9 +72,27 @@ export default class BlankListPage extends Component {
         'Choose what do you want to do with:',
         file.fileName,
         [
-          {text: 'Close'},
-          {text: 'Delete', onPress: () => { this.setState({isLoading: true}); this.api.removeFile(file.blankFileId).then(() => { this.getFiles(); }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } },
-          {text: 'Download', onPress: () => { this.setState({isLoading: true}); this.api.downloadFile(file.blankFileId).then((data) => { this.setState({isLoading: false}); Linking.openURL(data); }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } }
+          {
+            text: 'Close'
+          },
+          {
+            text: 'Delete', 
+            onPress: () => { 
+              this.setState({isLoading: true}); 
+              this.api.removeFile(file.blankFileId)
+                .then(() => { this.getFiles(); })
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
+            } 
+          },
+          {
+            text: 'Download', 
+            onPress: () => { 
+              this.setState({isLoading: true}); 
+              this.api.downloadFile(file.blankFileId)
+                .then((data) => { this.setState({isLoading: false}); Linking.openURL(data); })
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
+            } 
+          }
         ]
       );
     }
@@ -84,9 +102,27 @@ export default class BlankListPage extends Component {
         'Choose what do you want to do with:',
         file.fileName,
         [
-          {text: 'Close'},
-          {text: 'Delete', onPress: () => { this.setState({isLoading: true}); this.api.removeFile(file.blankFileId).then(() => { this.getFiles(); }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } },
-          {text: 'Accept', onPress: () => { this.setState({isLoading: true}); this.api.acceptFile(file.blankFileId).then((data) => { this.files = data; this.setState({isLoading: false}) }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } }
+          {
+            text: 'Close'
+          },
+          {
+            text: 'Delete', 
+            onPress: () => { 
+              this.setState({isLoading: true}); 
+              this.api.removeFile(file.blankFileId)
+                .then(() => { this.getFiles(); })
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
+            } 
+          },
+          {
+            text: 'Accept', 
+            onPress: () => { 
+              this.setState({isLoading: true}); 
+              this.api.acceptFile(file.blankFileId)
+                .then((data) => { this.files = data; this.setState({isLoading: false}) })
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
+            } 
+          }
         ]
       );
     }
