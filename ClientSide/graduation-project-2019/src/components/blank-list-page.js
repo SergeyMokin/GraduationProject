@@ -1,7 +1,7 @@
 import { Content, Text, List, ListItem, Spinner, Icon, Button, Item, Picker } from 'native-base';
 import React, {Component} from 'react';
 import ApiRequests from '../api';
-import { Alert, Linking } from 'react-native';
+import { Alert, Linking, BackHandler } from 'react-native';
 import styles from '../styles/mainstyle.js';
 
 export default class BlankListPage extends Component {
@@ -16,6 +16,7 @@ export default class BlankListPage extends Component {
       }
       this.files = [];
       this.users = [];
+      this.backHandler = null;
       this.api = new ApiRequests();
       this.api.setAuthorizationHeader(this.props.userInfo.bearerToken);
   }
@@ -73,7 +74,7 @@ export default class BlankListPage extends Component {
         [
           {text: 'Close'},
           {text: 'Delete', onPress: () => { this.setState({isLoading: true}); this.api.removeFile(file.blankFileId).then(() => { this.getFiles(); }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } },
-          {text: 'Download', onPress: () => { this.setState({isLoading: true}); this.api.downloadFile(file.blankFileId).then((data) => { this.setState({isLoading: false}); Linking.openURL(data.uri); }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } }
+          {text: 'Download', onPress: () => { this.setState({isLoading: true}); this.api.downloadFile(file.blankFileId).then((data) => { this.setState({isLoading: false}); Linking.openURL(data); }).catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) } }
         ]
       );
     }
@@ -94,7 +95,6 @@ export default class BlankListPage extends Component {
   async sendMessage()
   {
     this.setState({isLoading: true});
-    console.log(this.state.selected2)
     let error = (error) => {
       console.log(error);
       this.setState({isLoading: false, isSend: false});
@@ -116,7 +116,23 @@ export default class BlankListPage extends Component {
       });
   }
 
+  sendMessageModalOpen(file)
+  {
+    this.setState({isSend: true, fileToSend: file});
+  }
+
+  sendMessageModalClose()
+  {
+    this.setState({isSend: false});
+    return true;
+  }
+
   render() {
+    if(this.backHandler !== null)
+    {
+      this.backHandler.remove();
+      this.backHandler = null;
+    }
     if(this.state.isLoading)
     {
       return  <Content contentContainerStyle={styles.body}>
@@ -125,6 +141,7 @@ export default class BlankListPage extends Component {
     }
     else if(this.state.isSend)
     {
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.sendMessageModalClose.bind(this));
       return  <Content>
                 <Item picker>
                       <Picker
@@ -140,7 +157,7 @@ export default class BlankListPage extends Component {
                       {this.users.map(item => <Picker.Item label={item.email} value={item.email} key={item.id} />)}
                       </Picker>
                 </Item>
-                <Button style={styles.primaryButton} onPress={() => this.setState({isSend: false})}><Text>Back</Text></Button>
+                <Button style={styles.primaryButton} onPress={this.sendMessageModalClose.bind(this)}><Text>Back</Text></Button>
                 <Button style={styles.primaryButton} onPress={this.sendMessage.bind(this)}><Text>Send</Text></Button>
               </Content>
     }
@@ -152,7 +169,7 @@ export default class BlankListPage extends Component {
                 </ListItem>
                 {this.files.map((file) => 
                   <ListItem key={file.blankFileId} 
-                    onLongPress={() => {this.setState({isSend: true, fileToSend: file})}} onPress={() => this.alertMes(file)}>
+                    onLongPress={() => this.sendMessageModalOpen(file)} onPress={() => this.alertMes(file)}>
                   <Icon name="ios-document" style={{margin: 5, color: file.isAccepted ? 'blue' : 'yellow'}} />
                   <Text style={{padding: 5}}>{file.blankFileId}: {file.fileName}</Text>
                 </ListItem>)}

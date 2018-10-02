@@ -130,6 +130,22 @@
             <tbody>
                 <tr>
                     <td>Скачать файл</td>
+                    <td>Allow anonymous</td>
+                    <td>GET</td>
+                    <td>api/user/downloadfileanonymous</td>
+                    <td>
+                        id : <a style="color: blue">long</a><br />
+                        token : <a style="color: blue">string</a><br />
+                    </td>
+                    <td>
+                        <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
+                        <a style="color:green" href="#401">401</a> <br />
+                        <a style="color:green" href="#404">404</a> <br />
+                        <a style="color:green" href="#500">500</a> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Скачать файл</td>
                     <td>Authorize</td>
                     <td>GET</td>
                     <td>api/user/downloadfile</td>

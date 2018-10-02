@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GraduationProjectAPI.Extensions;
 using GraduationProjectAPI.Filters;
@@ -7,6 +8,8 @@ using GraduationProjectInterfaces.Services;
 using GraduationProjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GraduationProjectAPI.Controllers
 {
@@ -22,6 +25,24 @@ namespace GraduationProjectAPI.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        // Get api/user/downloadfileanonymous?id=
+        public async Task<FileContentResult> DownloadFileAnonymous(long id, string token)
+        {
+            try
+            {
+                var user = new JwtSecurityTokenHandler().ValidateToken(token.Replace("Bearer ", ""), AuthOptions.GetTokenValidationParameters(), out SecurityToken _)
+                    ?? throw new UnauthorizedAccessException();
+
+                return await _userService.DownloadFile(id, user.GetUserId());
+            }
+            catch
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         // GET api/user/downloadfile?id=

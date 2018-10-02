@@ -47,19 +47,7 @@ namespace GraduationProjectAPI
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        // Specifies whether the publisher will validate when validating the token.
-                        ValidateIssuer = false,
-                        // Will the token consumer be validated.
-                        ValidateAudience = false,
-                        // Will the lifetime be validated.
-                        ValidateLifetime = true,
-                        // Set the security key.
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // Validate the security key.
-                        ValidateIssuerSigningKey = true
-                    };
+                    options.TokenValidationParameters = AuthOptions.GetTokenValidationParameters();
                 });
 
             // Add cors attribute to all controllers.

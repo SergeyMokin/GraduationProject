@@ -1,5 +1,3 @@
-import Expo from 'expo';
-
 const API_URL = `https://graduationprojectapi20180920024232.azurewebsites.net/api/`;
 
 class StatusException
@@ -176,29 +174,7 @@ export default class ApiRequests
 
     async downloadFile(id)
     {
-        let path = API_URL + `user/downloadfile?id=${encodeURIComponent(id)}`;
-        let folder = Expo.FileSystem.documentDirectory + 'downloads/';
-        try
-        {
-            await Expo.FileSystem.makeDirectoryAsync(folder, {intermediates: true});
-        }
-        catch(ex)
-        {
-            console.log(ex);
-        }
-        let pathToSave = folder + new Date().toJSON() + ".xlsx";
-
-        var downloadResumable = Expo.FileSystem.createDownloadResumable(path, pathToSave, {headers: this.headers});
-        let response = await downloadResumable.downloadAsync();
-
-        if(response.status === 200 || response.status === 201 || response.status === 204)
-        {
-            return response;
-        }
-        else
-        {
-            CreateException(response.status);
-        }
+        return API_URL + `user/downloadfileanonymous?id=${encodeURIComponent(id)}&token=${encodeURIComponent(this.headers.Authorization)}`;
     }
 
     async generateExcel(param)

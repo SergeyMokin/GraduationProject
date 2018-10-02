@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import {
   ActivityIndicator,
   Image,
-  Share,
   StyleSheet,
   ImageStore
 } from 'react-native';
-import { Button, Text, Content, Icon, Segment } from 'native-base';
+import { Button, Content, Icon, Segment } from 'native-base';
 import { Constants, ImagePicker, Permissions } from 'expo';
 
 
@@ -27,7 +26,7 @@ export default class CameraPage extends Component {
     } = this.state;
 
     return (
-      <Content style={styles.container}>
+      <Content style={styles.container} alignItems='center' justifyContent='center'>
         <Segment>
           <Button
             style = {styles.primaryButton}

@@ -16,5 +16,22 @@ namespace GraduationProjectModels
         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Key));
         }
+
+        public static TokenValidationParameters GetTokenValidationParameters()
+        {
+            return new TokenValidationParameters
+            {
+                // Specifies whether the publisher will validate when validating the token.
+                ValidateIssuer = false,
+                // Will the token consumer be validated.
+                ValidateAudience = false,
+                // Will the lifetime be validated.
+                ValidateLifetime = true,
+                // Set the security key.
+                IssuerSigningKey = GetSymmetricSecurityKey(),
+                // Validate the security key.
+                ValidateIssuerSigningKey = true
+            };
+        }
     }
 }
