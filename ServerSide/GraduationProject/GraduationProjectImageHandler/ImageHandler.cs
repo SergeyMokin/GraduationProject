@@ -129,7 +129,7 @@ namespace GraduationProjectImageHandler
         {
             using (var img = new Bitmap(_savedImageName))
                 using (var resizedImg = ResizeBitmap(img, new Size { Width = 1080, Height = 1397 }))
-                    using (var kirschImg = KirschFilter(resizedImg))
+                    using (var kirschImg = ConvolutionFilter(resizedImg, Kirsch3X3Horizontal, Kirsch3X3Vertical))
                         using (var bw = kirschImg.Clone(new Rectangle(0, 0, kirschImg.Width, kirschImg.Height), PixelFormat.Format1bppIndexed))
                             bw.Save(_savedBlackWhiteImageName);
         }
@@ -156,13 +156,6 @@ namespace GraduationProjectImageHandler
             return new Bitmap(imgToResize, size);
         }
 
-        private static Bitmap KirschFilter(Bitmap sourceBitmap, bool grayscale = true)
-        {
-            var resultBitmap = ConvolutionFilter(sourceBitmap, Kirsch3X3Horizontal, Kirsch3X3Vertical, grayscale);
-            
-            return resultBitmap;
-        }
-
         private static double[,] Kirsch3X3Horizontal => new double[,]
         {
             {  5,  5,  5 },
@@ -177,7 +170,7 @@ namespace GraduationProjectImageHandler
             {  5, -3, -3, },
         };
 
-        private static Bitmap ConvolutionFilter(Bitmap sourceBitmap, double[,] xFilterMatrix, double[,] yFilterMatrix, bool grayscale = false)
+        private static Bitmap ConvolutionFilter(Bitmap sourceBitmap, double[,] xFilterMatrix, double[,] yFilterMatrix, bool grayscale = true)
         {
             var sourceData =
                 sourceBitmap.LockBits(new Rectangle(0, 0,
