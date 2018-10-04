@@ -5,6 +5,10 @@ namespace GraduationProjectImageHandler
     //Container coordinates of answers.
     public class AnswerCoordinates
     {
+        public const int QuestionsCount = 7;
+        public const int BlankWidth = 1080;
+        public const int BlankHeight = 1397;
+
         public static Dictionary<int, int[]> Coordinates = new Dictionary<int, int[]>
         {
             { 1, new [] { 630, 295, 785, 400, 800, 295, 965, 400 } },

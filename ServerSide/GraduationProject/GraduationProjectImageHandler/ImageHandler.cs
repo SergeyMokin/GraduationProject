@@ -34,7 +34,7 @@ namespace GraduationProjectImageHandler
         {
             _questions = questions?.ToArray();
 
-            if (_questions?.Length != AppSettings.QuestionsCount)
+            if (_questions?.Length != AnswerCoordinates.QuestionsCount)
             {
                 throw new NotImplementedException();
             }
@@ -67,7 +67,7 @@ namespace GraduationProjectImageHandler
 
                 ISheet sheet = workbook.CreateSheet("ImageHandlerResult");
 
-                for (var i = 0; i < 7; i++)
+                for (var i = 0; i < AnswerCoordinates.QuestionsCount; i++)
                 {
                     IRow row = sheet.CreateRow(i);
                     row.CreateCell(0).SetCellValue(_questions[i]);
@@ -128,7 +128,7 @@ namespace GraduationProjectImageHandler
         private void SaveGrayScaleImage()
         {
             using (var img = new Bitmap(_savedImageName))
-                using (var resizedImg = ResizeBitmap(img, new Size { Width = 1080, Height = 1397 }))
+                using (var resizedImg = ResizeBitmap(img, new Size { Width = AnswerCoordinates.BlankWidth, Height = AnswerCoordinates.BlankHeight }))
                     using (var kirschImg = ConvolutionFilter(resizedImg, Kirsch3X3Horizontal, Kirsch3X3Vertical))
                         using (var bw = kirschImg.Clone(new Rectangle(0, 0, kirschImg.Width, kirschImg.Height), PixelFormat.Format1bppIndexed))
                             bw.Save(_savedBlackWhiteImageName);
@@ -136,13 +136,14 @@ namespace GraduationProjectImageHandler
 
         private static int SearchCountOfWhitePixelsByCoordinates(Bitmap img, int startX, int startY, int endX, int endY)
         {
+            const int threshold = 5;
             var whitePixelCount = 0;
             for (var x = startX; x < endX; x++)
             {
                 for (var y = startY; y < endY; y++)
                 {
                     var color = img.GetPixel(x, y);
-                    if ((color.R + color.G + color.B) > 5)
+                    if ((color.R + color.G + color.B) > threshold)
                     {
                         whitePixelCount++;
                     }
@@ -172,9 +173,7 @@ namespace GraduationProjectImageHandler
 
         private static Bitmap ConvolutionFilter(Bitmap sourceBitmap, double[,] xFilterMatrix, double[,] yFilterMatrix, bool grayscale = true)
         {
-            var sourceData =
-                sourceBitmap.LockBits(new Rectangle(0, 0,
-                        sourceBitmap.Width, sourceBitmap.Height),
+            var sourceData = sourceBitmap.LockBits(new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height),
                     ImageLockMode.ReadOnly,
                     PixelFormat.Format32bppArgb);
 
@@ -193,8 +192,7 @@ namespace GraduationProjectImageHandler
                     var rgb = pixelBuffer[k] * 0.11f;
                     rgb += pixelBuffer[k + 1] * 0.59f;
                     rgb += pixelBuffer[k + 2] * 0.3f;
-
-
+                    
                     pixelBuffer[k] = (byte)rgb;
                     pixelBuffer[k + 1] = pixelBuffer[k];
                     pixelBuffer[k + 2] = pixelBuffer[k];
