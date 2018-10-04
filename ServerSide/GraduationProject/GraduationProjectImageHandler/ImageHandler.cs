@@ -3,13 +3,13 @@ using GraduationProjectModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
+using System.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using NPOI.SS.Util;
 
 namespace GraduationProjectImageHandler
 {
@@ -18,33 +18,43 @@ namespace GraduationProjectImageHandler
     {
         private Tuple<string, string> _answerVariants = new Tuple<string, string>("YES", "NO");
         private Dictionary<int, string> _answers = new Dictionary<int, string>();
+        private string[] _questions;
 
         private string _savedImageName;
         private string _savedBlackWhiteImageName;
 
         private string _excelFileName;
         private string _excelFilePath;
+        private string _recognizedBlankType;
 
         private BlankFile _blankFile;
 
-        public Task<BlankFile> GenerateExcel(BlankFile param)
+        public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
         {
+            _questions = questions?.ToArray();
+
+            if (_questions?.Length != AppSettings.QuestionsCount)
+            {
+                throw new NotImplementedException();
+            }
+
             var pathToSave = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot",
-                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString());
+                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
 
             _savedImageName = pathToSave + param.Name;
             _savedBlackWhiteImageName = pathToSave + param.Name + "_bw";
 
-            _excelFileName = param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
+            _excelFileName =  DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
             _excelFilePath = pathToSave + _excelFileName;
+            _recognizedBlankType = param.Type;
 
             _blankFile = param;
 
             SearchAnswers();
 
-            return Task.Run(() => CreateExcel());
+            return Task.FromResult(CreateExcel());
         }
 
         private BlankFile CreateExcel()
@@ -59,7 +69,7 @@ namespace GraduationProjectImageHandler
                 for (var i = 0; i < 7; i++)
                 {
                     IRow row = sheet.CreateRow(i);
-                    row.CreateCell(0).SetCellValue(Questions.Values[i + 1]);
+                    row.CreateCell(0).SetCellValue(_questions[i]);
                     row.CreateCell(1).SetCellValue(_answers[i + 1]);
                 }
 
@@ -67,7 +77,7 @@ namespace GraduationProjectImageHandler
                 sheet.AutoSizeColumn(1);
 
                 workbook.Write(fs);
-            };
+            }
 
             var data = Convert.ToBase64String(File.ReadAllBytes(_excelFilePath));
 
@@ -78,7 +88,7 @@ namespace GraduationProjectImageHandler
                 Id = 0,
                 Name = _excelFileName,
                 Data = data,
-                Type = "GraduationBlank",
+                Type = _recognizedBlankType,
                 FileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             };
         }

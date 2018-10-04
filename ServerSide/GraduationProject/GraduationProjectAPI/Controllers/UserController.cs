@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GraduationProjectAPI.Extensions;
 using GraduationProjectAPI.Filters;
@@ -7,6 +8,8 @@ using GraduationProjectInterfaces.Services;
 using GraduationProjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GraduationProjectAPI.Controllers
 {
@@ -17,11 +20,29 @@ namespace GraduationProjectAPI.Controllers
     [Authorize]
     public class UserController : ControllerBase, IUserController
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        // Get api/user/downloadfileanonymous?id=
+        public async Task<FileContentResult> DownloadFileAnonymous(long id, string token)
+        {
+            try
+            {
+                var user = new JwtSecurityTokenHandler().ValidateToken(token.Replace("Bearer ", ""), AuthOptions.GetTokenValidationParameters(), out SecurityToken _)
+                    ?? throw new UnauthorizedAccessException();
+
+                return await _userService.DownloadFile(id, user.GetUserId());
+            }
+            catch
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         // GET api/user/downloadfile?id=
@@ -46,6 +67,27 @@ namespace GraduationProjectAPI.Controllers
             return await _userService.GetFiles(User.GetUserId());
         }
 
+        // GET api/user/getusers
+        [HttpGet]
+        public IEnumerable<User> GetUsers()
+        {
+            return _userService.GetUsers(User.GetUserId());
+        }
+
+        // GET api/user/getblanktypes
+        [HttpGet]
+        public IEnumerable<BlankType> GetBlankTypes()
+        {
+            return _userService.GetBlankTypes();
+        }
+
+        // POST api/user/addblanktype
+        [HttpPost]
+        public async Task<BlankType> AddBlankType(string typeName, [FromQuery(Name="questions")]IEnumerable<string> questions)
+        {
+            return await _userService.AddBlankType(typeName, questions);
+        }
+
         // DELETE api/user/removefile?id=
         [HttpDelete]
         public async Task<long> RemoveFile(long id)
@@ -59,6 +101,13 @@ namespace GraduationProjectAPI.Controllers
         public async Task<Message> SendMessage([FromBody]Message mes)
         {
             return await _userService.SendMessage(mes, User.GetUserId());
+        }
+
+        // POST api/user/acceptfile
+        [HttpPost]
+        public async Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId)
+        {
+            return await _userService.AcceptFile(fileId, User.GetUserId());
         }
     }
 }

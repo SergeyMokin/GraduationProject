@@ -8,7 +8,7 @@ namespace GraduationProjectAPI.Extensions
         // Get user ID from claims.
         public static long GetUserId(this ClaimsPrincipal user)
         {
-            return long.Parse(user.Claims.FirstOrDefault().Value);
+            return long.Parse(user.Claims.FirstOrDefault()?.Value);
         }
     }
 }

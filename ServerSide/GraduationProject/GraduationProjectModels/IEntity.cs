@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GraduationProjectModels
+﻿namespace GraduationProjectModels
 {
     // Interface of class what contains in database.
-    public interface IEntity<T>
+    public interface IEntity<in T>
     {
         long Id { get; set; }
 

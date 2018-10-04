@@ -47,19 +47,7 @@ namespace GraduationProjectAPI
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        // Specifies whether the publisher will validate when validating the token.
-                        ValidateIssuer = false,
-                        // Will the token consumer be validated.
-                        ValidateAudience = false,
-                        // Will the lifetime be validated.
-                        ValidateLifetime = true,
-                        // Set the security key.
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // Validate the security key.
-                        ValidateIssuerSigningKey = true
-                    };
+                    options.TokenValidationParameters = AuthOptions.GetTokenValidationParameters();
                 });
 
             // Add cors attribute to all controllers.
@@ -71,6 +59,9 @@ namespace GraduationProjectAPI
             // Enable MVC and add exception handling attribute.
             services.AddMvc(options =>
                 options.Filters.Add(new ControllerExceptionFilterAttribute())).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
+            //Get and decode connection string.
+            BuildAppSettingsProvider();
 
             // Register all dependencies.
             RegisterDependencyInjection(services);
@@ -103,7 +94,9 @@ namespace GraduationProjectAPI
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<BlankFile>, Repository<BlankFile>>();
             services.AddScoped<IRepository<Password>, Repository<Password>>();
-            
+            services.AddScoped<IRepository<BlankType>, Repository<BlankType>>();
+            services.AddScoped<IRepository<QuestionEntity>, Repository<QuestionEntity>>();
+
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
 
@@ -111,7 +104,13 @@ namespace GraduationProjectAPI
             services.AddScoped<IUserController, UserController>();
 
             services.AddDbContext<GraduationProjectContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(AppSettings.DbConnectionString));
+        }
+
+        private void BuildAppSettingsProvider()
+        {
+            AppSettings.DbConnectionString =
+                Defines.GetDecodedString(Configuration["AppSettings:DBConnectionString"]);
         }
     }
 }

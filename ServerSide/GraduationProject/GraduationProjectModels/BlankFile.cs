@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GraduationProjectModels
 {
@@ -60,6 +58,7 @@ namespace GraduationProjectModels
         {
             UserId = fileUser.UserId;
             BlankFileId = fileUser.BlankFileId;
+            IsAccepted = fileUser.IsAccepted;
         }
 
         public long UserId { get; set; }
@@ -67,5 +66,7 @@ namespace GraduationProjectModels
         public long BlankFileId { get; set; }
 
         public string FileName { get; set; }
+
+        public bool IsAccepted { get; set; }
     }
 }

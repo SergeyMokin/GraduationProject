@@ -7,20 +7,16 @@ namespace GraduationProjectServices
     {
         public static bool IsEmail(this string email)
         {
-            const string PATTERN = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+            const string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 
-            return string.IsNullOrWhiteSpace(email)
-                ? false
-                : new Regex(PATTERN).Match(email).Success;
+            return !string.IsNullOrWhiteSpace(email) && new Regex(pattern).Match(email).Success;
         }
 
         public static bool IsPassword(this string password)
         {
-            const string PATTERN = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
+            const string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
 
-            return string.IsNullOrWhiteSpace(password)
-                ? false
-                : new Regex(PATTERN).Match(password).Success;
+            return !string.IsNullOrWhiteSpace(password) && new Regex(pattern).Match(password).Success;
         }
     }
 }
