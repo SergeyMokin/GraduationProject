@@ -37,7 +37,7 @@ namespace GraduationProjectServices
         {
             var questionsToAdd = questions?.Select(x => string.IsNullOrWhiteSpace(x) ? throw new ArgumentException() : x).ToArray();
 
-            if (questionsToAdd?.Count() != AppSettings.QuestionsCount)
+            if (questionsToAdd?.Count() != BlankFileSettings.QuestionsCount)
             {
                 throw new ArgumentException();
             }
@@ -50,7 +50,7 @@ namespace GraduationProjectServices
 
             var addedType = await _blankTypeRepository.AddAsync(new BlankType {Type = typeName});
 
-            for (var i = 0; i < AppSettings.QuestionsCount; i++)
+            for (var i = 0; i < BlankFileSettings.QuestionsCount; i++)
             {
                 await _questionRepository.AddAsync(new QuestionEntity { BlankTypeId = addedType.Id, Question = questionsToAdd[i] });
             }

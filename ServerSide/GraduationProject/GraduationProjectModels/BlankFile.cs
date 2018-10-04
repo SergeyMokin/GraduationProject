@@ -2,6 +2,13 @@
 
 namespace GraduationProjectModels
 {
+    public static class BlankFileSettings
+    {
+        public const int QuestionsCount = 7;
+        public const int BlankWidth = 1080;
+        public const int BlankHeight = 1397;
+    }
+
     // BlankFile image/document what contain in database.
     public class BlankFile : IEntity<BlankFile>
     {

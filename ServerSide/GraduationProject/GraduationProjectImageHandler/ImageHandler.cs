@@ -34,7 +34,7 @@ namespace GraduationProjectImageHandler
         {
             _questions = questions?.ToArray();
 
-            if (_questions?.Length != AnswerCoordinates.QuestionsCount)
+            if (_questions?.Length != BlankFileSettings.QuestionsCount)
             {
                 throw new NotImplementedException();
             }
@@ -67,7 +67,7 @@ namespace GraduationProjectImageHandler
 
                 ISheet sheet = workbook.CreateSheet("ImageHandlerResult");
 
-                for (var i = 0; i < AnswerCoordinates.QuestionsCount; i++)
+                for (var i = 0; i < BlankFileSettings.QuestionsCount; i++)
                 {
                     IRow row = sheet.CreateRow(i);
                     row.CreateCell(0).SetCellValue(_questions[i]);
@@ -128,7 +128,7 @@ namespace GraduationProjectImageHandler
         private void SaveGrayScaleImage()
         {
             using (var img = new Bitmap(_savedImageName))
-                using (var resizedImg = ResizeBitmap(img, new Size { Width = AnswerCoordinates.BlankWidth, Height = AnswerCoordinates.BlankHeight }))
+                using (var resizedImg = ResizeBitmap(img, new Size { Width = BlankFileSettings.BlankWidth, Height = BlankFileSettings.BlankHeight }))
                     using (var kirschImg = ConvolutionFilter(resizedImg, Kirsch3X3Horizontal, Kirsch3X3Vertical))
                         using (var bw = kirschImg.Clone(new Rectangle(0, 0, kirschImg.Width, kirschImg.Height), PixelFormat.Format1bppIndexed))
                             bw.Save(_savedBlackWhiteImageName);
