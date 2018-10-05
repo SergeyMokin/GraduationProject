@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GraduationProjectModels;
-using Tesseract;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 
 namespace GraduationProjectImageHandler
 {
@@ -57,7 +59,7 @@ namespace GraduationProjectImageHandler
             }
         }
 
-        public override Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile)
+        public override async Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile)
         {
             var pathToSave = Path.Combine(
                 Directory.GetCurrentDirectory(),
@@ -70,26 +72,98 @@ namespace GraduationProjectImageHandler
 
             var questionList = new List<string>();
 
-            using (var img = new Bitmap(savedImageName))
+            var computerVision = new ComputerVisionClient(
+                new ApiKeyServiceClientCredentials("86716aff0e6544df851dd470f2e8b2ce"));
+
+            computerVision.Endpoint = "https://westcentralus.api.cognitive.microsoft.com";
+
+            var text = (await ExtractLocalTextAsync(computerVision, savedImageName)).ToArray();
+
+            var currentY = AnswerCoordinates.MainBlank.QStartPoint.Value;
+            while (currentY + AnswerCoordinates.MainBlank.QyStep < BlankFileSettings.BlankHeight)
             {
-                var currentY = AnswerCoordinates.MainBlank.QStartPoint.Value;
-                while (currentY + AnswerCoordinates.MainBlank.QyStep < img.Height)
+                var contains = text.Where(x =>
+                        x.BoundingBox[0] >= AnswerCoordinates.MainBlank.QStartPoint.Key
+                        && x.BoundingBox[1] >= currentY
+                        && x.BoundingBox[4] <=
+                        AnswerCoordinates.MainBlank.QStartPoint.Key + AnswerCoordinates.MainBlank.QWidth
+                        && x.BoundingBox[5] <= currentY + AnswerCoordinates.MainBlank.QHeight + 25).Select(x => x.Text)
+                    .ToArray();
+
+                var result = contains.Any()
+                    ? string.Join(" ", contains)
+                    : null;
+
+                if (!string.IsNullOrWhiteSpace(result))
                 {
-                    using (var newImg = img.Clone(new Rectangle(AnswerCoordinates.MainBlank.QStartPoint.Key,
-                        currentY,
-                        AnswerCoordinates.MainBlank.QWidth,
-                        AnswerCoordinates.MainBlank.QHeight), img.PixelFormat))
-                    {
-                        using (var ocr = new TesseractEngine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "eng"))
-                            questionList.Add(ocr.Process(newImg).GetText().Replace("\n", " "));
-                    }
-                    currentY += AnswerCoordinates.MainBlank.QyStep;
+                    questionList.Add(result);
                 }
+
+                currentY += AnswerCoordinates.MainBlank.QyStep;
             }
 
             File.Delete(savedImageName);
 
-            return Task.FromResult(questionList.AsEnumerable());
+            return questionList.AsEnumerable();
+        }
+
+        private static async Task<IEnumerable<Line>> ExtractLocalTextAsync(ComputerVisionClient computerVision, string imagePath)
+        {
+            if (!File.Exists(imagePath))
+            {
+                throw new Exception();
+            }
+
+            RecognizeTextInStreamHeaders textHeaders = null;
+            while (textHeaders == null)
+            {
+                try
+                {
+                    using (Stream imageStream = File.Open(imagePath, FileMode.OpenOrCreate))
+                    {
+                        textHeaders = await computerVision.RecognizeTextInStreamAsync(imageStream, TextRecognitionMode.Handwritten);
+                    }
+                }
+                catch
+                {
+                    Thread.Sleep(5000);
+                }
+            }
+
+            return await GetTextAsync(computerVision, textHeaders.OperationLocation);
+        }
+
+        // Retrieve the recognized text
+        private static async Task<IEnumerable<Line>> GetTextAsync(ComputerVisionClient computerVision, string operationLocation)
+        {
+            if (computerVision == null) throw new ArgumentNullException(nameof(computerVision));
+
+            try
+            {
+                const int numberOfCharsInOperationId = 36;
+
+                var operationId = operationLocation.Substring(
+                    operationLocation.Length - numberOfCharsInOperationId);
+
+                var result =
+                    await computerVision.GetTextOperationResultAsync(operationId);
+
+                // Wait for the operation to complete
+                var i = 0;
+                const int maxRetries = 10;
+                while ((result.Status == TextOperationStatusCodes.Running ||
+                        result.Status == TextOperationStatusCodes.NotStarted) && i++ < maxRetries)
+                {
+                    result = await computerVision.GetTextOperationResultAsync(operationId);
+                }
+
+                return result.RecognitionResult.Lines;
+            }
+            catch
+            {
+                Thread.Sleep(5000);
+                return await GetTextAsync(computerVision, operationLocation);
+            }
         }
     }
 }

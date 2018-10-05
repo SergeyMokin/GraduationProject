@@ -47,7 +47,7 @@ namespace GraduationProjectServices
             var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
                                  ?? throw new ArgumentException();
 
-            if (questionsToAdd.Count(q => !q.Contains("?")) != questionsToAdd.Length)
+            if (questionsToAdd.Count(q => q.Contains("?")) != questionsToAdd.Length)
             {
                 throw new ArgumentException();
             }

@@ -173,7 +173,7 @@ export default class ApiRequests
         }
         else
         {
-            CreateException(response.status, 'Can not generate this file. Your file is wrong or file with this name exists');
+            CreateException(response.status, 'Can not generate this file.');
         }
     }
 
@@ -244,16 +244,14 @@ export default class ApiRequests
     async addBlankType(param)
     {
         let method = `POST`;
-        let path = API_URL + `user/addblanktype?typeName=${encodeURIComponent(param.typeName)}`;
-        for(let i = 0; i < param.questions.length; i++)
-        {
-            path += `&questions=${encodeURIComponent(param.questions[i])}`
-        }
+        let path = API_URL + `user/addblanktype`;
+        let body = JSON.stringify(param);
         let response = await fetch(
             path, 
             {
                 method: method,
-                headers: this.headers
+                headers: this.headers,
+                body: body
             }
         );
 

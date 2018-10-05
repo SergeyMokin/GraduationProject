@@ -17,25 +17,9 @@ export default class BlankCreatorPage extends Component {
         isLoading: false,
         enabledButton: buttons.blank,
         typeName: "",
-        q1: "",
-        q2: "",
-        q3: "",
-        q4: "",
-        q5: "",
-        q6: "",
-        q7: "",
-        q8: "",
-        q9: "",
-        q10: "",
-        q11: "",
-        q12: "",
-        q13: "",
-        q14: "",
-        q15: "",
-        q16: "",
-        q17: "",
         imageData: null,
-        selected2: "Graduation Project",
+        selectedType: "Graduation Blank", //default
+        selectedTemplate: "MainBlank",
         inputStyle: {
           color: 'blue'
         },
@@ -109,23 +93,6 @@ export default class BlankCreatorPage extends Component {
         this.setState({
             isLoading: false,
             typeName: "",
-            q1: "",
-            q2: "",
-            q3: "",
-            q4: "",
-            q5: "",
-            q6: "",
-            q7: "",
-            q8: "",
-            q9: "",
-            q10: "",
-            q11: "",
-            q12: "",
-            q13: "",
-            q14: "",
-            q15: "",
-            q16: "",
-            q17: "",
             inputStyle: {
                 color: 'blue'
             },
@@ -139,19 +106,27 @@ export default class BlankCreatorPage extends Component {
     };
 
     this.typeToAdd = {
-      typeName: this.state.typeName,
-      questions: [this.state.q1, this.state.q2, this.state.q3, this.state.q4, this.state.q5, this.state.q6, this.state.q7,
-         this.state.q8, this.state.q9, this.state.q10, this.state.q11, this.state.q12, this.state.q13, this.state.q14, this.state.q15, this.state.q16, this.state.q17]
+        id: 0,
+        data: this.state.imageData.base64,
+        type: this.state.selectedTemplate,
+        blankTypeName: this.state.typeName
     }
     await this.api.addBlankType(this.typeToAdd)
       .then(success.bind(this))
       .catch(error.bind(this));
   }
 
-  onValueChange2(value)
+  onValueChangeType(value)
   {
     this.setState({
-        selected2: value
+        selectedType: value
+      });
+  }
+
+  onValueChangeTemplate(value)
+  {
+    this.setState({
+        selectedTemplate: value
       });
   }
 
@@ -194,7 +169,7 @@ export default class BlankCreatorPage extends Component {
     let type = `image/${fileType}`;
     let name = `${fileName}.${fileType}`
 
-    await this.api.generateExcel({id: 0, name: name, data: this.state.imageData.base64, type: this.state.selected2, fileType: type, fileTypeUsers: []})
+    await this.api.generateExcel({id: 0, name: name, data: this.state.imageData.base64, type: this.state.selectedType, fileType: type, fileTypeUsers: []})
       .then(success.bind(this))
       .catch(error.bind(this));
   }
@@ -210,24 +185,8 @@ export default class BlankCreatorPage extends Component {
     this.setState({
       isLoading: false,
       typeName: "",
-      q1: "",
-      q2: "",
-      q3: "",
-      q4: "",
-      q5: "",
-      q6: "",
-      q7: "",
-      q8: "",
-      q9: "",
-      q10: "",
-      q11: "",
-      q12: "",
-      q13: "",
-      q14: "",
-      q15: "",
-      q16: "",
-      q17: "",
-      selected2: this.types[0].name,
+      imageData: null,
+      selectedType: this.types[0].name,
       inputStyle: {
         color: 'blue'
       },
@@ -255,8 +214,8 @@ export default class BlankCreatorPage extends Component {
                 placeholder="Select blank type"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
-                selectedValue={this.state.selected2}
-                onValueChange={this.onValueChange2.bind(this)}
+                selectedValue={this.state.selectedType}
+                onValueChange={this.onValueChangeType.bind(this)}
               >
               {this.types.map(item => <Picker.Item label={item.name} value={item.name} key={item.id} />)}
               </Picker>
@@ -268,7 +227,21 @@ export default class BlankCreatorPage extends Component {
 
     :
           <List>
-            <ListItem style={{height: 20}}>
+            <Item picker>
+                    <Picker
+                    mode="dropdown"
+                    iosIcon={<Icon name="ios-arrow-down-outline" />}
+                    style={{ width: undefined }}
+                    placeholder="Select blank template"
+                    placeholderStyle={{ color: "#bfc6ea" }}
+                    placeholderIconColor="#007aff"
+                    selectedValue={this.state.selectedTemplate}
+                    onValueChange={this.onValueChangeTemplate.bind(this)}
+                    >
+                    {[...new Set(this.types.map(item => item.type))].map(item => <Picker.Item label={item} value={item} key={item} />)}
+                    </Picker>
+            </Item>
+            <ListItem>
                 <InputGroup>
                     <Icon name="ios-document" style={this.state.inputStyle} />
                     <Input
@@ -277,163 +250,11 @@ export default class BlankCreatorPage extends Component {
                         placeholder={"Name of type"} />
                 </InputGroup>
             </ListItem> 
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q1: text})}
-                        value={this.state.q1}
-                        placeholder={"Q1"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q2: text})}
-                        value={this.state.q2}
-                        placeholder={"Q2"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q3: text})}
-                        value={this.state.q3}
-                        placeholder={"Q3"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q4: text})}
-                        value={this.state.q4}
-                        placeholder={"Q4"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q5: text})}
-                        value={this.state.q5}
-                        placeholder={"Q5"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q6: text})}
-                        value={this.state.q6}
-                        placeholder={"Q6"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q7: text})}
-                        value={this.state.q7}
-                        placeholder={"Q7"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q8: text})}
-                        value={this.state.q8}
-                        placeholder={"Q8"} />
-                </InputGroup>
-            </ListItem>      
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q9: text})}
-                        value={this.state.q9}
-                        placeholder={"Q9"} />
-                </InputGroup>
-            </ListItem>   
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q10: text})}
-                        value={this.state.q10}
-                        placeholder={"Q10"} />
-                </InputGroup>
-            </ListItem>      
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q11: text})}
-                        value={this.state.q11}
-                        placeholder={"Q11"} />
-                </InputGroup>
-            </ListItem>   
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q12: text})}
-                        value={this.state.q12}
-                        placeholder={"Q12"} />
-                </InputGroup>
-            </ListItem>   
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q13: text})}
-                        value={this.state.q13}
-                        placeholder={"Q13"} />
-                </InputGroup>
-            </ListItem>  
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q14: text})}
-                        value={this.state.q14}
-                        placeholder={"Q14"} />
-                </InputGroup>
-            </ListItem>  
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q15: text})}
-                        value={this.state.q15}
-                        placeholder={"Q15"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q16: text})}
-                        value={this.state.q16}
-                        placeholder={"Q16"} />
-                </InputGroup>
-            </ListItem>
-            <ListItem style={{height: 20}}>
-                <InputGroup>
-                    <Icon name="ios-help" style={this.state.inputStyle} />
-                    <Input
-                        onChangeText={(text) => this.setState({q17: text})}
-                        value={this.state.q17}
-                        placeholder={"Q17"} />
-                </InputGroup>
-            </ListItem>
-              <Button style={styles.primaryButton} onPress={this.addType.bind(this)}>
-                  <Text>Add type</Text>
-              </Button>
-              <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
+            <CameraPage imageCallback = {(imageData) => {this.setState({imageData: imageData})}}/>
+            <Button style={styles.primaryButton} onPress={this.addType.bind(this)}>
+                <Text>Add type</Text>
+            </Button>
+            <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
           </List>                
     ;
 
