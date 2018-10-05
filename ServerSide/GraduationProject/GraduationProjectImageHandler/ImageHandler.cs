@@ -17,7 +17,7 @@ namespace GraduationProjectImageHandler
     // Process images class.
     public class ImageHandler : IImageHandler
     {
-        private readonly Tuple<string, string> _answerVariants = new Tuple<string, string>("YES", "NO");
+        private readonly Tuple<string, string, string> _answerVariants = new Tuple<string, string, string>("YES", "MAY BE", "NO");
         private readonly Dictionary<int, string> _answers = new Dictionary<int, string>();
         private string[] _questions;
 
@@ -33,11 +33,6 @@ namespace GraduationProjectImageHandler
         public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
         {
             _questions = questions?.ToArray();
-
-            if (_questions?.Length != BlankFileSettings.QuestionsCount)
-            {
-                throw new NotImplementedException();
-            }
 
             var pathToSave = Path.Combine(
                 Directory.GetCurrentDirectory(),
@@ -67,11 +62,11 @@ namespace GraduationProjectImageHandler
 
                 ISheet sheet = workbook.CreateSheet("ImageHandlerResult");
 
-                for (var i = 0; i < BlankFileSettings.QuestionsCount; i++)
+                for (var i = 0; i < _questions.Length; i++)
                 {
                     IRow row = sheet.CreateRow(i);
                     row.CreateCell(0).SetCellValue(_questions[i]);
-                    row.CreateCell(1).SetCellValue(_answers[i + 1]);
+                    row.CreateCell(1).SetCellValue(_answers[i]);
                 }
 
                 sheet.AutoSizeColumn(0);
@@ -101,13 +96,36 @@ namespace GraduationProjectImageHandler
 
             using (var img = new Bitmap(_savedBlackWhiteImageName))
             {
-                var i = 1;
-                foreach (var c in AnswerCoordinates.Coordinates)
+                var yStep = 0;
+                for (var i = 0; i < _questions.Length; i++)
                 {
-                    var blackPixelLeftCount = SearchCountOfWhitePixelsByCoordinates(img, c.Value[0], c.Value[1], c.Value[2], c.Value[3]);
-                    var blackPixelRightCount = SearchCountOfWhitePixelsByCoordinates(img, c.Value[4], c.Value[5], c.Value[6], c.Value[7]);
+                    var whitePixelYesCount = SearchCountOfWhitePixelsByCoordinates(img,
+                        AnswerCoordinates.StartPoint.Key, 
+                        AnswerCoordinates.StartPoint.Value + yStep, 
+                        AnswerCoordinates.EndPoint.Key, 
+                        AnswerCoordinates.EndPoint.Value + yStep);
 
-                    _answers.Add(i++, blackPixelLeftCount > blackPixelRightCount ? _answerVariants.Item1 : _answerVariants.Item2);
+                    var whitePixelMaybeCount = SearchCountOfWhitePixelsByCoordinates(img, 
+                        AnswerCoordinates.StartPoint.Key + AnswerCoordinates.XStep, 
+                        AnswerCoordinates.StartPoint.Value + yStep, 
+                        AnswerCoordinates.EndPoint.Key + AnswerCoordinates.XStep, 
+                        AnswerCoordinates.EndPoint.Value + yStep);
+
+                    var whitePixelNoCount = SearchCountOfWhitePixelsByCoordinates(img, 
+                        AnswerCoordinates.StartPoint.Key + 2 * AnswerCoordinates.XStep, 
+                        AnswerCoordinates.StartPoint.Value + yStep, 
+                        AnswerCoordinates.EndPoint.Key + 2 * AnswerCoordinates.XStep, 
+                        AnswerCoordinates.EndPoint.Value + yStep);
+
+                    var answer = whitePixelYesCount > whitePixelMaybeCount && whitePixelYesCount > whitePixelNoCount ? 
+                        _answerVariants.Item1
+                        : whitePixelMaybeCount > whitePixelYesCount && whitePixelMaybeCount > whitePixelNoCount ? 
+                        _answerVariants.Item2
+                        : _answerVariants.Item3;
+
+                    yStep += AnswerCoordinates.YStep;
+
+                    _answers.Add(i, answer);
                 }
             }
 

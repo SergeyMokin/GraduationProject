@@ -24,6 +24,16 @@ export default class BlankCreatorPage extends Component {
         q5: "",
         q6: "",
         q7: "",
+        q8: "",
+        q9: "",
+        q10: "",
+        q11: "",
+        q12: "",
+        q13: "",
+        q14: "",
+        q15: "",
+        q16: "",
+        q17: "",
         imageData: null,
         selected2: "Graduation Project",
         inputStyle: {
@@ -106,6 +116,16 @@ export default class BlankCreatorPage extends Component {
             q5: "",
             q6: "",
             q7: "",
+            q8: "",
+            q9: "",
+            q10: "",
+            q11: "",
+            q12: "",
+            q13: "",
+            q14: "",
+            q15: "",
+            q16: "",
+            q17: "",
             inputStyle: {
                 color: 'blue'
             },
@@ -120,7 +140,8 @@ export default class BlankCreatorPage extends Component {
 
     this.typeToAdd = {
       typeName: this.state.typeName,
-      questions: [this.state.q1, this.state.q2, this.state.q3, this.state.q4, this.state.q5, this.state.q6, this.state.q7]
+      questions: [this.state.q1, this.state.q2, this.state.q3, this.state.q4, this.state.q5, this.state.q6, this.state.q7,
+         this.state.q8, this.state.q9, this.state.q10, this.state.q11, this.state.q12, this.state.q13, this.state.q14, this.state.q15, this.state.q16, this.state.q17]
     }
     await this.api.addBlankType(this.typeToAdd)
       .then(success.bind(this))
@@ -196,6 +217,16 @@ export default class BlankCreatorPage extends Component {
       q5: "",
       q6: "",
       q7: "",
+      q8: "",
+      q9: "",
+      q10: "",
+      q11: "",
+      q12: "",
+      q13: "",
+      q14: "",
+      q15: "",
+      q16: "",
+      q17: "",
       selected2: this.types[0].type,
       inputStyle: {
         color: 'blue'
@@ -308,7 +339,97 @@ export default class BlankCreatorPage extends Component {
                         value={this.state.q7}
                         placeholder={"Q7"} />
                 </InputGroup>
-            </ListItem>         
+            </ListItem>
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q8: text})}
+                        value={this.state.q8}
+                        placeholder={"Q8"} />
+                </InputGroup>
+            </ListItem>      
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q9: text})}
+                        value={this.state.q9}
+                        placeholder={"Q9"} />
+                </InputGroup>
+            </ListItem>   
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q10: text})}
+                        value={this.state.q10}
+                        placeholder={"Q10"} />
+                </InputGroup>
+            </ListItem>      
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q11: text})}
+                        value={this.state.q11}
+                        placeholder={"Q11"} />
+                </InputGroup>
+            </ListItem>   
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q12: text})}
+                        value={this.state.q12}
+                        placeholder={"Q12"} />
+                </InputGroup>
+            </ListItem>   
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q13: text})}
+                        value={this.state.q13}
+                        placeholder={"Q13"} />
+                </InputGroup>
+            </ListItem>  
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q14: text})}
+                        value={this.state.q14}
+                        placeholder={"Q14"} />
+                </InputGroup>
+            </ListItem>  
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q15: text})}
+                        value={this.state.q15}
+                        placeholder={"Q15"} />
+                </InputGroup>
+            </ListItem>
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q16: text})}
+                        value={this.state.q16}
+                        placeholder={"Q16"} />
+                </InputGroup>
+            </ListItem>
+            <ListItem style={{height: 20}}>
+                <InputGroup>
+                    <Icon name="ios-help" style={this.state.inputStyle} />
+                    <Input
+                        onChangeText={(text) => this.setState({q17: text})}
+                        value={this.state.q17}
+                        placeholder={"Q17"} />
+                </InputGroup>
+            </ListItem>
               <Button style={styles.primaryButton} onPress={this.addType.bind(this)}>
                   <Text>Add type</Text>
               </Button>

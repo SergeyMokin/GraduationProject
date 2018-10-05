@@ -35,9 +35,11 @@ namespace GraduationProjectServices
 
         public async Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions)
         {
-            var questionsToAdd = questions?.Select(x => string.IsNullOrWhiteSpace(x) ? throw new ArgumentException() : x).ToArray();
+            var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray() 
+                ?? throw new ArgumentException();
 
-            if (questionsToAdd?.Count() != BlankFileSettings.QuestionsCount)
+            if (questionsToAdd.Length < BlankFileSettings.MinQuestionCount ||
+                questionsToAdd.Length > BlankFileSettings.MaxQuestionCount)
             {
                 throw new ArgumentException();
             }
@@ -50,9 +52,9 @@ namespace GraduationProjectServices
 
             var addedType = await _blankTypeRepository.AddAsync(new BlankType {Type = typeName});
 
-            for (var i = 0; i < BlankFileSettings.QuestionsCount; i++)
+            foreach (var q in questionsToAdd)
             {
-                await _questionRepository.AddAsync(new QuestionEntity { BlankTypeId = addedType.Id, Question = questionsToAdd[i] });
+                await _questionRepository.AddAsync(new QuestionEntity { BlankTypeId = addedType.Id, Question = q});
             }
 
             return addedType;

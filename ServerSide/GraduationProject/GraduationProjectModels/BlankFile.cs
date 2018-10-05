@@ -4,7 +4,8 @@ namespace GraduationProjectModels
 {
     public static class BlankFileSettings
     {
-        public const int QuestionsCount = 7;
+        public const int MinQuestionCount = 1;
+        public const int MaxQuestionCount = 17;
         public const int BlankWidth = 1080;
         public const int BlankHeight = 1397;
     }
