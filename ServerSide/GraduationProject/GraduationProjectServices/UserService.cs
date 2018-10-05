@@ -38,8 +38,9 @@ namespace GraduationProjectServices
             var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray() 
                 ?? throw new ArgumentException();
 
-            if (questionsToAdd.Length < BlankFileSettings.MinQuestionCount ||
-                questionsToAdd.Length > BlankFileSettings.MaxQuestionCount)
+            const int minQuestionsCount = 1;
+
+            if (questionsToAdd.Length < minQuestionsCount)
             {
                 throw new ArgumentException();
             }
