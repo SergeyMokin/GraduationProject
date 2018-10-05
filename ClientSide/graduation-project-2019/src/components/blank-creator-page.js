@@ -74,7 +74,7 @@ export default class BlankCreatorPage extends Component {
 
     let success = (data) => {
         this.types = data;
-        this.onValueChange2(data[0].type);
+        this.onValueChange2(data[0].name);
         this.setState({isLoading: false});
     };
 
@@ -227,7 +227,7 @@ export default class BlankCreatorPage extends Component {
       q15: "",
       q16: "",
       q17: "",
-      selected2: this.types[0].type,
+      selected2: this.types[0].name,
       inputStyle: {
         color: 'blue'
       },
@@ -258,7 +258,7 @@ export default class BlankCreatorPage extends Component {
                 selectedValue={this.state.selected2}
                 onValueChange={this.onValueChange2.bind(this)}
               >
-              {this.types.map(item => <Picker.Item label={item.type} value={item.type} key={item.id} />)}
+              {this.types.map(item => <Picker.Item label={item.name} value={item.name} key={item.id} />)}
               </Picker>
         </Item>
         <CameraPage imageCallback = {(imageData) => {this.setState({imageData: imageData})}}/>

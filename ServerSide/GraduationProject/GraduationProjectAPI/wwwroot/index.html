@@ -213,8 +213,7 @@
                     <td>POST</td>
                     <td>api/user/addblanktype</td>
                     <td>
-                        typeName: <a style="color:blue">string</a> <br />
-                        questions: <a style="color:blue">string</a>[] <br />
+                        [FromBody]param: <a style="color:green" href="#TypeFile">TypeFile</a> <br />
                     </td>
                     <td>
                         <a style="color:green" href="#BlankType">BlankType</a> <br />
@@ -330,6 +329,7 @@
                     <td>
                         id : <a style="color: blue">long</a><br />
                         type : <a style="color: blue">string</a><br />
+                        name : <a style="color: blue">string</a><br />
                     </td>
                 </tr>
                 <tr>
@@ -349,6 +349,15 @@
                     <td><a style="color:green" href="#FileContentResult" id="FileContentResult">FileContentResult</a></td>
                     <td>
                         Media type to download.
+                    </td>
+                </tr>
+                <tr>
+                    <td><a style="color:green" href="#TypeFile" id="TypeFile">TypeFile</a></td>
+                    <td>
+                        id : <a style="color: blue">long</a><br />
+                        data : <a style="color: blue">string</a><br />
+                        type : <a style="color: blue">string</a><br />
+                        blankTypeName : <a style="color: blue">string</a><br />
                     </td>
                 </tr>
             </tbody>

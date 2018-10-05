@@ -1,56 +1,20 @@
 ﻿using System;
-using GraduationProjectModels;
-using System.IO;
+using System.Collections.Generic;
 using System.Drawing;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
+using System.Threading.Tasks;
+using GraduationProjectModels;
 
 namespace GraduationProjectImageHandler
 {
     // Process images class.
     public class ImageHandler : BaseImageHandler
     {
-        protected override BlankFile CreateExcel()
-        {
-
-            using (var fs = new FileStream(ExcelFilePath, FileMode.Create, FileAccess.Write))
-            {
-
-                IWorkbook workbook = new XSSFWorkbook();
-
-                ISheet sheet = workbook.CreateSheet("ImageHandlerResult");
-
-                for (var i = 0; i < Questions.Length; i++)
-                {
-                    IRow row = sheet.CreateRow(i);
-                    row.CreateCell(0).SetCellValue(Questions[i]);
-                    row.CreateCell(1).SetCellValue(Answers[i]);
-                }
-
-                sheet.AutoSizeColumn(0);
-                sheet.AutoSizeColumn(1);
-
-                workbook.Write(fs);
-            }
-
-            var data = Convert.ToBase64String(File.ReadAllBytes(ExcelFilePath));
-
-            return new BlankFile
-            {
-                Id = 0,
-                Name = ExcelFileName,
-                Data = data,
-                Type = RecognizedBlankType,
-                FileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            };
-        }
-
         protected override void SearchAnswers()
         {
             if (Questions.Length < AnswerCoordinates.MainBlank.MaxQuestionCount
                 || Questions.Length > AnswerCoordinates.MainBlank.MaxQuestionCount)
             {
-                throw new ArgumentException($"{RecognizedBlankType} has not valid count of questions. It need to be between {AnswerCoordinates.MainBlank.MaxQuestionCount} and {AnswerCoordinates.MainBlank.MaxQuestionCount}");
+                throw new InvalidOperationException();
             }
 
             using (var img = new Bitmap(SavedBlackWhiteImageName))
@@ -88,5 +52,7 @@ namespace GraduationProjectImageHandler
                 }
             }
         }
+
+        public override Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile) => throw new Exception();
     }
 }

@@ -83,9 +83,9 @@ namespace GraduationProjectAPI.Controllers
 
         // POST api/user/addblanktype
         [HttpPost]
-        public async Task<BlankType> AddBlankType(string typeName, [FromQuery(Name="questions")]IEnumerable<string> questions)
+        public async Task<BlankType> AddBlankType([FromBody]TypeFile param)
         {
-            return await _userService.AddBlankType(typeName, questions);
+            return await _userService.AddBlankType(param);
         }
 
         // DELETE api/user/removefile?id=

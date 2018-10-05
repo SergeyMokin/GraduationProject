@@ -8,6 +8,29 @@ namespace GraduationProjectModels
         public const int BlankHeight = 1397;
     }
 
+    // TypeFile image to generate type.
+    public class TypeFile : IEntity<TypeFile>
+    {
+        public long Id { get; set; }
+
+        public string Type { get; set; }
+
+        public string BlankTypeName { get; set; }
+
+        public string Data { get; set; }
+
+        public bool Validate() => !(string.IsNullOrWhiteSpace(Data)
+                                    && string.IsNullOrWhiteSpace(Type)
+                                    && string.IsNullOrWhiteSpace(BlankTypeName));
+
+        public void Edit(TypeFile param)
+        {
+            Type = param.Type;
+            BlankTypeName = param.BlankTypeName;
+            Data = param.Data;
+        }
+    }
+
     // BlankFile image/document what contain in database.
     public class BlankFile : IEntity<BlankFile>
     {

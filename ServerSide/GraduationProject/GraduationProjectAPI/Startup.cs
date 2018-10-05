@@ -8,15 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using GraduationProjectInterfaces.Controllers;
 using GraduationProjectAPI.Controllers;
 using GraduationProjectInterfaces.Services;
 using GraduationProjectServices;
 using GraduationProjectInterfaces.Repository;
-using GraduationProjectInterfaces.ImageHandler;
-using GraduationProjectImageHandler;
 
 namespace GraduationProjectAPI
 {
@@ -87,10 +84,8 @@ namespace GraduationProjectAPI
         }
 
         // Register dependencies.
-        private void RegisterDependencyInjection(IServiceCollection services)
+        private static void RegisterDependencyInjection(IServiceCollection services)
         {
-            services.AddScoped<IImageHandler, ImageHandler>();
-
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<BlankFile>, Repository<BlankFile>>();
             services.AddScoped<IRepository<Password>, Repository<Password>>();

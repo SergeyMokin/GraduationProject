@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GraduationProjectInterfaces.ImageHandler;
 
 namespace GraduationProjectInterfaces.Services
 {
     // Service what realize logic of work controller of user documents.
     public interface IUserService
     {
-        Task<FileContentResult> GenerateExcel(BlankFile param, long userId);
+        Task<FileContentResult> GenerateExcel(BlankFile param, long userId, IImageHandler imageHandler = null);
 
         Task<IEnumerable<BlankFileUserReturn>> GetFiles(long userId);
 
@@ -16,7 +17,7 @@ namespace GraduationProjectInterfaces.Services
 
         IEnumerable<User> GetUsers(long userId);
 
-        Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions);
+        Task<BlankType> AddBlankType(TypeFile typeFile, IImageHandler imageHandler = null);
 
         Task<long> RemoveFile(long fileId, long userId);
 

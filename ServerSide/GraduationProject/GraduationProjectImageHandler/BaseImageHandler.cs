@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using GraduationProjectInterfaces.ImageHandler;
 using GraduationProjectModels;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace GraduationProjectImageHandler
 {
@@ -17,56 +19,27 @@ namespace GraduationProjectImageHandler
         protected readonly Tuple<string, string, string> BaseAnswerVariants = new Tuple<string, string, string>("YES", "MAY BE", "NO");
         protected readonly Dictionary<int, string> Answers = new Dictionary<int, string>();
         protected string[] Questions;
-
-        private string _savedImageName;
         protected string SavedBlackWhiteImageName;
 
-        protected string ExcelFileName;
-        protected string ExcelFilePath;
-        protected string RecognizedBlankType;
+        private string _savedImageName;
 
-        protected BlankFile BlankFile;
+        private string _excelFileName;
+        private string _excelFilePath;
+        private string _recognizedBlankType;
 
-        public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
-        {
-            Questions = questions?.ToArray();
-
-            var pathToSave = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
-
-            _savedImageName = pathToSave + param.Name;
-            SavedBlackWhiteImageName = pathToSave + param.Name + "_bw";
-
-            ExcelFileName = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
-            ExcelFilePath = pathToSave + ExcelFileName;
-            RecognizedBlankType = param.Type;
-
-            BlankFile = param;
-
-            SaveImage();
-            SaveGrayScaleImage();
-
-            SearchAnswers();
-
-            var result = Task.FromResult(CreateExcel());
-
-            RemoveFiles();
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Override this method to create Excel file.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract BlankFile CreateExcel();
+        private BlankFile _blankFile;
 
         /// <summary>
         ///     Override this method to search answers on blank.
         /// </summary>
         protected abstract void SearchAnswers();
+
+        /// <summary>
+        ///     Override to get questions from blank.
+        /// </summary>
+        /// <param name="typeFile"></param>
+        /// <returns></returns>
+        public abstract Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile);
 
         /// <summary>
         ///     Search count of white pixels on rectangle.
@@ -95,9 +68,80 @@ namespace GraduationProjectImageHandler
             return whitePixelCount;
         }
 
+        public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
+        {
+            Questions = questions?.ToArray();
+
+            var pathToSave = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
+
+            _savedImageName = pathToSave + param.Name;
+            SavedBlackWhiteImageName = pathToSave + param.Name + "_bw";
+
+            _excelFileName = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
+            _excelFilePath = pathToSave + _excelFileName;
+            _recognizedBlankType = param.Type;
+
+            _blankFile = param;
+
+            SaveImage();
+            SaveGrayScaleImage();
+
+            SearchAnswers();
+
+            var result = Task.FromResult(CreateExcel());
+
+            RemoveFiles();
+
+            return result;
+        }
+
+        private BlankFile CreateExcel()
+        {
+            try
+            {
+                using (var fs = new FileStream(_excelFilePath, FileMode.Create, FileAccess.Write))
+                {
+
+                    IWorkbook workbook = new XSSFWorkbook();
+
+                    ISheet sheet = workbook.CreateSheet("ImageHandlerResult");
+
+                    for (var i = 0; i < Questions.Length; i++)
+                    {
+                        IRow row = sheet.CreateRow(i);
+                        row.CreateCell(0).SetCellValue(Questions[i]);
+                        row.CreateCell(1).SetCellValue(Answers[i]);
+                    }
+
+                    sheet.AutoSizeColumn(0);
+                    sheet.AutoSizeColumn(1);
+
+                    workbook.Write(fs);
+                }
+
+                var data = Convert.ToBase64String(File.ReadAllBytes(_excelFilePath));
+
+                return new BlankFile
+                {
+                    Id = 0,
+                    Name = _excelFileName,
+                    Data = data,
+                    Type = _recognizedBlankType,
+                    FileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                };
+            }
+            catch
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
         private void SaveImage()
         {
-            var bytes = Convert.FromBase64String(BlankFile.Data);
+            var bytes = Convert.FromBase64String(_blankFile.Data);
             using (var stream = new FileStream(_savedImageName, FileMode.Create))
             {
                 stream.Write(bytes, 0, bytes.Length);
@@ -118,7 +162,7 @@ namespace GraduationProjectImageHandler
         {
             File.Delete(_savedImageName);
             File.Delete(SavedBlackWhiteImageName);
-            File.Delete(ExcelFilePath);
+            File.Delete(_excelFilePath);
         }
 
         private static Bitmap ResizeBitmap(Image imgToResize, Size size)

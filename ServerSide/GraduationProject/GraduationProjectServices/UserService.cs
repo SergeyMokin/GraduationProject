@@ -8,35 +8,44 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraduationProjectImageHandler;
 
 namespace GraduationProjectServices
 {
     // IUserService implementation to work with user documents.
     public class UserService : IUserService
     {
-        private readonly IImageHandler _imageHandler;
+        private IImageHandler _imageHandler;
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<BlankFile> _blankFileRepository;
         private readonly IRepository<BlankType> _blankTypeRepository;
         private readonly IRepository<QuestionEntity> _questionRepository;
 
-        public UserService(IImageHandler imageHandler,
-                IRepository<User> userRepository,
+        public UserService(IRepository<User> userRepository,
                 IRepository<BlankFile> blankFileRepository,
                 IRepository<BlankType> blankTypeRepository,
                 IRepository<QuestionEntity> questionRepository)
         {
-            _imageHandler = imageHandler;
             _userRepository = userRepository;
             _blankFileRepository = blankFileRepository;
             _blankTypeRepository = blankTypeRepository;
             _questionRepository = questionRepository;
         }
 
-        public async Task<BlankType> AddBlankType(string typeName, IEnumerable<string> questions)
+        public async Task<BlankType> AddBlankType(TypeFile param, IImageHandler imageHandler = null)
         {
-            var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray() 
-                ?? throw new ArgumentException();
+            if (await _blankTypeRepository.Get()
+                .AnyAsync(entity => entity.Name.Equals(param.BlankTypeName, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new InvalidOperationException();
+            }
+
+            _imageHandler = imageHandler ?? ImageHandlerFactory.GetImageHanlderByType(param.Type);
+
+            var questions = await _imageHandler.GetQuestionsFromBlank(param);
+
+            var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
+                                 ?? throw new ArgumentException();
 
             const int minQuestionsCount = 1;
 
@@ -45,13 +54,7 @@ namespace GraduationProjectServices
                 throw new ArgumentException();
             }
 
-            if (await _blankTypeRepository.Get()
-                .AnyAsync(entity => entity.Type.Equals(typeName, StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new InvalidOperationException();
-            }
-
-            var addedType = await _blankTypeRepository.AddAsync(new BlankType {Type = typeName});
+            var addedType = await _blankTypeRepository.AddAsync(new BlankType {Type = param.Type, Name = param.BlankTypeName});
 
             foreach (var q in questionsToAdd)
             {
@@ -77,7 +80,7 @@ namespace GraduationProjectServices
             };
         }
 
-        public async Task<FileContentResult> GenerateExcel(BlankFile param, long userId)
+        public async Task<FileContentResult> GenerateExcel(BlankFile param, long userId, IImageHandler imageHandler = null)
         {
             if (!param.Validate())
             {
@@ -85,7 +88,7 @@ namespace GraduationProjectServices
             }
 
             var blankType = await _blankTypeRepository.Get()
-                .FirstOrDefaultAsync(bt => bt.Type.Equals(param.Type, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(bt => bt.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase));
 
             if (blankType == null)
             {
@@ -93,6 +96,8 @@ namespace GraduationProjectServices
             }
 
             var questions = _questionRepository.Get().Where(q => q.BlankTypeId == blankType.Id).Select(q => q.Question);
+
+            _imageHandler = imageHandler ?? ImageHandlerFactory.GetImageHanlderByType(blankType.Type);
 
             var file = await _imageHandler.GenerateExcel(param, questions) 
                 ?? throw new InvalidOperationException();

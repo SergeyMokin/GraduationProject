@@ -8,5 +8,7 @@ namespace GraduationProjectInterfaces.ImageHandler
     public interface IImageHandler
     {
         Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions);
+
+        Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile);
     }
 }
