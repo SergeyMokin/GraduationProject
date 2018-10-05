@@ -6,12 +6,18 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GraduationProjectInterfaces\GraduationProjectInterfaces.csproj" />
     <ProjectReference Include="..\GraduationProjectModels\GraduationProjectModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Tesseract.NetCore">
+      <HintPath>..\libraries\Tesseract.NetCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

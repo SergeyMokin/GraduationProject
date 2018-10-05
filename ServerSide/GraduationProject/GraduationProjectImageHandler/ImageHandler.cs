@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using GraduationProjectModels;
+using Tesseract;
 
 namespace GraduationProjectImageHandler
 {
@@ -53,6 +57,39 @@ namespace GraduationProjectImageHandler
             }
         }
 
-        public override Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile) => throw new Exception();
+        public override Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile)
+        {
+            var pathToSave = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
+
+            var savedImageName = pathToSave + "_qadd_img";
+
+            SaveImage(typeFile.Data, savedImageName);
+
+            var questionList = new List<string>();
+
+            using (var img = new Bitmap(savedImageName))
+            {
+                var currentY = AnswerCoordinates.MainBlank.QStartPoint.Value;
+                while (currentY + AnswerCoordinates.MainBlank.QyStep < img.Height)
+                {
+                    using (var newImg = img.Clone(new Rectangle(AnswerCoordinates.MainBlank.QStartPoint.Key,
+                        currentY,
+                        AnswerCoordinates.MainBlank.QWidth,
+                        AnswerCoordinates.MainBlank.QHeight), img.PixelFormat))
+                    {
+                        using (var ocr = new TesseractEngine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "eng"))
+                            questionList.Add(ocr.Process(newImg).GetText().Replace("\n", " "));
+                    }
+                    currentY += AnswerCoordinates.MainBlank.QyStep;
+                }
+            }
+
+            File.Delete(savedImageName);
+
+            return Task.FromResult(questionList.AsEnumerable());
+        }
     }
 }

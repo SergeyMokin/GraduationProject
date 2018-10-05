@@ -86,7 +86,7 @@ namespace GraduationProjectImageHandler
 
             _blankFile = param;
 
-            SaveImage();
+            SaveImage(_blankFile.Data, _savedImageName);
             SaveGrayScaleImage();
 
             SearchAnswers();
@@ -139,10 +139,10 @@ namespace GraduationProjectImageHandler
             }
         }
 
-        private void SaveImage()
+        protected void SaveImage(string data, string path)
         {
-            var bytes = Convert.FromBase64String(_blankFile.Data);
-            using (var stream = new FileStream(_savedImageName, FileMode.Create))
+            var bytes = Convert.FromBase64String(data);
+            using (var stream = new FileStream(path, FileMode.Create))
             {
                 stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
