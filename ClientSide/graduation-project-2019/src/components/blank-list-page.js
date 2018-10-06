@@ -154,7 +154,10 @@ export default class BlankListPage extends Component {
 
   sendMessageModalOpen(file)
   {
-    this.setState({isSend: true, fileToSend: file});
+    if(file.isAccepted)
+    {
+      this.setState({isSend: true, fileToSend: file});
+    }
   }
 
   sendMessageModalClose()
@@ -205,9 +208,9 @@ export default class BlankListPage extends Component {
                 </ListItem>
                 {this.files.map((file) => 
                   <ListItem key={file.blankFileId} 
-                    onLongPress={() => this.sendMessageModalOpen(file)} onPress={() => this.alertMes(file)}>
+                    onPress={() => this.sendMessageModalOpen(file)} onLongPress={() => this.alertMes(file)}>
                   <Icon name="ios-document" style={{margin: 5, color: file.isAccepted ? 'blue' : 'yellow'}} />
-                  <Text style={{padding: 5}}>{file.blankFileId}: {file.fileName}</Text>
+                  <Text style={{padding: 5}}>{file.blankFileId}: <Text style={{fontSize: 10}}>{file.fileName}</Text></Text>
                 </ListItem>)}
               </List>      
             </Content>

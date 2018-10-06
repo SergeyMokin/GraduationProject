@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
       width: 4,
     },
     shadowRadius: 5,
-    width: 250,
+    width: 210,
   },
   maybeRenderImageContainer: {
     borderTopLeftRadius: 3,
@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   maybeRenderImage: {
-    height: 250,
-    width: 250,
+    height: 297,
+    width: 210,
   },
   maybeRenderImageText: {
     paddingHorizontal: 10,
