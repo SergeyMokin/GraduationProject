@@ -44,19 +44,20 @@ namespace GraduationProjectServices
 
             var questions = await _imageHandler.GetQuestionsFromBlank(param);
 
-            var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray()
-                                 ?? throw new ArgumentException();
+            var questionsToAdd = questions?.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
-            if (questionsToAdd.Count(q => q.Contains("?")) != questionsToAdd.Length)
+            const int minQuestionsCount = 1;
+
+            if (questionsToAdd == null || questionsToAdd.Length < minQuestionsCount)
             {
                 throw new ArgumentException();
             }
 
-            const int minQuestionsCount = 1;
-
-            if (questionsToAdd.Length < minQuestionsCount)
+            if (questionsToAdd.Count(q => q.Contains("?")) != questionsToAdd.Length)
             {
-                throw new ArgumentException();
+                var questionsWithoutQuestion = questionsToAdd.Where(q => !q.Contains("?")).Select(x => x + "?").ToList();
+                questionsToAdd = questionsToAdd.Select(q =>
+                    q.Contains("?") ? q : questionsWithoutQuestion.FirstOrDefault(qwq => qwq.Contains(q))).ToArray();
             }
 
             var addedType = await _blankTypeRepository.AddAsync(new BlankType {Type = param.Type, Name = param.BlankTypeName});
@@ -93,7 +94,7 @@ namespace GraduationProjectServices
             }
 
             var blankType = await _blankTypeRepository.Get()
-                .FirstOrDefaultAsync(bt => bt.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(bt => bt.Name.Equals(param.Type, StringComparison.OrdinalIgnoreCase));
 
             if (blankType == null)
             {

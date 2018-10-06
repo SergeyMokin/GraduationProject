@@ -106,6 +106,9 @@ namespace GraduationProjectAPI
         {
             AppSettings.DbConnectionString =
                 Defines.GetDecodedString(Configuration["AppSettings:DBConnectionString"]);
+
+            AppSettings.MicrosoftVisionApiKey =
+                Defines.GetDecodedString(Configuration["MicrosoftVisionApiKey"]);
         }
     }
 }

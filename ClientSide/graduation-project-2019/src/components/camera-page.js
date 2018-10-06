@@ -93,8 +93,9 @@ export default class CameraPage extends Component {
     if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
       let pickerResult = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [1080, 1397],
-        base64: true
+        aspect: [210, 297],
+        base64: true,
+        quality: 0.7
       });
 
       this._handleImagePicked(pickerResult);
@@ -110,10 +111,11 @@ export default class CameraPage extends Component {
     if (cameraRollPerm === 'granted') {
       let pickerResult = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        aspect: [1080, 1397],
-        base64: true
+        aspect: [210, 297],
+        base64: true,
+        quality: 0.7
       });
-
+      
       this._handleImagePicked(pickerResult);
     }
   };

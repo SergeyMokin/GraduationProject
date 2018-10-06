@@ -8,10 +8,10 @@ namespace GraduationProjectServices
     // Service to write logs.
     public static class LogService
     {
-        private static readonly List<string> _notWrittenExceptions
+        private static readonly List<string> NotWrittenExceptions
             = new List<string>();
 
-        private static readonly object _lock = new object();
+        private static readonly object Lock = new object();
 
         public static void UpdateLogFile(Exception ex)
         {
@@ -28,16 +28,16 @@ namespace GraduationProjectServices
             var path = Path.Combine(
                            Directory.GetCurrentDirectory(),
                           "wwwroot/logs", DateTime.Now.ToString("dd_MM_yy") + "_log.txt");
-            lock (_lock)
+            lock (Lock)
             {
                 try
                 {
-                    if (_notWrittenExceptions.Any())
+                    if (NotWrittenExceptions.Any())
                     {
-                        while (_notWrittenExceptions.Any())
+                        while (NotWrittenExceptions.Any())
                         {
-                            File.AppendAllText(path, _notWrittenExceptions.Last() + Environment.NewLine);
-                            _notWrittenExceptions.Remove(_notWrittenExceptions.Last());
+                            File.AppendAllText(path, NotWrittenExceptions.Last() + Environment.NewLine);
+                            NotWrittenExceptions.Remove(NotWrittenExceptions.Last());
                         }
                     }
 
@@ -45,7 +45,7 @@ namespace GraduationProjectServices
                 }
                 catch
                 {
-                    _notWrittenExceptions.Add(res + Environment.NewLine);
+                    NotWrittenExceptions.Add(res + Environment.NewLine);
                 }
             }
         }

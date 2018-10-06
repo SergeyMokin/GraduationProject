@@ -142,20 +142,26 @@ namespace GraduationProjectImageHandler
         protected void SaveImage(string data, string path)
         {
             var bytes = Convert.FromBase64String(data);
-            using (var stream = new FileStream(path, FileMode.Create))
+            using (var stream = new FileStream(path + "_middle", FileMode.Create))
             {
                 stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
             }
+
+            using (var img = new Bitmap(path + "_middle"))
+                using (var resizedImg = ResizeBitmap(img, new Size { Width = BlankFileSettings.BlankWidth, Height = BlankFileSettings.BlankHeight }))
+                    resizedImg.Save(path);
+
+            File.Delete(path + "_middle");
+
         }
 
         private void SaveGrayScaleImage()
         {
             using (var img = new Bitmap(_savedImageName))
-            using (var resizedImg = ResizeBitmap(img, new Size { Width = BlankFileSettings.BlankWidth, Height = BlankFileSettings.BlankHeight }))
-            using (var kirschImg = ConvolutionFilter(resizedImg, Kirsch3X3Horizontal, Kirsch3X3Vertical))
-            using (var bw = kirschImg.Clone(new Rectangle(0, 0, kirschImg.Width, kirschImg.Height), PixelFormat.Format1bppIndexed))
-                bw.Save(SavedBlackWhiteImageName);
+                using (var kirschImg = ConvolutionFilter(img, Kirsch3X3Horizontal, Kirsch3X3Vertical))
+                    using (var bw = kirschImg.Clone(new Rectangle(0, 0, kirschImg.Width, kirschImg.Height), PixelFormat.Format1bppIndexed))
+                        bw.Save(SavedBlackWhiteImageName);
         }
 
         private void RemoveFiles()

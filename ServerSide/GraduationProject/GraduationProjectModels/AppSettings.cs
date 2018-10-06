@@ -8,5 +8,7 @@
             get => _connectionString?.Replace("Connection Time", "");
             set => _connectionString = value;
         }
+
+        public static string MicrosoftVisionApiKey { get; set; }
     }
 }

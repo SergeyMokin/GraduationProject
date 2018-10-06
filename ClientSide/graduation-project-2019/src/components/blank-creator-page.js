@@ -71,10 +71,11 @@ export default class BlankCreatorPage extends Component {
   {
     this.setState({isLoading: true});
     let error = (error) => {
-      this.successMessage = "";
+        this.successMessage = "";
         this.errorMessage = error.message;
         this.setState({
             isLoading: false,
+            imageData: null,
             inputStyle: {
                 color: 'red'
             },
@@ -93,6 +94,7 @@ export default class BlankCreatorPage extends Component {
         this.setState({
             isLoading: false,
             typeName: "",
+            imageData: null,
             inputStyle: {
                 color: 'blue'
             },
@@ -107,9 +109,9 @@ export default class BlankCreatorPage extends Component {
 
     this.typeToAdd = {
         id: 0,
-        data: this.state.imageData.base64,
         type: this.state.selectedTemplate,
-        blankTypeName: this.state.typeName
+        blankTypeName: this.state.typeName,
+        data: this.state.imageData.base64
     }
     await this.api.addBlankType(this.typeToAdd)
       .then(success.bind(this))

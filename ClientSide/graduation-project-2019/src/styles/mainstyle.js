@@ -12,7 +12,7 @@ module.exports = StyleSheet.create({
     flexDirection:'row',
     alignItems:'center',
     justifyContent:'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   primaryButton: {
     margin: 10,

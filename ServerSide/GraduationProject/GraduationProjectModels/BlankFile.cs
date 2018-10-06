@@ -4,8 +4,8 @@ namespace GraduationProjectModels
 {
     public class BlankFileSettings
     {
-        public const int BlankWidth = 1080;
-        public const int BlankHeight = 1397;
+        public const int BlankWidth = 1050;
+        public const int BlankHeight = 1485;
     }
 
     // TypeFile image to generate type.
