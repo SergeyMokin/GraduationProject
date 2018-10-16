@@ -5,6 +5,7 @@ namespace GraduationProjectImageHandler
     //Container coordinates of answers.
     public class AnswerCoordinates
     {
+        //Container of types to generate blanks.
         public static class MainBlank
         {
             public const int QyStep = 55;

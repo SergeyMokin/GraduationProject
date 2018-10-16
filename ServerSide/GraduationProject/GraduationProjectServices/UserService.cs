@@ -208,5 +208,10 @@ namespace GraduationProjectServices
 
             return await GetFiles(userId);
         }
+
+        public IEnumerable<string> GetTypes()
+        {
+            return ImageHandlerFactory.GetTypes();
+        }
     }
 }

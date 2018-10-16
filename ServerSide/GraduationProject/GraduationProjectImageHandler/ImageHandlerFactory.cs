@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using GraduationProjectInterfaces.ImageHandler;
 
 namespace GraduationProjectImageHandler
@@ -7,11 +10,17 @@ namespace GraduationProjectImageHandler
     {
         public static IImageHandler GetImageHanlderByType(string typeName)
         {
-            switch (typeName)
-            {
-                case nameof(AnswerCoordinates.MainBlank): return new ImageHandler();
-                default: throw new ArgumentNullException();
-            }
+            return (IImageHandler)Activator.CreateInstance(Assembly.GetExecutingAssembly().DefinedTypes
+                .FirstOrDefault(x => x.Name.Equals(typeName + nameof(ImageHandler), StringComparison.OrdinalIgnoreCase)))
+                ?? throw new ArgumentNullException();
+        }
+
+        public static IEnumerable<string> GetTypes()
+        {
+            return Assembly.GetExecutingAssembly().DefinedTypes
+                .FirstOrDefault(x => x.Name.Equals(nameof(AnswerCoordinates)))
+                ?.DeclaredNestedTypes.Select(x => x.Name)
+                ?? throw new ArgumentNullException();
         }
     }
 }

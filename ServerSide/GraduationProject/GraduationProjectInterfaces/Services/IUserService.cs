@@ -26,5 +26,7 @@ namespace GraduationProjectInterfaces.Services
         Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId, long userId);
 
         Task<Message> SendMessage(Message mes, long userId);
+
+        IEnumerable<string> GetTypes();
     }
 }

@@ -28,5 +28,7 @@ namespace GraduationProjectInterfaces.Controllers
 
         Task<Message> SendMessage(Message mes);
 
+        IEnumerable<string> GetTypes();
+
     }
 }

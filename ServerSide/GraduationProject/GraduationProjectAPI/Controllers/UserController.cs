@@ -109,5 +109,12 @@ namespace GraduationProjectAPI.Controllers
         {
             return await _userService.AcceptFile(fileId, User.GetUserId());
         }
+
+        //GET api/user/gettypes
+        [HttpGet]
+        public IEnumerable<string> GetTypes()
+        {
+            return _userService.GetTypes();
+        }
     }
 }
