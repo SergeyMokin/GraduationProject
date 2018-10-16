@@ -35,6 +35,7 @@ export default class BlankCreatorPage extends Component {
       this.api.setAuthorizationHeader(this.props.userInfo.bearerToken);
       
       this.types = [];
+      this.templates = [];
       this.errorMessage = "";
       this.successMessage = "";
       this.typeToAdd = {
@@ -46,6 +47,25 @@ export default class BlankCreatorPage extends Component {
   async componentWillMount()
   {
     await this.getTypes();
+    await this.getTemplates();
+  }
+
+  async getTemplates()
+  {
+    this.setState({isLoading: true});
+    let error = (error) => {
+      console.log(error);
+      this.setState({isLoading: false});
+    };
+
+    let success = (data) => {
+        this.templates = data;
+        this.setState({isLoading: false});
+    };
+
+    await this.api.getTemplates()
+      .then(success.bind(this))
+      .catch(error.bind(this));
   }
 
   async getTypes()
@@ -240,7 +260,7 @@ export default class BlankCreatorPage extends Component {
                     selectedValue={this.state.selectedTemplate}
                     onValueChange={this.onValueChangeTemplate.bind(this)}
                     >
-                    {[...new Set(this.types.map(item => item.type))].map(item => <Picker.Item label={item} value={item} key={item} />)}
+                    {this.templates.map(item => <Picker.Item label={item} value={item} key={item} />)}
                     </Picker>
             </Item>
             <ListItem>

@@ -193,6 +193,22 @@ export default class ApiRequests
         return ResponseHandler(response);
     }
 
+    async getTemplates()
+    {
+        let method = `GET`;
+        let path = API_URL + `user/gettypes`;
+
+        let response = await fetch(
+            path, 
+            {
+                method: method,
+                headers: this.headers
+            }
+        );
+
+        return ResponseHandler(response);
+    }
+
     async getBlankTypes()
     {
         let method = `GET`;
