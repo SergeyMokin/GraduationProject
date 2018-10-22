@@ -21,7 +21,7 @@ namespace GraduationProjectImageHandler
             var computerVision = new ComputerVisionClient(
                 new ApiKeyServiceClientCredentials(AppSettings.MicrosoftVisionApiKey))
             {
-                Endpoint = "https://westcentralus.api.cognitive.microsoft.com"
+                Endpoint = "https://westeurope.api.cognitive.microsoft.com"
             };
 
             RecognizeTextInStreamHeaders textHeaders = null;
@@ -44,7 +44,7 @@ namespace GraduationProjectImageHandler
         }
 
         // Retrieve the recognized text
-        private static async Task<IEnumerable<Line>> GetTextAsync(ComputerVisionClient computerVision, string operationLocation)
+        private static async Task<IEnumerable<Line>> GetTextAsync(ComputerVisionClient computerVision, string operationLocation, int count = 0)
         {
             if (computerVision == null) throw new ArgumentNullException(nameof(computerVision));
 
@@ -72,7 +72,9 @@ namespace GraduationProjectImageHandler
             catch
             {
                 Thread.Sleep(5000);
-                return await GetTextAsync(computerVision, operationLocation);
+                return count <= 25
+                    ? await GetTextAsync(computerVision, operationLocation, ++count)
+                    : throw new InvalidOperationException();
             }
         }
     }
