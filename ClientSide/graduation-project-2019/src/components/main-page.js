@@ -73,7 +73,7 @@ export default class MainPage extends React.Component {
             <Container>
                 {content}
                 
-                <Footer style={{ backgroundColor: "blue" }}>
+                <Footer style={{ backgroundColor: "blue", bottom: -1 }}>
                     {buttonContent}
                 </Footer>
             </Container>
