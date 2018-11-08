@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar, AsyncStorage, Image } from 'react-native';
 import MainPage from './src/components/main-page';
-import { Container, Content, Spinner, Header } from 'native-base';
+import { Root, Container, Content, Spinner, Header } from 'native-base';
 import styles from './src/styles/mainstyle.js';
 import { Font } from 'expo';
 import LoginPage from './src/components/login-page';
@@ -89,6 +89,7 @@ export default class App extends React.Component {
       <Content contentContainerStyle={styles.body}>
         <Spinner color="blue" />
       </Content>
+      
 
       : this.state.isLogined ?
       <MainPage userInfo = {this.userInfo} logout={this.authCallback.bind(this)} changeUserInfo = {this.changeUserInfo.bind(this)}/>
@@ -98,13 +99,13 @@ export default class App extends React.Component {
     ;
 
     return (
-      <Container>
-        <StatusBar hidden={true} />
-        
-        <Header style={{backgroundColor:'blue'}}>
-          <Image source={require('./src/images/gp-logo-white.png')} style={{width:50, height: 50}}/>
+      <Container style={styles.container}>        
+        <Header style={{backgroundColor:'blue', height: 74}}>
+          <Image source={require('./src/images/gp-logo-white.png')} style={{marginTop: 24, width:50, height: 50}}/>
         </Header>
-        {content}
+        <Root>
+          {content}
+        </Root>
       </Container>
     );
   }

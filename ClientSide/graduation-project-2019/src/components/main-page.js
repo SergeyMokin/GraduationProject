@@ -8,9 +8,9 @@ import BlankListPage from './blank-list-page';
 
 export default class MainPage extends React.Component {
     static routes = {
-        main: "home",
-        profile: "person",
-        blankCreator: "document"
+        main: "list",
+        blankCreator: "ios-add-circle",
+        profile: "person"
     };
 
     constructor(props) {
@@ -64,8 +64,8 @@ export default class MainPage extends React.Component {
         const buttonContent = 
         <FooterTab style={{ backgroundColor: "blue" }}>
             {this.renderButton(MainPage.routes.main)}
-            {this.renderButton(MainPage.routes.profile)}
             {this.renderButton(MainPage.routes.blankCreator)}
+            {this.renderButton(MainPage.routes.profile)}
         </FooterTab>
         ;
 

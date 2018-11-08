@@ -168,8 +168,10 @@ export default class ProfilePage extends Component {
     </Content>
 
     :
-    <Container>
         <List>
+            <ListItem itemHeader first style={{alignSelf: 'center', marginBottom: -25}}>
+                <Text>PROFILE MANAGER</Text>
+            </ListItem>
             <ListItem>
                 <InputGroup>
                     <Icon name="ios-person" style={this.state.emailIconStyle} />
@@ -205,12 +207,11 @@ export default class ProfilePage extends Component {
             <Button style={styles.primaryButton} onPress={this.changePassword.bind(this)}>
                 <Text>change password</Text>
             </Button>
-        </List>                
-        <Button style={styles.primaryButton} onPress={this.props.logoutCallback}>
-            <Text>logout</Text>
-        </Button>
-        <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
-    </Container>
+            <Button style={styles.primaryButton} onPress={this.props.logoutCallback}>
+                <Text>logout</Text>
+            </Button>
+            <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
+        </List>    
     ;
     return (
         <Content>

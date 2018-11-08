@@ -27,7 +27,7 @@ export default class CameraPage extends Component {
 
     return (
       <Content style={styles.container} alignItems='center' justifyContent='center'>
-        <Segment>
+        <Segment style={{marginTop: 10}}>
           <Button
             style = {styles.primaryButton}
             onPress={this._pickImage.bind(this)}

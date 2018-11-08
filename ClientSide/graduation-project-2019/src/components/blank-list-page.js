@@ -1,8 +1,18 @@
-import { Content, Text, List, ListItem, Spinner, Icon, Button, Item, Picker } from 'native-base';
+import { Content, Text, List, ListItem, Spinner, Icon, Button, Item, Picker, Thumbnail, ActionSheet } from 'native-base';
 import React, {Component} from 'react';
 import ApiRequests from '../api';
 import { Alert, Linking, BackHandler } from 'react-native';
 import styles from '../styles/mainstyle.js';
+
+const ACCEPTED_BUTTONS = [
+  { text: "Share", icon: "ios-share-alt", iconColor: "#ff9966" },
+  { text: "Download", icon: "download", iconColor: "blue" },
+  { text: "Delete", icon: "trash", iconColor: "red" }
+];
+let NOT_ACCEPTED_BUTTONS = [
+  { text: "Accept", icon: "ios-checkmark-circle", iconColor: "#ff9966" },
+  { text: "Delete", icon: "trash", iconColor: "red" }
+];  
 
 export default class BlankListPage extends Component {
   constructor(props){
@@ -68,62 +78,71 @@ export default class BlankListPage extends Component {
   {
     if(file.isAccepted)
     {
-      Alert.alert(
-        'Choose what do you want to do with:',
-        file.fileName,
-        [
-          {
-            text: 'Close'
-          },
-          {
-            text: 'Delete', 
-            onPress: () => { 
-              this.setState({isLoading: true}); 
-              this.api.removeFile(file.blankFileId)
-                .then(() => { this.getFiles(); })
-                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
-            } 
-          },
-          {
-            text: 'Download', 
-            onPress: () => { 
+      ActionSheet.show(
+        {
+          options: ACCEPTED_BUTTONS,
+          destructiveButtonIndex: 2,
+          title: 'Choose what do you want to do with: ' + file.blankFileId
+        },
+        buttonIndex => {
+          switch (buttonIndex) {
+            case 0:
+              this.sendMessageModalOpen(file);
+              break;
+            case 1:
               this.setState({isLoading: true}); 
               this.api.downloadFile(file.blankFileId)
                 .then((data) => { this.setState({isLoading: false}); Linking.openURL(data); })
-                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
-            } 
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); });
+              break;
+            case 2:
+              Alert.alert(
+                'Delete file: ' + file.blankFileId,
+                'Are you sure?',
+                [
+                  {text: 'Cancel', style: 'cancel'},
+                  {text: 'OK', onPress: () => {
+                    this.setState({isLoading: true}); 
+                    this.api.removeFile(file.blankFileId)
+                      .then(() => { this.getFiles(); })
+                      .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); });
+                  }},
+                ],
+                { cancelable: false }
+              )
+              break; 
+            default:
+              break; 
           }
-        ]
+        }
       );
     }
     else
     {
-      Alert.alert(
-        'Choose what do you want to do with:',
-        file.fileName,
-        [
-          {
-            text: 'Close'
-          },
-          {
-            text: 'Delete', 
-            onPress: () => { 
-              this.setState({isLoading: true}); 
-              this.api.removeFile(file.blankFileId)
-                .then(() => { this.getFiles(); })
-                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
-            } 
-          },
-          {
-            text: 'Accept', 
-            onPress: () => { 
+      ActionSheet.show(
+        {
+          options: NOT_ACCEPTED_BUTTONS,
+          destructiveButtonIndex: 1,
+          title: 'Choose what do you want to do with file: ' + file.blankFileId
+        },
+        buttonIndex => {
+          switch (buttonIndex) {
+            case 0:
               this.setState({isLoading: true}); 
               this.api.acceptFile(file.blankFileId)
                 .then((data) => { this.files = data; this.setState({isLoading: false}) })
-                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); }) 
-            } 
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); });
+              break;
+            case 1:
+              this.setState({isLoading: true}); 
+              this.api.removeFile(file.blankFileId)
+                .then(() => { this.getFiles(); })
+                .catch((er) => { this.setState({isLoading: false}); Alert.alert(er); });
+              break; 
+            default:
+              break; 
           }
-        ]
+        }
       );
     }
   }
@@ -196,21 +215,27 @@ export default class BlankListPage extends Component {
                       {this.users.map(item => <Picker.Item label={item.email} value={item} key={item.id} />)}
                       </Picker>
                 </Item>
-                <Button style={styles.primaryButton} onPress={this.sendMessageModalClose.bind(this)}><Text>Back</Text></Button>
-                <Button style={styles.primaryButton} onPress={this.sendMessage.bind(this)}><Text>Send</Text></Button>
+                <Button style={styles.primaryButton} onPress={this.sendMessage.bind(this)}><Text>Share</Text></Button>
               </Content>
+    }
+    else if(this.files.length === 0)
+    {
+      return <Content>   
+              <Text style={{alignSelf: 'center', padding: 5, color: 'black'}}>Your list of blanks is empty</Text>
+            </Content>
     }
     return (
             <Content>  
               <List>
-                <ListItem itemHeader first>
-                  <Text>YOUR GENERATED BLANKS</Text>
+                <ListItem itemHeader first style={{alignSelf: 'center', marginBottom: -25}}>
+                  <Text>LIST OF YOUR BLANKS</Text>
                 </ListItem>
                 {this.files.map((file) => 
-                  <ListItem key={file.blankFileId} 
-                    onPress={() => this.sendMessageModalOpen(file)} onLongPress={() => this.alertMes(file)}>
-                  <Icon name="ios-document" style={{margin: 5, color: file.isAccepted ? 'blue' : 'yellow'}} />
-                  <Text style={{padding: 5}}>{file.blankFileId}: <Text style={{fontSize: 10}}>{file.fileName}</Text></Text>
+                <ListItem key={file.blankFileId} 
+                    onPress={() => this.alertMes(file)}>
+                  <Thumbnail square small source={require('../images/excel_file_icon.png')} />
+                  <Text style={{padding: 5, color: file.isAccepted ? 'black' : '#ff9966'}}>{ file.blankFileId }</Text>
+                  <Text style={{fontSize: 10, color: file.isAccepted ? 'gray' : '#ff9966'}} note>{ file.isAccepted ? file.fileName : 'NOT ACCEPTED FILE' }</Text>
                 </ListItem>)}
               </List>      
             </Content>

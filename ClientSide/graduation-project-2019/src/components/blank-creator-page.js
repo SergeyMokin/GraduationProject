@@ -228,7 +228,8 @@ export default class BlankCreatorPage extends Component {
 
     : this.state.enabledButton === buttons.blank && !this.state.isCamera && !this.state.isCameraRoll ?
     <Content>
-        <Item picker>
+        <Text style={{color:'gray', padding: 5, alignSelf: 'center', marginTop: 10}}>Select blank type</Text>
+        <Item picker style={{marginTop: 10}}>
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down-outline" />}
@@ -249,7 +250,8 @@ export default class BlankCreatorPage extends Component {
 
     :
           <List>
-            <Item picker>
+            <Text style={{color:'gray', padding: 5, alignSelf: 'center', marginTop: 10}}>Select blank template</Text>
+            <Item picker style={{marginTop: 10}}>
                     <Picker
                     mode="dropdown"
                     iosIcon={<Icon name="ios-arrow-down-outline" />}
@@ -263,18 +265,18 @@ export default class BlankCreatorPage extends Component {
                     {this.templates.map(item => <Picker.Item label={item} value={item} key={item} />)}
                     </Picker>
             </Item>
-            <ListItem>
+            <ListItem style={{marginTop: 10}}>
                 <InputGroup>
                     <Icon name="ios-document" style={this.state.inputStyle} />
                     <Input
                         onChangeText={(text) => this.setState({typeName: text})}
                         value={this.state.typeName}
-                        placeholder={"Name of type"} />
+                        placeholder={"Name of blank"} />
                 </InputGroup>
             </ListItem> 
             <CameraPage imageCallback = {(imageData) => {this.setState({imageData: imageData})}}/>
             <Button style={styles.primaryButton} onPress={this.addType.bind(this)}>
-                <Text>Add type</Text>
+                <Text>Add blank type</Text>
             </Button>
             <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
           </List>                
