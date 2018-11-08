@@ -157,7 +157,7 @@ namespace GraduationProjectServices
                 file.FileName = blankFiles.FirstOrDefault(x => x.Id == file.BlankFileId)?.Name;
             }
 
-            return files.OrderByDescending(x => x.BlankFileId);
+            return files.OrderByDescending(x => x.IsAccepted).ThenByDescending(x => x.BlankFileId);
         }
 
         public async Task<long> RemoveFile(long fileId, long userId)
