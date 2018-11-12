@@ -140,22 +140,22 @@ namespace GraduationProjectImageHandler
 
                 if (countTop >= (endX - startX - 10))
                 {
-                    lst.Add(AnswerCoordinates.Sides.Top);
+                    lst.Add(Sides.Top);
                 }
 
                 if (countBottom >= (endX - startX - 10))
                 {
-                    lst.Add(AnswerCoordinates.Sides.Bottom);
+                    lst.Add(Sides.Bottom);
                 }
 
                 if (countLeft >= (endY - startY - 10))
                 {
-                    lst.Add(AnswerCoordinates.Sides.Left);
+                    lst.Add(Sides.Left);
                 }
 
                 if (countRight >= (endY - startY - 10))
                 {
-                    lst.Add(AnswerCoordinates.Sides.Right);
+                    lst.Add(Sides.Right);
                 }
 
                 return lst.Distinct();

@@ -3,7 +3,7 @@
 namespace GraduationProjectImageHandler
 {
     //Container coordinates of answers.
-    public class AnswerCoordinates
+    public static class AnswerCoordinates
     {
         //Container of types to generate blanks.
         public static class MainBlank
@@ -19,13 +19,13 @@ namespace GraduationProjectImageHandler
             public const int YStep = 55;
             public const int MaxQuestionCount = 17;
         }
+    }
 
-        public static class Sides
-        {
-            public const int Top = 1;
-            public const int Bottom = 2;
-            public const int Left = 3;
-            public const int Right = 4;
-        }
+    public static class Sides
+    {
+        public const int Top = 1;
+        public const int Bottom = 2;
+        public const int Left = 3;
+        public const int Right = 4;
     }
 }

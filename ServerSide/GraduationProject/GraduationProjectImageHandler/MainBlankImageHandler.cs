@@ -32,22 +32,22 @@ namespace GraduationProjectImageHandler
 
                     var badPositions = CheckPositions(img, startX, startY, endX, endY).ToArray();
 
-                    if (badPositions.Contains(AnswerCoordinates.Sides.Top))
+                    if (badPositions.Contains(Sides.Top))
                     {
                         startY += shift;
                         endY += shift;
                     }
-                    if (badPositions.Contains(AnswerCoordinates.Sides.Bottom))
+                    if (badPositions.Contains(Sides.Bottom))
                     {
                         startY -= shift;
                         endY -= shift;
                     }
-                    if (badPositions.Contains(AnswerCoordinates.Sides.Left))
+                    if (badPositions.Contains(Sides.Left))
                     {
                         startX += shift;
                         endX += shift;
                     }
-                    if (badPositions.Contains(AnswerCoordinates.Sides.Right))
+                    if (badPositions.Contains(Sides.Right))
                     {
                         startX -= shift;
                         endX -= shift;
@@ -57,7 +57,7 @@ namespace GraduationProjectImageHandler
 
                     var whitePixelMaybeCount = SearchCountOfWhitePixelsByCoordinates(img, startX + AnswerCoordinates.MainBlank.XStep, startY, endX + AnswerCoordinates.MainBlank.XStep, endY);
 
-                    var whitePixelNoCount = SearchCountOfWhitePixelsByCoordinates(img, startX + 2 * AnswerCoordinates.MainBlank.XStep, startY, endX + 2 *AnswerCoordinates.MainBlank.XStep, endY);
+                    var whitePixelNoCount = SearchCountOfWhitePixelsByCoordinates(img, startX + 2 * AnswerCoordinates.MainBlank.XStep, startY, endX + 2 * AnswerCoordinates.MainBlank.XStep, endY);
 
                     var answer = whitePixelYesCount > whitePixelMaybeCount && whitePixelYesCount > whitePixelNoCount ?
                         BaseAnswerVariants.Item1
