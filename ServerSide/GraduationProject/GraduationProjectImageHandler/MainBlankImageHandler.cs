@@ -29,7 +29,7 @@ namespace GraduationProjectImageHandler
                 var endY = AnswerCoordinates.MainBlank.EndPoint.Value;
                 for (var i = 0; i < Questions.Length; i++)
                 {
-                    var badPositions = CheckPositions(img, startX, startY, endX, endY).ToArray();
+                    var badPositions = CheckPositions(img, startX, startY, endX, endY);
 
                     ChangeStartPoints(ref startX, ref startY, ref endX, ref endY, badPositions, shift);
 

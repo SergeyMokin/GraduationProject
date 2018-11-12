@@ -85,7 +85,7 @@ namespace GraduationProjectImageHandler
         /// <param name="endX"></param>
         /// <param name="endY"></param>
         /// <returns>Number of side</returns>
-        protected static IEnumerable<int> CheckPositions(Bitmap img, int startX, int startY, int endX, int endY)
+        protected static int[] CheckPositions(Bitmap img, int startX, int startY, int endX, int endY)
         {
             const int threshold = 5;
             var byteArr = new byte[endX - startX][];
@@ -158,7 +158,7 @@ namespace GraduationProjectImageHandler
                     lst.Add(Sides.Right);
                 }
 
-                return lst.Distinct();
+                return lst.Distinct().ToArray();
             }
             catch
             {
@@ -178,13 +178,13 @@ namespace GraduationProjectImageHandler
         /// <param name="endY"></param>
         /// <param name="badPositions"></param>
         /// <param name="shift"></param>
-        protected void ChangeStartPoints(ref int startX, ref int startY, ref int endX, ref int endY, IEnumerable<int> badPositions, int shift)
+        protected void ChangeStartPoints(ref int startX, ref int startY, ref int endX, ref int endY, int[] badPositions, int shift)
         {
             if (!badPositions.Any())
             {
                 return;
             }
-
+            
             if (badPositions.Contains(Sides.Top))
             {
                 startY += shift;
