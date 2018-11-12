@@ -17,8 +17,15 @@ namespace GraduationProjectImageHandler
             public static readonly KeyValuePair<int, int> EndPoint = new KeyValuePair<int, int>(670, 310);
             public const int XStep = 142;
             public const int YStep = 55;
-            public const int MinQuestionCount = 1;
             public const int MaxQuestionCount = 17;
+        }
+
+        public static class Sides
+        {
+            public const int Top = 1;
+            public const int Bottom = 2;
+            public const int Left = 3;
+            public const int Right = 4;
         }
     }
 }

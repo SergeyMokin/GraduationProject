@@ -54,50 +54,159 @@ namespace GraduationProjectImageHandler
         {
             const int threshold = 5;
             var whitePixelCount = 0;
-            for (var x = startX; x < endX; x++)
+            try
             {
-                for (var y = startY; y < endY; y++)
+                for (var x = startX; x < endX; x++)
                 {
-                    var color = img.GetPixel(x, y);
-                    if ((color.R + color.G + color.B) > threshold)
+                    for (var y = startY; y < endY; y++)
                     {
-                        whitePixelCount++;
+                        var color = img.GetPixel(x, y);
+                        if ((color.R + color.G + color.B) > threshold)
+                        {
+                            whitePixelCount++;
+                        }
                     }
                 }
+            }
+            catch
+            {
+                img.Dispose();
+                throw;
             }
             return whitePixelCount;
         }
 
-        public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
+        /// <summary>
+        /// Search sides what contains borders.
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="startX"></param>
+        /// <param name="startY"></param>
+        /// <param name="endX"></param>
+        /// <param name="endY"></param>
+        /// <returns>Number of side</returns>
+        protected static IEnumerable<int> CheckPositions(Bitmap img, int startX, int startY, int endX, int endY)
         {
-            Questions = questions?.ToArray();
+            const int threshold = 5;
+            var byteArr = new byte[endX - startX][];
+            var lst = new List<int>();
+            var countTop = 0;
+            var countBottom = 0;
+            var countLeft = 0;
+            var countRight = 0;
 
-            var pathToSave = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
+            try
+            {
+                for (var x = startX; x < endX; x++)
+                {
+                    byteArr[x - startX] = new byte[endY - startY];
+                    for (var y = startY; y < endY; y++)
+                    {
+                        var pixel = img.GetPixel(x, y);
+                        if ((pixel.R + pixel.G + pixel.B) / 3 > threshold)
+                        {
+                            byteArr[x - startX][y - startY] = 255;
+                        }
+                        else
+                        {
+                            byteArr[x - startX][y - startY] = 0;
+                        }
+                    }
+                }
 
-            _savedImageName = pathToSave + param.Name;
-            SavedBlackWhiteImageName = pathToSave + param.Name + "_bw";
+                for (var x = 0; x < byteArr.Length; x++)
+                {
+                    if (byteArr[x][0] == 255 || byteArr[x][1] == 255 || byteArr[x][2] == 255)
+                    {
+                        countTop++;
+                    }
+                    if (byteArr[x][byteArr.Length - 3] == 255 || byteArr[x][byteArr.Length - 2] == 255 || byteArr[x][byteArr.Length - 1] == 255)
+                    {
+                        countBottom++;
+                    }
+                }
 
-            _excelFileName = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
-            _excelFilePath = pathToSave + _excelFileName;
-            _recognizedBlankType = param.Type;
+                for (var y = 0; y < byteArr[0].Length; y++)
+                {
+                    if (byteArr[0][y] == 255 || byteArr[1][y] == 255 || byteArr[2][y] == 255)
+                    {
+                        countLeft++;
+                    }
+                    if (byteArr[byteArr.Length - 1][y] == 255 || byteArr[byteArr.Length - 2][y] == 255 || byteArr[byteArr.Length - 3][y] == 255)
+                    {
+                        countRight++;
+                    }
+                }
 
-            _blankFile = param;
+                if (countTop >= (endX - startX - 10))
+                {
+                    lst.Add(AnswerCoordinates.Sides.Top);
+                }
 
-            SaveImage(_blankFile.Data, _savedImageName);
-            SaveGrayScaleImage();
+                if (countBottom >= (endX - startX - 10))
+                {
+                    lst.Add(AnswerCoordinates.Sides.Bottom);
+                }
 
-            SearchAnswers();
+                if (countLeft >= (endY - startY - 10))
+                {
+                    lst.Add(AnswerCoordinates.Sides.Left);
+                }
 
-            var result = Task.FromResult(CreateExcel());
+                if (countRight >= (endY - startY - 10))
+                {
+                    lst.Add(AnswerCoordinates.Sides.Right);
+                }
 
-            RemoveFiles();
+                return lst.Distinct();
+            }
+            catch
+            {
+                img.Dispose();
+                throw;
+            }
 
-            return result;
+            
         }
 
+        public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
+        {
+            try
+            {
+                Questions = questions?.ToArray();
+
+                var pathToSave = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds.ToString(CultureInfo.CurrentCulture));
+
+                _savedImageName = pathToSave + param.Name;
+                SavedBlackWhiteImageName = pathToSave + param.Name + "_bw";
+
+                _excelFileName = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
+                _excelFilePath = pathToSave + _excelFileName;
+                _recognizedBlankType = param.Type;
+
+                _blankFile = param;
+
+                SaveImage(_blankFile.Data, _savedImageName);
+                SaveGrayScaleImage();
+
+                SearchAnswers();
+
+                var result = Task.FromResult(CreateExcel());
+
+                return result;
+            }
+            finally
+            {
+                RemoveFiles();
+
+                GC.Collect();
+            }
+            
+        }
+        
         private BlankFile CreateExcel()
         {
             try
@@ -166,9 +275,14 @@ namespace GraduationProjectImageHandler
 
         private void RemoveFiles()
         {
-            File.Delete(_savedImageName);
-            File.Delete(SavedBlackWhiteImageName);
-            File.Delete(_excelFilePath);
+            if(File.Exists(_savedImageName))
+                File.Delete(_savedImageName);
+
+            if (File.Exists(SavedBlackWhiteImageName))
+                File.Delete(SavedBlackWhiteImageName);
+
+            if (File.Exists(_excelFilePath))
+                File.Delete(_excelFilePath);
         }
 
         private static Bitmap ResizeBitmap(Image imgToResize, Size size)

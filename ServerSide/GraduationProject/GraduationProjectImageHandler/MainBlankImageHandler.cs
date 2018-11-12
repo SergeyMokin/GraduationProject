@@ -22,26 +22,42 @@ namespace GraduationProjectImageHandler
 
             using (var img = new Bitmap(SavedBlackWhiteImageName))
             {
-                var yStep = 0;
+                const int shift = 20;
+                var startX = AnswerCoordinates.MainBlank.StartPoint.Key;
+                var startY = AnswerCoordinates.MainBlank.StartPoint.Value;
+                var endX = AnswerCoordinates.MainBlank.EndPoint.Key;
+                var endY = AnswerCoordinates.MainBlank.EndPoint.Value;
                 for (var i = 0; i < Questions.Length; i++)
                 {
-                    var whitePixelYesCount = SearchCountOfWhitePixelsByCoordinates(img,
-                        AnswerCoordinates.MainBlank.StartPoint.Key,
-                        AnswerCoordinates.MainBlank.StartPoint.Value + yStep,
-                        AnswerCoordinates.MainBlank.EndPoint.Key,
-                        AnswerCoordinates.MainBlank.EndPoint.Value + yStep);
 
-                    var whitePixelMaybeCount = SearchCountOfWhitePixelsByCoordinates(img,
-                        AnswerCoordinates.MainBlank.StartPoint.Key + AnswerCoordinates.MainBlank.XStep,
-                        AnswerCoordinates.MainBlank.StartPoint.Value + yStep,
-                        AnswerCoordinates.MainBlank.EndPoint.Key + AnswerCoordinates.MainBlank.XStep,
-                        AnswerCoordinates.MainBlank.EndPoint.Value + yStep);
+                    var badPositions = CheckPositions(img, startX, startY, endX, endY).ToArray();
 
-                    var whitePixelNoCount = SearchCountOfWhitePixelsByCoordinates(img,
-                        AnswerCoordinates.MainBlank.StartPoint.Key + 2 * AnswerCoordinates.MainBlank.XStep,
-                        AnswerCoordinates.MainBlank.StartPoint.Value + yStep,
-                        AnswerCoordinates.MainBlank.EndPoint.Key + 2 * AnswerCoordinates.MainBlank.XStep,
-                        AnswerCoordinates.MainBlank.EndPoint.Value + yStep);
+                    if (badPositions.Contains(AnswerCoordinates.Sides.Top))
+                    {
+                        startY += shift;
+                        endY += shift;
+                    }
+                    if (badPositions.Contains(AnswerCoordinates.Sides.Bottom))
+                    {
+                        startY -= shift;
+                        endY -= shift;
+                    }
+                    if (badPositions.Contains(AnswerCoordinates.Sides.Left))
+                    {
+                        startX += shift;
+                        endX += shift;
+                    }
+                    if (badPositions.Contains(AnswerCoordinates.Sides.Right))
+                    {
+                        startX -= shift;
+                        endX -= shift;
+                    }
+
+                    var whitePixelYesCount = SearchCountOfWhitePixelsByCoordinates(img, startX, startY, endX, endY);
+
+                    var whitePixelMaybeCount = SearchCountOfWhitePixelsByCoordinates(img, startX + AnswerCoordinates.MainBlank.XStep, startY, endX + AnswerCoordinates.MainBlank.XStep, endY);
+
+                    var whitePixelNoCount = SearchCountOfWhitePixelsByCoordinates(img, startX + 2 * AnswerCoordinates.MainBlank.XStep, startY, endX + 2 *AnswerCoordinates.MainBlank.XStep, endY);
 
                     var answer = whitePixelYesCount > whitePixelMaybeCount && whitePixelYesCount > whitePixelNoCount ?
                         BaseAnswerVariants.Item1
@@ -49,12 +65,16 @@ namespace GraduationProjectImageHandler
                             BaseAnswerVariants.Item2
                             : BaseAnswerVariants.Item3;
 
-                    yStep += AnswerCoordinates.MainBlank.YStep;
+                    startY += AnswerCoordinates.MainBlank.YStep;
+                    endY += AnswerCoordinates.MainBlank.YStep;
 
-                    yStep = yStep % 2 == 0 ? yStep + 1 : yStep;
+                    startY = startY % 2 == 0 ? startY + 1 : startY;
+                    endY = endY % 2 == 0 ? endY + 1 : endY;
 
                     Answers.Add(i, answer);
                 }
+
+                img.Save(@"C:\git\myself\GraduationProject\ServerSide\GraduationProject\GraduationProjectAPI\wwwroot\one.jpg");
             }
         }
 
@@ -74,6 +94,7 @@ namespace GraduationProjectImageHandler
             var text = (await MicrosoftVisionApiCaller.ExtractLocalTextAsync(savedImageName)).ToArray();
             
             var currentY = AnswerCoordinates.MainBlank.QStartPoint.Value;
+
             while (currentY + AnswerCoordinates.MainBlank.QyStep < BlankFileSettings.BlankHeight)
             {
                 var contains = text.Where(x =>
@@ -96,6 +117,8 @@ namespace GraduationProjectImageHandler
             }
 
             File.Delete(savedImageName);
+            
+            GC.Collect();
 
             return questionList.AsEnumerable();
         }
