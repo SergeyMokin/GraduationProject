@@ -29,29 +29,9 @@ namespace GraduationProjectImageHandler
                 var endY = AnswerCoordinates.MainBlank.EndPoint.Value;
                 for (var i = 0; i < Questions.Length; i++)
                 {
-
                     var badPositions = CheckPositions(img, startX, startY, endX, endY).ToArray();
 
-                    if (badPositions.Contains(Sides.Top))
-                    {
-                        startY += shift;
-                        endY += shift;
-                    }
-                    if (badPositions.Contains(Sides.Bottom))
-                    {
-                        startY -= shift;
-                        endY -= shift;
-                    }
-                    if (badPositions.Contains(Sides.Left))
-                    {
-                        startX += shift;
-                        endX += shift;
-                    }
-                    if (badPositions.Contains(Sides.Right))
-                    {
-                        startX -= shift;
-                        endX -= shift;
-                    }
+                    ChangeStartPoints(ref startX, ref startY, ref endX, ref endY, badPositions, shift);
 
                     var whitePixelYesCount = SearchCountOfWhitePixelsByCoordinates(img, startX, startY, endX, endY);
 

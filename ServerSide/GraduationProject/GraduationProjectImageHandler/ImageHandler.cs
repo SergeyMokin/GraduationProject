@@ -169,6 +169,44 @@ namespace GraduationProjectImageHandler
             
         }
 
+        /// <summary>
+        /// Change start points by ref.
+        /// </summary>
+        /// <param name="startX"></param>
+        /// <param name="startY"></param>
+        /// <param name="endX"></param>
+        /// <param name="endY"></param>
+        /// <param name="badPositions"></param>
+        /// <param name="shift"></param>
+        protected void ChangeStartPoints(ref int startX, ref int startY, ref int endX, ref int endY, IEnumerable<int> badPositions, int shift)
+        {
+            if (!badPositions.Any())
+            {
+                return;
+            }
+
+            if (badPositions.Contains(Sides.Top))
+            {
+                startY += shift;
+                endY += shift;
+            }
+            if (badPositions.Contains(Sides.Bottom))
+            {
+                startY -= shift;
+                endY -= shift;
+            }
+            if (badPositions.Contains(Sides.Left))
+            {
+                startX += shift;
+                endX += shift;
+            }
+            if (badPositions.Contains(Sides.Right))
+            {
+                startX -= shift;
+                endX -= shift;
+            }
+        }
+
         public Task<BlankFile> GenerateExcel(BlankFile param, IEnumerable<string> questions)
         {
             try
