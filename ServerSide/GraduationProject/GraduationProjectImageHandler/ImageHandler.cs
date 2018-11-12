@@ -120,7 +120,7 @@ namespace GraduationProjectImageHandler
                     {
                         countTop++;
                     }
-                    if (byteArr[x][byteArr.Length - 3] == 255 || byteArr[x][byteArr.Length - 2] == 255 || byteArr[x][byteArr.Length - 1] == 255)
+                    if (byteArr[x][byteArr[x].Length - 3] == 255 || byteArr[x][byteArr[x].Length - 2] == 255 || byteArr[x][byteArr[x].Length - 1] == 255)
                     {
                         countBottom++;
                     }

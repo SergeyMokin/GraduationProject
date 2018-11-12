@@ -53,8 +53,6 @@ namespace GraduationProjectImageHandler
 
                     Answers.Add(i, answer);
                 }
-
-                img.Save(@"C:\git\myself\GraduationProject\ServerSide\GraduationProject\GraduationProjectAPI\wwwroot\one.jpg");
             }
         }
 
