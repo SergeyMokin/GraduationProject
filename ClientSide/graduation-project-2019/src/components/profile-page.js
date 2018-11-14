@@ -117,7 +117,16 @@ export default class ProfilePage extends Component {
     }
 
     back() {
-        this.setState({ currentPage: VIEWS.main });
+        this.errorMessage = "";
+        this.setState({
+            currentPage: VIEWS.main,
+            emailIconStyle: {
+                color: '#4a76a8'
+            },
+            passwordIconStyle: {
+                color: '#4a76a8'
+            }
+        });
         return true;
     }
 
@@ -225,6 +234,7 @@ export default class ProfilePage extends Component {
                         <Button style={styles.primaryButton} onPress={this.changePassword.bind(this)}>
                             <Text>change</Text>
                         </Button>
+                        <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
                     </List>
                 </Content>
 
@@ -247,6 +257,7 @@ export default class ProfilePage extends Component {
                             <Button style={styles.primaryButton} onPress={this.changeEmail.bind(this)}>
                                 <Text>change</Text>
                             </Button>
+                            <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
                         </List>
                     </Content>
 
@@ -264,7 +275,6 @@ export default class ProfilePage extends Component {
                             <Button style={LIST_BUTTON_STYLE} onPress={this.props.logoutCallback}>
                                 <Text style={{ color: 'black' }}>logout</Text>
                             </Button>
-                            <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
                         </List>
                     </Content>
             ;
