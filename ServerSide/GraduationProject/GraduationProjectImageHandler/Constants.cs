@@ -8,9 +8,10 @@ namespace GraduationProjectImageHandler
         //Container of types to generate blanks.
         public static class MainBlank
         {
+            public const string Questions = nameof(Questions);
+            public const int QShift = 50;
             public const int QyStep = 55;
             public const int QWidth = 500;
-            public const int QHeight = 65;
             public static readonly KeyValuePair<int, int> QStartPoint = new KeyValuePair<int, int>(100, 275);
 
             public static readonly KeyValuePair<int, int> StartPoint = new KeyValuePair<int, int>(565, 285);

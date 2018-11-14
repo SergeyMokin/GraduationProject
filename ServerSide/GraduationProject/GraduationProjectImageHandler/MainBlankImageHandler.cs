@@ -58,6 +58,8 @@ namespace GraduationProjectImageHandler
 
         public override async Task<IEnumerable<string>> GetQuestionsFromBlank(TypeFile typeFile)
         {
+            const int shift = 5;
+
             var pathToSave = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot",
@@ -73,13 +75,37 @@ namespace GraduationProjectImageHandler
             
             var currentY = AnswerCoordinates.MainBlank.QStartPoint.Value;
 
-            while (currentY + AnswerCoordinates.MainBlank.QyStep < BlankFileSettings.BlankHeight)
+            if (text.Any(x => x.Text.Contains(AnswerCoordinates.MainBlank.Questions)))
             {
+                currentY = text.First(x => x.Text.Contains(AnswerCoordinates.MainBlank.Questions)).BoundingBox[1] + AnswerCoordinates.MainBlank.QShift;
+            }
+
+            var counter = 0;
+            while (currentY + AnswerCoordinates.MainBlank.QyStep < BlankFileSettings.BlankHeight &&
+                   counter++ < AnswerCoordinates.MainBlank.MaxQuestionCount)
+            {
+                if (text.Any(x =>
+                    x.BoundingBox[0] > AnswerCoordinates.MainBlank.QStartPoint.Key
+                    && x.BoundingBox[1] >= currentY
+                    && x.BoundingBox[4] < AnswerCoordinates.MainBlank.QStartPoint.Key +
+                    AnswerCoordinates.MainBlank.QWidth
+                    && x.BoundingBox[1] < currentY + AnswerCoordinates.MainBlank.QyStep))
+                {
+                    currentY = text.First(x =>
+                            x.BoundingBox[0] > AnswerCoordinates.MainBlank.QStartPoint.Key
+                            && x.BoundingBox[1] >= currentY
+                            && x.BoundingBox[4] < AnswerCoordinates.MainBlank.QStartPoint.Key +
+                            AnswerCoordinates.MainBlank.QWidth
+                            && x.BoundingBox[1] < currentY + AnswerCoordinates.MainBlank.QyStep)
+                        .BoundingBox[1] - shift;
+                }
+
                 var contains = text.Where(x =>
                         x.BoundingBox[0] > AnswerCoordinates.MainBlank.QStartPoint.Key
                         && x.BoundingBox[1] >= currentY
-                        && x.BoundingBox[4] < AnswerCoordinates.MainBlank.QStartPoint.Key + AnswerCoordinates.MainBlank.QWidth
-                        && x.BoundingBox[5] < currentY + AnswerCoordinates.MainBlank.QHeight).Select(x => x.Text)
+                        && x.BoundingBox[4] < AnswerCoordinates.MainBlank.QStartPoint.Key +
+                        AnswerCoordinates.MainBlank.QWidth
+                        && x.BoundingBox[1] < currentY + AnswerCoordinates.MainBlank.QyStep).Select(x => x.Text)
                     .ToArray();
 
                 var result = contains.Any()
@@ -91,7 +117,7 @@ namespace GraduationProjectImageHandler
                     questionList.Add(result);
                 }
 
-                currentY += AnswerCoordinates.MainBlank.QyStep;
+                currentY += counter > AnswerCoordinates.MainBlank.MaxQuestionCount / 2 ? AnswerCoordinates.MainBlank.QyStep + 2 : AnswerCoordinates.MainBlank.QyStep;
             }
 
             File.Delete(savedImageName);
