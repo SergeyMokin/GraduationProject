@@ -80,7 +80,7 @@ export default class BlankCreatorPage extends Component {
 
     let success = (data) => {
       this.types = data;
-      this.onValueChange2(data[0].name);
+      this.onValueChangeType(data[0].name);
       this.setState({ isLoading: false });
       this.props.footerDisableCallback(false);
     };

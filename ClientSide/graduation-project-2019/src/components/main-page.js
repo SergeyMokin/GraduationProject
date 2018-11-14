@@ -5,6 +5,7 @@ import ApiRequsts from '../api';
 import ProfilePage from './profile-page';
 import BlankCreatorPage from './blank-creator-page';
 import BlankListPage from './blank-list-page';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 export default class MainPage extends React.Component {
     static routes = {
@@ -49,7 +50,46 @@ export default class MainPage extends React.Component {
         }
     }
 
+    onSwipe(direction) {
+        const { SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+        switch (direction) {
+            case SWIPE_LEFT:
+                {
+                    if (this.state.isLoading === true) return;
+                    let pageName = this.state.currentPage === MainPage.routes.main
+                        ? MainPage.routes.blankCreator
+                        : this.state.currentPage === MainPage.routes.blankCreator
+                            ? MainPage.routes.profile
+                            : MainPage.routes.main;
+                    this.setState({
+                        currentPage: pageName
+                    });
+                    break;
+                }
+            case SWIPE_RIGHT:
+                {
+                    if (this.state.isLoading === true) return;
+                    let pageName = this.state.currentPage === MainPage.routes.main
+                        ? MainPage.routes.profile
+                        : this.state.currentPage === MainPage.routes.blankCreator
+                            ? MainPage.routes.main
+                            : MainPage.routes.blankCreator;
+                    this.setState({
+                        currentPage: pageName
+                    });
+                    break;
+                }
+        }
+    }
+
     render() {
+        const configSwipe = {
+            velocityThreshold: 0.1,
+            directionalOffsetThreshold: 30,
+            detectSwipeUp: false,
+            detectSwipeDown: false
+        };
+
         const content = this.state.currentPage === MainPage.routes.main ?
             <BlankListPage userInfo={this.props.userInfo} footerDisableCallback={(param) => this.setState({ isLoading: param })} />
 
@@ -70,7 +110,15 @@ export default class MainPage extends React.Component {
 
         return (
             <Container>
-                {content}
+                <GestureRecognizer
+                    config={configSwipe}
+                    style={{
+                        flex: 1
+                    }}
+                    onSwipe={(direction) => this.onSwipe(direction)}
+                >
+                    {content}
+                </GestureRecognizer>
 
                 <Footer disable style={{ backgroundColor: "#4a76a8", bottom: -1 }}>
                     {buttonContent}
