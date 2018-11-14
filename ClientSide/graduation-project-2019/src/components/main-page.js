@@ -84,8 +84,8 @@ export default class MainPage extends React.Component {
 
     render() {
         const configSwipe = {
-            velocityThreshold: 0.1,
-            directionalOffsetThreshold: 30,
+            velocityThreshold: 0.3,
+            directionalOffsetThreshold: 80,
             detectSwipeUp: false,
             detectSwipeDown: false
         };
