@@ -13,8 +13,8 @@
     },
     "splash": {
       "image": "./src/images/gp-logo-white.png",
-      "backgroundColor": "#0000FF",
+      "backgroundColor": "#4a76a8",
       "resizeMode": "contain"
     }
-   }
+  }
 }

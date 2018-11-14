@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, AsyncStorage, Image } from 'react-native';
+import { AsyncStorage, Image } from 'react-native';
 import MainPage from './src/components/main-page';
 import { Root, Container, Content, Spinner, Header } from 'native-base';
 import styles from './src/styles/mainstyle.js';
@@ -17,8 +17,7 @@ export default class App extends React.Component {
     this.userInfoContainer = this.api.asyncStorageUser;
   }
 
-  changeUserInfo(data)
-  {
+  changeUserInfo(data) {
     this.userInfo = data;
   }
 
@@ -31,18 +30,16 @@ export default class App extends React.Component {
     await this.tryGetUserInfo();
   }
 
-  async tryGetUserInfo()
-  {
+  async tryGetUserInfo() {
     let successUpdate = (data) => {
       this.userInfo = data;
       AsyncStorage.setItem(this.userInfoContainer, JSON.stringify(data));
-      this.setState({isLogined: true, isLoading: false});
+      this.setState({ isLogined: true, isLoading: false });
     };
 
     let success = (data) => {
-      if(data === null) 
-      {
-        this.setState({isLogined: false, isLoading: false});
+      if (data === null) {
+        this.setState({ isLogined: false, isLoading: false });
         return;
       }
 
@@ -62,22 +59,19 @@ export default class App extends React.Component {
       .catch(error);
   }
 
-  async authCallback()
-  {
+  async authCallback() {
     let success = (data) => {
-      if(data !== null)
-      {
+      if (data !== null) {
         this.userInfo = JSON.parse(data);
-        this.setState({isLogined: true});
+        this.setState({ isLogined: true });
       }
-      else
-      {
-        this.setState({isLogined: false});
+      else {
+        this.setState({ isLogined: false });
       }
     };
     let error = (error) => {
       console.log(error);
-      this.setState({isLogined: false});
+      this.setState({ isLogined: false });
     }
     await AsyncStorage.getItem(this.userInfoContainer)
       .then(success.bind(this))
@@ -87,21 +81,21 @@ export default class App extends React.Component {
   render() {
     const content = this.state.isLoading ?
       <Content contentContainerStyle={styles.body}>
-        <Spinner color="blue" />
+        <Spinner color="#4a76a8" />
       </Content>
-      
+
 
       : this.state.isLogined ?
-      <MainPage userInfo = {this.userInfo} logout={this.authCallback.bind(this)} changeUserInfo = {this.changeUserInfo.bind(this)}/>
+        <MainPage userInfo={this.userInfo} logout={this.authCallback.bind(this)} changeUserInfo={this.changeUserInfo.bind(this)} />
 
-      :
-      <LoginPage loginSuccessful={this.authCallback.bind(this)}/>
-    ;
+        :
+        <LoginPage loginSuccessful={this.authCallback.bind(this)} />
+      ;
 
     return (
-      <Container style={styles.container}>        
-        <Header style={{backgroundColor:'blue', height: 74}}>
-          <Image source={require('./src/images/gp-logo-white.png')} style={{marginTop: 24, width:50, height: 50}}/>
+      <Container style={styles.container}>
+        <Header style={{ backgroundColor: '#4a76a8', height: 74 }}>
+          <Image source={require('./src/images/gp-logo-white.png')} style={{ marginTop: 24, width: 50, height: 50 }} />
         </Header>
         <Root>
           {content}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
-import { Container, Button, Footer, FooterTab, Icon, Content } from 'native-base';
+import { Container, Button, Footer, FooterTab, Icon } from 'native-base';
 import ApiRequsts from '../api';
 import ProfilePage from './profile-page';
 import BlankCreatorPage from './blank-creator-page';
@@ -17,63 +17,62 @@ export default class MainPage extends React.Component {
         super(props);
 
         this.state = {
-            currentPage: MainPage.routes.main
+            currentPage: MainPage.routes.main,
+            isLoading: false
         };
 
         this.api = new ApiRequsts();
     }
-  
-    logout(){
+
+    logout() {
         AsyncStorage.removeItem(this.api.asyncStorageUser);
         this.props.logout();
     }
 
-    changePage(name){
+    changePage(name) {
+        if (this.state.isLoading === true) return;
         this.setState({
             currentPage: name
         });
     }
 
-    renderButton(name)
-    {
-        if(this.state.currentPage === name)
-        {
-            return  <Button active style={{ backgroundColor: "blue" }} onPress={() => this.changePage(name)}>
-                        <Icon active name={name} />
-                    </Button>
+    renderButton(name) {
+        if (this.state.currentPage === name) {
+            return <Button active style={{ backgroundColor: "#4a76a8" }} onPress={() => this.changePage(name)}>
+                <Icon active name={name} />
+            </Button>
         }
-        else
-        {
-            return  <Button style={{ backgroundColor: "blue" }} onPress={() => this.changePage(name)}>
-                        <Icon name={name} />
-                    </Button>
+        else {
+            return <Button style={{ backgroundColor: "#4a76a8" }} onPress={() => this.changePage(name)}>
+                <Icon style={{ color: '#7f96c1' }} name={name} />
+            </Button>
         }
     }
 
     render() {
         const content = this.state.currentPage === MainPage.routes.main ?
-            <BlankListPage userInfo={this.props.userInfo} />
+            <BlankListPage userInfo={this.props.userInfo} footerDisableCallback={(param) => this.setState({ isLoading: param })} />
 
             : this.state.currentPage === MainPage.routes.profile ?
-            <ProfilePage userInfo={this.props.userInfo} logoutCallback = {this.logout.bind(this)} changeUserInfo = {this.props.changeUserInfo}/>
+                <ProfilePage userInfo={this.props.userInfo} logoutCallback={this.logout.bind(this)} changeUserInfo={this.props.changeUserInfo} footerDisableCallback={(param) => this.setState({ isLoading: param })} />
 
-            :
-            <BlankCreatorPage userInfo={this.props.userInfo} />
+                :
+                <BlankCreatorPage userInfo={this.props.userInfo} footerDisableCallback={(param) => this.setState({ isLoading: param })} />
             ;
 
-        const buttonContent = 
-        <FooterTab style={{ backgroundColor: "blue" }}>
-            {this.renderButton(MainPage.routes.main)}
-            {this.renderButton(MainPage.routes.blankCreator)}
-            {this.renderButton(MainPage.routes.profile)}
-        </FooterTab>
-        ;
+        const buttonContent =
+            <FooterTab style={{ backgroundColor: "#4a76a8" }}>
+                {this.renderButton(MainPage.routes.main)}
+                {this.renderButton(MainPage.routes.blankCreator)}
+                {this.renderButton(MainPage.routes.profile)}
+            </FooterTab>
+            ;
 
         return (
             <Container>
                 {content}
-                
-                <Footer style={{ backgroundColor: "blue", bottom: -1 }}>
+
+                <Footer disable style={{ backgroundColor: "#4a76a8", bottom: -1 }}>
                     {buttonContent}
                 </Footer>
             </Container>

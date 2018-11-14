@@ -15,8 +15,7 @@ export default class CameraPage extends Component {
     uploading: false,
   };
 
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
   }
 
@@ -27,17 +26,17 @@ export default class CameraPage extends Component {
 
     return (
       <Content style={styles.container} alignItems='center' justifyContent='center'>
-        <Segment style={{marginTop: 10}}>
+        <Segment style={{ marginTop: 10 }}>
           <Button
-            style = {styles.primaryButton}
+            style={styles.primaryButton}
             onPress={this._pickImage.bind(this)}
           >
-            <Icon name="ios-folder" style={{margin: 5, color: 'white'}}/>
+            <Icon name="ios-folder" style={{ margin: 5, color: 'white' }} />
           </Button>
-          <Button 
-            style = {styles.primaryButton} 
+          <Button
+            style={styles.primaryButton}
             onPress={this._takePhoto.bind(this)}>
-            <Icon name="ios-camera" style={{margin: 5, color: 'white'}}/>
+            <Icon name="ios-camera" style={{ margin: 5, color: 'white' }} />
           </Button>
         </Segment>
 
@@ -52,8 +51,8 @@ export default class CameraPage extends Component {
       return (
         <Content
           style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}
-          justifyContent = 'center'
-          alignItems = 'center'>
+          justifyContent='center'
+          alignItems='center'>
           <ActivityIndicator color="#fff" size="large" />
         </Content>
       );
@@ -115,7 +114,7 @@ export default class CameraPage extends Component {
         base64: true,
         quality: 0.7
       });
-      
+
       this._handleImagePicked(pickerResult);
     }
   };
@@ -142,7 +141,7 @@ export default class CameraPage extends Component {
             error => console.log(error)
           );
         }
-        
+
 
         this.setState({
           image: pickerResult
@@ -203,9 +202,9 @@ const styles = StyleSheet.create({
   primaryButton: {
     margin: 10,
     padding: 15,
-    backgroundColor:"blue",
+    backgroundColor: "#4a76a8",
     alignSelf: 'auto',
-    alignItems:'center',
-    justifyContent:'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

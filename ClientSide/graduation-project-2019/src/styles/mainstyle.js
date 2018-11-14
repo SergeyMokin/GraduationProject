@@ -9,16 +9,16 @@ module.exports = StyleSheet.create({
   },
   body: {
     flex: 9,
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'white',
   },
   primaryButton: {
     margin: 10,
     padding: 15,
-    backgroundColor:"blue",
+    backgroundColor: "#4a76a8",
     alignSelf: 'auto',
-    justifyContent:'center'
+    justifyContent: 'center'
   }
 });
