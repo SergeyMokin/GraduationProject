@@ -219,7 +219,11 @@ export default class BlankListPage extends Component {
     }
     else if (this.files.length === 0) {
       return <Content>
-        <Text style={{ alignSelf: 'center', padding: 5, color: 'black' }}>Your list of blanks is empty</Text>
+        <List>
+          <ListItem itemHeader first style={{ alignSelf: 'center', marginBottom: -25 }}>
+            <Text>YOUR LIST OF BLANKS IS EMPTY</Text>
+          </ListItem>
+        </List>
       </Content>
     }
     return (

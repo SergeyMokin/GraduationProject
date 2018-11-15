@@ -213,7 +213,7 @@ export default class BlankCreatorPage extends Component {
       isLoading: false,
       typeName: "",
       imageData: null,
-      selectedType: this.types[0].name,
+      selectedType: this.types.length > 0 ? this.types[0].name : '',
       inputStyle: {
         color: '#4a76a8'
       },
