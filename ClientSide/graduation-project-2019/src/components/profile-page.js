@@ -223,7 +223,6 @@ export default class ProfilePage extends Component {
                                 <InputGroup>
                                     <Icon name="ios-person" style={this.state.emailIconStyle} />
                                     <Input
-                                        editable={false}
                                         onChangeText={(text) => this.setState({ email: text })}
                                         value={this.state.email}
                                         placeholder={this.props.userInfo.user.email} />
