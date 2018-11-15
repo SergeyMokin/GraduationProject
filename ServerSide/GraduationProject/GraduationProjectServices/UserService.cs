@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 using GraduationProjectImageHandler;
 
 namespace GraduationProjectServices
@@ -84,6 +85,27 @@ namespace GraduationProjectServices
             {
                 FileDownloadName = file.Name
             };
+        }
+
+        public async Task<FileContentResult> DownloadTemplate(string template)
+        {
+            const string docxMimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            const string postfix = "_tutorial.docx";
+            var fileName = template + postfix;
+            var root = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "tutorials");
+
+            if (!File.Exists(Path.Combine(root, fileName)))
+            {
+                throw new ArgumentNullException();
+            }
+
+            return await Task.FromResult(new FileContentResult(File.ReadAllBytes(Path.Combine(root, fileName)), docxMimeType)
+            {
+                FileDownloadName = fileName
+            });
         }
 
         public async Task<FileContentResult> GenerateExcel(BlankFile param, long userId, IImageHandler imageHandler = null)

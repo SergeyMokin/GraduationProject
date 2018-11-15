@@ -221,7 +221,7 @@ namespace GraduationProjectImageHandler
                 _savedImageName = pathToSave + param.Name;
                 SavedBlackWhiteImageName = pathToSave + param.Name + "_bw";
 
-                _excelFileName = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Name.Replace(".bmp", "").Replace(".jpg", "").Replace(".png", "") + ".xlsx";
+                _excelFileName = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss_") + param.Type.Replace(" ", "") + ".xlsx";
                 _excelFilePath = pathToSave + _excelFileName;
                 _recognizedBlankType = param.Type;
 
@@ -249,6 +249,8 @@ namespace GraduationProjectImageHandler
         {
             try
             {
+                const string xlsxMimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
                 using (var fs = new FileStream(_excelFilePath, FileMode.Create, FileAccess.Write))
                 {
 
@@ -277,7 +279,7 @@ namespace GraduationProjectImageHandler
                     Name = _excelFileName,
                     Data = data,
                     Type = _recognizedBlankType,
-                    FileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    FileType = xlsxMimeType
                 };
             }
             catch

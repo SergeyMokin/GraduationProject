@@ -29,7 +29,7 @@ namespace GraduationProjectAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        // Get api/user/downloadfileanonymous?id=
+        // Get api/user/downloadfileanonymous?id=&token=
         public async Task<FileContentResult> DownloadFileAnonymous(long id, string token)
         {
             try
@@ -43,6 +43,13 @@ namespace GraduationProjectAPI.Controllers
             {
                 throw new UnauthorizedAccessException();
             }
+        }
+        
+        [HttpGet]
+        // Get api/user/downloadtemplate?template=
+        public async Task<FileContentResult> DownloadTemplate(string template)
+        {
+            return await _userService.DownloadTemplate(template);
         }
 
         // GET api/user/downloadfile?id=

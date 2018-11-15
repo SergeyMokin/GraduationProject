@@ -22,6 +22,8 @@ namespace GraduationProjectInterfaces.Controllers
 
         Task<FileContentResult> DownloadFileAnonymous(long id, string token);
 
+        Task<FileContentResult> DownloadTemplate(string template);
+
         Task<FileContentResult> DownloadFile(long id);
 
         Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId);
