@@ -87,7 +87,7 @@ namespace GraduationProjectServices
             };
         }
 
-        public async Task<FileContentResult> DownloadTemplate(string template)
+        public async Task<FileContentResult> DownloadTutorial(string template)
         {
             const string docxMimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
             const string postfix = "_tutorial.docx";

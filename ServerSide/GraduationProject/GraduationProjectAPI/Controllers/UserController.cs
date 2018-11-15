@@ -47,8 +47,8 @@ namespace GraduationProjectAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        // Get api/user/downloadtemplate?template=&token=
-        public async Task<FileContentResult> DownloadTemplate(string template, string token)
+        // Get api/user/downloadtutorial?template=&token=
+        public async Task<FileContentResult> DownloadTutorial(string template, string token)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace GraduationProjectAPI.Controllers
                     throw new UnauthorizedAccessException();
                 }
 
-                return await _userService.DownloadTemplate(template);
+                return await _userService.DownloadTutorial(template);
             }
             catch
             {

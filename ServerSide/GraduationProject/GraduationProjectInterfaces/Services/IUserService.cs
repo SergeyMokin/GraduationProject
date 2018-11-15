@@ -23,7 +23,7 @@ namespace GraduationProjectInterfaces.Services
 
         Task<FileContentResult> DownloadFile(long fileId, long userId);
 
-        Task<FileContentResult> DownloadTemplate(string template);
+        Task<FileContentResult> DownloadTutorial(string template);
 
         Task<IEnumerable<BlankFileUserReturn>> AcceptFile(long fileId, long userId);
 
