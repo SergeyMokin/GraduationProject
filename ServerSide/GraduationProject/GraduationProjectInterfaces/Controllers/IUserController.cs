@@ -22,7 +22,7 @@ namespace GraduationProjectInterfaces.Controllers
 
         Task<FileContentResult> DownloadFileAnonymous(long id, string token);
 
-        Task<FileContentResult> DownloadTemplate(string template);
+        Task<FileContentResult> DownloadTemplate(string template, string token);
 
         Task<FileContentResult> DownloadFile(long id);
 

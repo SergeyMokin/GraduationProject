@@ -44,12 +44,26 @@ namespace GraduationProjectAPI.Controllers
                 throw new UnauthorizedAccessException();
             }
         }
-        
+
+        [AllowAnonymous]
         [HttpGet]
-        // Get api/user/downloadtemplate?template=
-        public async Task<FileContentResult> DownloadTemplate(string template)
+        // Get api/user/downloadtemplate?template=&token=
+        public async Task<FileContentResult> DownloadTemplate(string template, string token)
         {
-            return await _userService.DownloadTemplate(template);
+            try
+            {
+                if (new JwtSecurityTokenHandler().ValidateToken(token.Replace("Bearer ", ""),
+                        AuthOptions.GetTokenValidationParameters(), out SecurityToken _) == null)
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                return await _userService.DownloadTemplate(template);
+            }
+            catch
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         // GET api/user/downloadfile?id=

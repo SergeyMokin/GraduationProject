@@ -128,156 +128,172 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Скачать файл</td>
-                    <td>Allow anonymous</td>
-                    <td>GET</td>
-                    <td>api/user/downloadfileanonymous</td>
-                    <td>
-                        id : <a style="color: blue">long</a><br />
-                        token : <a style="color: blue">string</a><br />
-                    </td>
-                    <td>
-                        <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#404">404</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Скачать файл</td>
-                    <td>Authorize</td>
-                    <td>GET</td>
-                    <td>api/user/downloadfile</td>
-                    <td>id : <a style="color: blue">long</a></td>
-                    <td>
-                        <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#404">404</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Сгенерировать эксель по фото</td>
-                    <td>Authorize</td>
-                    <td>POST</td>
-                    <td>api/user/generateexcel</td>
-                    <td>[FromBody]param: <a style="color:green" href="#BlankFile">BlankFile</a></td>
-                    <td>
-                        <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
-                        <a style="color:green" href="#400" title="Невозомжно сгенерировать эксель. Обратитесь в support.">400</a> <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#422">422</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Получить список всех файлов пользователя</td>
-                    <td>Authorize</td>
-                    <td>GET</td>
-                    <td>api/user/getfiles</td>
-                    <td> - </td>
-                    <td>
-                        <a style="color:green" href="#BlankFileUserReturn">BlankFileUserReturn</a>[] <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Получить список всех типов бланков доступных к генерации</td>
-                    <td>Authorize</td>
-                    <td>GET</td>
-                    <td>api/user/getblanktypes</td>
-                    <td> - </td>
-                    <td>
-                        <a style="color:green" href="#BlankType">BlankType</a>[] <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Получить список всех шаблонов бланков доступных к генерации</td>
-                    <td>Authorize</td>
-                    <td>GET</td>
-                    <td>api/user/gettypes</td>
-                    <td> - </td>
-                    <td>
-                        <a style="color:blue">string</a>[] <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#404">404</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Получить список всех пользователей</td>
-                    <td>Authorize</td>
-                    <td>GET</td>
-                    <td>api/user/getusers</td>
-                    <td> - </td>
-                    <td>
-                        <a style="color:green" href="#User">User</a>[] <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Добавить тип бланка для генерации</td>
-                    <td>Authorize</td>
-                    <td>POST</td>
-                    <td>api/user/addblanktype</td>
-                    <td>
-                        [FromBody]param: <a style="color:green" href="#TypeFile">TypeFile</a> <br />
-                    </td>
-                    <td>
-                        <a style="color:green" href="#BlankType">BlankType</a> <br />
-                        <a style="color:green" href="#400" title="Данный тип уже существует.">400</a> <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#422">422</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Удалить файл пользователя</td>
-                    <td>Authorize</td>
-                    <td>DELETE</td>
-                    <td>api/user/removefile</td>
-                    <td>id : <a style="color:blue">long</a></td>
-                    <td>
-                        <a style="color:blue">long</a> <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#404">404</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Принять файл</td>
-                    <td>Authorize</td>
-                    <td>POST</td>
-                    <td>api/user/acceptfile</td>
-                    <td>fileId : <a style="color:blue">long</a></td>
-                    <td>
-                        <a style="color:green" href="#BlankFileUserReturn">BlankFileUserReturn</a>[] <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#404">404</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Отправить файлы пользователю</td>
-                    <td>Authorize</td>
-                    <td>POST</td>
-                    <td>api/user/sendmessage</td>
-                    <td>
-                        [FromBody]mes : <a style="color:green" href="#Message">Message</a>
-                    </td>
-                    <td>
-                        <a style="color:green" href="#Message">Message</a> <br />
-                        <a style="color:green" href="#401">401</a> <br />
-                        <a style="color:green" href="#404">404</a> <br />
-                        <a style="color:green" href="#422">422</a> <br />
-                        <a style="color:green" href="#500">500</a> <br />
-                    </td>
-                </tr>
+            <tr>
+                <td>Скачать документацию по созданию типа бланка</td>
+                <td>Allow anonymous</td>
+                <td>GET</td>
+                <td>api/user/downloadtemplate</td>
+                <td>
+                    template : <a style="color: blue">long</a><br />
+                    token : <a style="color: blue">string</a><br />
+                </td>
+                <td>
+                    <a style="color:green" href="#FileContentResult">FileContentResult</a> <br />
+                    <a style="color:green" href="#401">401</a> <br />
+                    <a style="color:green" href="#404">404</a> <br />
+                    <a style="color:green" href="#500">500</a> <br />
+                </td>
+            </tr>
+            <tr>
+                <td>Скачать файл</td>
+                <td>Allow anonymous</td>
+                <td>GET</td>
+                <td>api/user/downloadfileanonymous</td>
+                <td>
+                    id : <a style="color: blue">long</a><br/>
+                    token : <a style="color: blue">string</a><br/>
+                </td>
+                <td>
+                    <a style="color: green" href="#FileContentResult">FileContentResult</a> <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#404">404</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Скачать файл</td>
+                <td>Authorize</td>
+                <td>GET</td>
+                <td>api/user/downloadfile</td>
+                <td>id : <a style="color: blue">long</a></td>
+                <td>
+                    <a style="color: green" href="#FileContentResult">FileContentResult</a> <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#404">404</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Сгенерировать эксель по фото</td>
+                <td>Authorize</td>
+                <td>POST</td>
+                <td>api/user/generateexcel</td>
+                <td>[FromBody]param: <a style="color: green" href="#BlankFile">BlankFile</a></td>
+                <td>
+                    <a style="color: green" href="#FileContentResult">FileContentResult</a> <br/>
+                    <a style="color: green" href="#400" title="Невозомжно сгенерировать эксель. Обратитесь в support.">400</a> <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#422">422</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Получить список всех файлов пользователя</td>
+                <td>Authorize</td>
+                <td>GET</td>
+                <td>api/user/getfiles</td>
+                <td> - </td>
+                <td>
+                    <a style="color: green" href="#BlankFileUserReturn">BlankFileUserReturn</a>[] <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Получить список всех типов бланков доступных к генерации</td>
+                <td>Authorize</td>
+                <td>GET</td>
+                <td>api/user/getblanktypes</td>
+                <td> - </td>
+                <td>
+                    <a style="color: green" href="#BlankType">BlankType</a>[] <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Получить список всех шаблонов бланков доступных к генерации</td>
+                <td>Authorize</td>
+                <td>GET</td>
+                <td>api/user/gettypes</td>
+                <td> - </td>
+                <td>
+                    <a style="color: blue">string</a>[] <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#404">404</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Получить список всех пользователей</td>
+                <td>Authorize</td>
+                <td>GET</td>
+                <td>api/user/getusers</td>
+                <td> - </td>
+                <td>
+                    <a style="color: green" href="#User">User</a>[] <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Добавить тип бланка для генерации</td>
+                <td>Authorize</td>
+                <td>POST</td>
+                <td>api/user/addblanktype</td>
+                <td>
+                    [FromBody]param: <a style="color: green" href="#TypeFile">TypeFile</a> <br/>
+                </td>
+                <td>
+                    <a style="color: green" href="#BlankType">BlankType</a> <br/>
+                    <a style="color: green" href="#400" title="Данный тип уже существует.">400</a> <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#422">422</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Удалить файл пользователя</td>
+                <td>Authorize</td>
+                <td>DELETE</td>
+                <td>api/user/removefile</td>
+                <td>id : <a style="color: blue">long</a></td>
+                <td>
+                    <a style="color: blue">long</a> <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#404">404</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Принять файл</td>
+                <td>Authorize</td>
+                <td>POST</td>
+                <td>api/user/acceptfile</td>
+                <td>fileId : <a style="color: blue">long</a></td>
+                <td>
+                    <a style="color: green" href="#BlankFileUserReturn">BlankFileUserReturn</a>[] <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#404">404</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
+            <tr>
+                <td>Отправить файлы пользователю</td>
+                <td>Authorize</td>
+                <td>POST</td>
+                <td>api/user/sendmessage</td>
+                <td>
+                    [FromBody]mes : <a style="color: green" href="#Message">Message</a>
+                </td>
+                <td>
+                    <a style="color: green" href="#Message">Message</a> <br/>
+                    <a style="color: green" href="#401">401</a> <br/>
+                    <a style="color: green" href="#404">404</a> <br/>
+                    <a style="color: green" href="#422">422</a> <br/>
+                    <a style="color: green" href="#500">500</a> <br/>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
