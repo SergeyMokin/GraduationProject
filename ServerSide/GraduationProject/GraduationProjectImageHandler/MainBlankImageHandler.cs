@@ -14,7 +14,8 @@ namespace GraduationProjectImageHandler
     {
         protected override void SearchAnswers()
         {
-            if (Questions.Length < AnswerCoordinates.MainBlank.MaxQuestionCount
+            const int minQuestionCount = 1;
+            if (Questions.Length < minQuestionCount
                 || Questions.Length > AnswerCoordinates.MainBlank.MaxQuestionCount)
             {
                 throw new InvalidOperationException();
