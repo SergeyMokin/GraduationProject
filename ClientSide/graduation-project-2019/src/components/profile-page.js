@@ -1,4 +1,4 @@
-import { Content, List, ListItem, InputGroup, Input, Icon, Text, Button, Spinner } from 'native-base';
+import { Content, List, ListItem, InputGroup, Input, Icon, Text, Button, Spinner, Toast } from 'native-base';
 import React, { Component } from 'react';
 import { AsyncStorage, BackHandler } from 'react-native';
 import styles from '../styles/mainstyle.js';
@@ -20,8 +20,6 @@ export default class ProfilePage extends Component {
     constructor(props) {
         super(props);
 
-        this.errorMessage = "";
-        this.successMessage = "";
         this.backHandler = null;
 
         this.state = {
@@ -34,11 +32,6 @@ export default class ProfilePage extends Component {
             },
             passwordIconStyle: {
                 color: '#4a76a8'
-            },
-            messageStyle: {
-                color: 'green',
-                alignSelf: 'center',
-                padding: 20
             },
             currentPage: VIEWS.main
         }
@@ -58,8 +51,7 @@ export default class ProfilePage extends Component {
         }
 
         let error = (error) => {
-            this.successMessage = "";
-            this.errorMessage = error.message;
+            this.showInfoMessage(error.message);
             this.setState({
                 isLoading: false,
                 oldPassword: "",
@@ -69,19 +61,13 @@ export default class ProfilePage extends Component {
                 },
                 passwordIconStyle: {
                     color: '#4a76a8'
-                },
-                messageStyle: {
-                    color: '#ff4d4d',
-                    alignSelf: 'center',
-                    padding: 20
                 }
             });
             this.props.footerDisableCallback(false);
         };
 
         let success = (data) => {
-            this.errorMessage = "";
-            this.successMessage = "Success";
+            this.showInfoMessage("Success");
 
             this.setState({
                 isLoading: false,
@@ -93,11 +79,6 @@ export default class ProfilePage extends Component {
                 },
                 passwordIconStyle: {
                     color: '#4a76a8'
-                },
-                messageStyle: {
-                    color: 'green',
-                    alignSelf: 'center',
-                    padding: 20
                 }
             });
             this.props.footerDisableCallback(false);
@@ -116,8 +97,15 @@ export default class ProfilePage extends Component {
             .catch(error.bind(this));
     }
 
+    showInfoMessage(message) {
+        Toast.show({
+            text: message,
+            buttonText: 'Okay',
+            duration: 5000
+        })
+    }
+
     back() {
-        this.errorMessage = "";
         this.setState({
             currentPage: VIEWS.main,
             emailIconStyle: {
@@ -142,8 +130,7 @@ export default class ProfilePage extends Component {
         }
 
         let error = (error) => {
-            this.successMessage = "";
-            this.errorMessage = error.status === 422 ? error.message + ". Password required 8 characters(1 uppercase, 1 lowercase, 1 digit, 1 special)" : error.message;
+            this.showInfoMessage(error.status === 422 ? error.message + ". Password required 8 characters(1 uppercase, 1 lowercase, 1 digit, 1 special)" : error.message);
             this.setState({
                 isLoading: false,
                 email: "",
@@ -152,19 +139,13 @@ export default class ProfilePage extends Component {
                 },
                 passwordIconStyle: {
                     color: '#ff4d4d'
-                },
-                messageStyle: {
-                    color: '#ff4d4d',
-                    alignSelf: 'center',
-                    padding: 20
                 }
             });
             this.props.footerDisableCallback(false);
         };
 
         let success = (data) => {
-            this.errorMessage = "";
-            this.successMessage = "Success";
+            this.showInfoMessage("Success");
 
             this.setState({
                 isLoading: false,
@@ -176,11 +157,6 @@ export default class ProfilePage extends Component {
                 },
                 passwordIconStyle: {
                     color: '#4a76a8'
-                },
-                messageStyle: {
-                    color: 'green',
-                    alignSelf: 'center',
-                    padding: 20
                 }
             });
             this.props.footerDisableCallback(false);
@@ -234,7 +210,6 @@ export default class ProfilePage extends Component {
                         <Button style={styles.primaryButton} onPress={this.changePassword.bind(this)}>
                             <Text>change</Text>
                         </Button>
-                        <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
                     </List>
                 </Content>
 
@@ -257,7 +232,6 @@ export default class ProfilePage extends Component {
                             <Button style={styles.primaryButton} onPress={this.changeEmail.bind(this)}>
                                 <Text>change</Text>
                             </Button>
-                            <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
                         </List>
                     </Content>
 

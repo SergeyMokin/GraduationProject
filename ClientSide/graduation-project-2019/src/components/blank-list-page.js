@@ -152,6 +152,7 @@ export default class BlankListPage extends Component {
   }
 
   async sendMessage() {
+    if(this.users.length === 0) return;
     this.setState({ isLoading: true });
     this.props.footerDisableCallback(true);
     let error = (error) => {

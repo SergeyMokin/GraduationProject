@@ -1,4 +1,4 @@
-import { Content, List, ListItem, InputGroup, Input, Icon, Text, Button, Spinner } from 'native-base';
+import { Content, List, ListItem, InputGroup, Input, Icon, Text, Button, Spinner, Toast } from 'native-base';
 import React, { Component } from 'react';
 import { AsyncStorage } from 'react-native';
 import styles from '../styles/mainstyle.js';
@@ -19,6 +19,14 @@ export default class LoginPage extends Component {
 
         this.errorMessage = "";
         this.api = new ApiRequests();
+    }
+
+    showInfoMessage(message) {
+        Toast.show({
+            text: message,
+            buttonText: 'Okay',
+            duration: 5000
+        })
     }
 
     async login() {
@@ -43,6 +51,8 @@ export default class LoginPage extends Component {
                 ? error.message + ". Password required 8 characters(1 uppercase, 1 lowercase, 1 digit, 1 special)"
                 : error.status === 500 ? error.message + ". User exists"
                     : error.message;
+
+            this.showInfoMessage(this.errorMessage);
             this.setState({
                 isLoading: false,
                 iconStyle: {
@@ -117,7 +127,6 @@ export default class LoginPage extends Component {
                 <Button style={styles.primaryButton} onPress={this.register.bind(this)}>
                     <Text>sign up</Text>
                 </Button>
-                <Text style={{ alignSelf: 'center', color: '#ff4d4d', padding: 20 }}>{this.errorMessage}</Text>
             </Content>
             ;
 

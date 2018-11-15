@@ -38,6 +38,8 @@ function ResponseHandler(response, badReqMes = null) {
 }
 
 export default class ApiRequests {
+    static ADMIN_EMAIL = 's.a.mokin@list.ru';
+    
     asyncStorageUser = 'gp-2019-user';
 
     headers = {
@@ -51,6 +53,10 @@ export default class ApiRequests {
             'Content-Type': 'application/json',
             Authorization: value
         }
+    }
+
+    async downloadTutorial(template) {
+        return API_URL + `user/downloadtutorial?template=${encodeURIComponent(template)}&token=${encodeURIComponent(this.headers.Authorization)}`;
     }
 
     async register(email, password) {

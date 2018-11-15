@@ -1,4 +1,5 @@
-import { Text, List, Button, ListItem, Segment, InputGroup, Icon, Input, Content, Spinner, Item, Picker } from 'native-base';
+import { Text, List, Button, ListItem, Segment, InputGroup, Icon, Input, Content, Spinner, Item, Picker, Toast } from 'native-base';
+import { Alert, Linking, TouchableOpacity } from 'react-native';
 import React, { Component } from 'react';
 import styles from '../styles/mainstyle.js';
 import ApiRequests from '../api/index.js';
@@ -8,6 +9,9 @@ const buttons = {
   blank: "Blank",
   type: "Type"
 };
+
+const INFO_MES_TYPE = 'To advise a new template, you need to contact the administrator, please write a letter to the address: ' + ApiRequests.ADMIN_EMAIL;
+const INFO_MES_BLANK = 'To generate Excel file you need to upload a photo or take a photo';
 
 export default class BlankCreatorPage extends Component {
   constructor(props) {
@@ -23,11 +27,6 @@ export default class BlankCreatorPage extends Component {
       inputStyle: {
         color: '#4a76a8'
       },
-      messageStyle: {
-        color: '#ff4d4d',
-        alignSelf: 'center',
-        padding: 20
-      },
       linkDownloadedFile: null
     }
 
@@ -36,8 +35,6 @@ export default class BlankCreatorPage extends Component {
 
     this.types = [];
     this.templates = [];
-    this.errorMessage = "";
-    this.successMessage = "";
     this.typeToAdd = {
       typeName: "",
       questions: []
@@ -94,26 +91,19 @@ export default class BlankCreatorPage extends Component {
     this.setState({ isLoading: true });
     this.props.footerDisableCallback(true);
     let error = (error) => {
-      this.successMessage = "";
-      this.errorMessage = error.message;
+      this.showInfoMessage(error.message);
       this.setState({
         isLoading: false,
         imageData: null,
         inputStyle: {
           color: '#ff4d4d'
-        },
-        messageStyle: {
-          color: '#ff4d4d',
-          alignSelf: 'center',
-          padding: 20
         }
       });
       this.props.footerDisableCallback(false);
     };
 
     let success = async (data) => {
-      this.errorMessage = "";
-      this.successMessage = "Success";
+      this.showInfoMessage("Success");
 
       this.setState({
         isLoading: false,
@@ -121,11 +111,6 @@ export default class BlankCreatorPage extends Component {
         imageData: null,
         inputStyle: {
           color: '#4a76a8'
-        },
-        messageStyle: {
-          color: 'green',
-          alignSelf: 'center',
-          padding: 20
         }
       });
       this.props.footerDisableCallback(false);
@@ -155,37 +140,31 @@ export default class BlankCreatorPage extends Component {
     });
   }
 
+  downloadTutorial(template) {
+    this.api.downloadTutorial(template)
+      .then((data) => { this.setState({ isLoading: false }); this.props.footerDisableCallback(false); Linking.openURL(data); })
+      .catch((er) => { this.setState({ isLoading: false }); this.props.footerDisableCallback(false); Alert.alert(er); });
+  }
+
   async generateExcel() {
     if (this.state.imageData === null || this.state.isLoading) return;
     this.setState({ isLoading: true });
     this.props.footerDisableCallback(true);
     let error = (error) => {
-      this.successMessage = "";
-      this.errorMessage = error.status + " : " + error.message;
+      this.showInfoMessage(error.status + " : " + error.message);
       this.setState({
-        isLoading: false,
-        messageStyle: {
-          color: '#ff4d4d',
-          alignSelf: 'center',
-          padding: 20
-        }
+        isLoading: false
       });
       this.props.footerDisableCallback(false);
     };
 
     let success = async (data) => {
-      this.errorMessage = "";
-      this.successMessage = "Success";
+      this.showInfoMessage("Success");
 
       this.setState({
         isLoading: false,
         typeName: "",
-        imageData: null,
-        messageStyle: {
-          color: 'green',
-          alignSelf: 'center',
-          padding: 20
-        }
+        imageData: null
       });
       this.props.footerDisableCallback(false);
     };
@@ -201,9 +180,15 @@ export default class BlankCreatorPage extends Component {
       .catch(error.bind(this));
   }
 
+  showInfoMessage(message) {
+    Toast.show({
+      text: message,
+      buttonText: 'Okay',
+      duration: 5000
+    })
+  }
+
   refresh() {
-    this.errorMessage = "";
-    this.successMessage = "";
     this.typeToAdd = {
       typeName: "",
       questions: []
@@ -216,11 +201,6 @@ export default class BlankCreatorPage extends Component {
       selectedType: this.types.length > 0 ? this.types[0].name : '',
       inputStyle: {
         color: '#4a76a8'
-      },
-      messageStyle: {
-        color: '#ff4d4d',
-        alignSelf: 'center',
-        padding: 20
       }
     });
     this.props.footerDisableCallback(false);
@@ -242,6 +222,9 @@ export default class BlankCreatorPage extends Component {
               <Text style={{ color: this.state.enabledButton === buttons.type ? '#4a76a8' : 'white' }}>{buttons.type}</Text>
             </Button>
           </Segment>
+          <TouchableOpacity style={{ position: 'absolute', right: 15, top: 59.7 }} onPress={() => this.showInfoMessage(INFO_MES_BLANK)}>
+            <Icon name='ios-information-circle-outline' style={{ color: 'gray' }} />
+          </TouchableOpacity>
           <Text style={{ color: 'gray', padding: 5, alignSelf: 'center', marginTop: 10 }}>Select blank type</Text>
           <Item picker style={{ marginTop: 10 }}>
             <Picker
@@ -259,7 +242,6 @@ export default class BlankCreatorPage extends Component {
           </Item>
           <CameraPage imageCallback={(imageData) => { this.setState({ imageData: imageData }) }} />
           <Button style={styles.primaryButton} onPress={this.generateExcel.bind(this)}><Text>Generate excel</Text></Button>
-          <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
         </Content>
 
         :
@@ -273,6 +255,9 @@ export default class BlankCreatorPage extends Component {
             </Button>
           </Segment>
           <List>
+            <TouchableOpacity style={{ position: 'absolute', right: 15, top: 15 }} onPress={() => this.showInfoMessage(INFO_MES_TYPE)}>
+              <Icon name='ios-information-circle-outline' style={{ color: 'gray' }} />
+            </TouchableOpacity>
             <Text style={{ color: 'gray', padding: 5, alignSelf: 'center', marginTop: 10 }}>Select blank template</Text>
             <Item picker style={{ marginTop: 10 }}>
               <Picker
@@ -301,7 +286,9 @@ export default class BlankCreatorPage extends Component {
             <Button style={styles.primaryButton} onPress={this.addType.bind(this)}>
               <Text>Add blank type</Text>
             </Button>
-            <Text style={this.state.messageStyle}>{this.errorMessage !== "" ? this.errorMessage : this.successMessage !== "" ? this.successMessage : ""}</Text>
+            <Button style={styles.primaryButton} onPress={() => this.downloadTutorial(this.state.selectedTemplate)}>
+              <Text>Download tutorial</Text>
+            </Button>
           </List>
         </Content>
       ;
