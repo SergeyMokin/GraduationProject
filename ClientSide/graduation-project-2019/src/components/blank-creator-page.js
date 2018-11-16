@@ -88,6 +88,7 @@ export default class BlankCreatorPage extends Component {
   }
 
   async addType() {
+    if (this.state.imageData === null || this.state.typeName.length === 0 || this.state.isLoading) return;
     this.setState({ isLoading: true });
     this.props.footerDisableCallback(true);
     let error = (error) => {
